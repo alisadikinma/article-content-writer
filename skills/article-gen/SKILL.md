@@ -23,6 +23,7 @@ Before any task, read the relevant reference files. ALWAYS read `global-config.m
 | Shareability | + `references/virality-triggers.md` |
 | Image prompts | + `references/image-prompt-guide.md` |
 | Style editing | + `references/style-guide.md` |
+| SEO optimization | + `references/seo-rules-engine.md` |
 | Final scoring | + `references/quality-gate.md` |
 
 **How to use this table:** Each row adds (+) to the base requirement. For example, when writing the body you read `global-config.md` first, then `retention-engine.md`. Multiple tasks in one step means reading all listed files for those tasks.
@@ -65,6 +66,8 @@ These 16 rules apply to EVERY article generated. Violation of any rule requires 
 
 16. **ALWAYS include at least 1 Practical Utility section.** This section uses the formula: [Number] + [Superlative] + [Timeframe] + [Outcome]. Example: "7 fastest ways to double your conversion rate in 30 days." This formula signals immediate, concrete value and drives both clicks and shares.
 
+17. **ALWAYS score SEO Score (6 metrics) — minimum 4/6 to publish.** Every article must be scored against the 6 SEO metrics (title length, keyword in title, title words, body keyword density, keyword in first 100 words, keyword in headings). A score below 4/6 means the article is not SEO-ready. Apply optimization strategies and re-score until the threshold is met.
+
 ---
 
 ## 3. Workflow: Full Article Generation
@@ -85,6 +88,7 @@ When invoked with `--idea-id` and `--api-url` flags, the skill runs in **pipelin
 - `--languages {en,id}` — Comma-separated output languages
 
 **Optional flags:**
+- `--keyword "{keyword}"` — Target SEO keyword (if not provided, auto-derived from topic)
 - `--instructions "{text}"` — Custom generation instructions
 
 **Pipeline mode behavior:**
@@ -112,35 +116,90 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
 | 4 | hook_generation | 25 | Hook generated |
 | 5 | outline_generation | 35 | Full outline created |
 | 6 | article_writing | 70 | Article draft completed |
-| 7 | style_pass | 80 | Style editing pass done |
+| 7 | style_pass | 78 | Style editing pass done |
+| 7.5 | seo_optimization | 82 | SEO optimization pass done |
 | 8 | image_prompts | 85 | Image prompts generated |
 | 9 | virality_score | 90 | Virality scoring done |
-| 10 | quality_gate | 95 | Quality gate passed |
+| 10 | quality_gate | 94 | Quality gate passed |
+| 10.5 | seo_score | 97 | SEO score passed |
 | 11 | completed | 100 | Article ready |
 
-**Completion callback:** After Step 10 passes, send the full article to the completion API:
+**Completion callback:** After all gates pass (Quality + Virality + SEO), send the FULL data package to the Portfolio API. See `references/seo-rules-engine.md` Section 5 for the complete JSON schema.
 
 ```bash
 curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
   -H "Authorization: Bearer {api_token}" \
   -H "Content-Type: application/json" \
   -d '{
-    "generated_article": {
+    "article": {
       "title": "{article_title}",
       "content": "{full_html_content}",
+      "keyword": "{target_keyword}",
       "word_count": {word_count},
-      "quality_score": {quality_score},
-      "virality_score": {virality_score},
+      "citation_count": {citation_count},
+      "image_count": {image_count},
       "framework": "{framework_name}",
       "hook_type": "{hook_type}",
-      "emotional_arc": "{arc_type}",
-      "image_prompts": [{image_prompt_objects}],
-      "sources": [{source_objects}]
+      "hook_boost": "{engagement_boost_pct}",
+      "emotional_arc": "{arc_type}"
     },
+    "seo_analysis": {
+      "score": {seo_score},
+      "max_score": 6,
+      "pass": {true_or_false},
+      "keyword": "{target_keyword}",
+      "metrics": {
+        "title_length": {"value": {chars}, "status": "{good/warning/bad}"},
+        "keyword_in_title": {"value": {true_or_false}, "status": "{good/bad}"},
+        "title_word_count": {"value": {words}, "status": "{good/warning/bad}"},
+        "body_keyword_density": {"value": {density_pct}, "status": "{good/warning/bad}"},
+        "keyword_in_first_100": {"value": {true_or_false}, "status": "{good/bad}"},
+        "keyword_in_headings": {"value": {count}, "status": "{good/warning/bad}"}
+      }
+    },
+    "virality_score": {
+      "score": {virality_score},
+      "max_score": 5,
+      "pass": {true_or_false},
+      "triggers": {
+        "social_currency": {"pass": {bool}, "evidence": "{text}"},
+        "high_arousal_emotion": {"pass": {bool}, "evidence": "{text}"},
+        "practical_utility": {"pass": {bool}, "evidence": "{text}"},
+        "identity_signaling": {"pass": {bool}, "evidence": "{text}"},
+        "cognitive_gap_closure": {"pass": {bool}, "evidence": "{text}"}
+      }
+    },
+    "quality_gate": {
+      "score": {quality_score},
+      "max_score": 10,
+      "pass": {true_or_false},
+      "criteria": {
+        "clear": {"pass": {bool}, "evidence": "{text}"},
+        "concise": {"pass": {bool}, "evidence": "{text}"},
+        "compelling": {"pass": {bool}, "evidence": "{text}"},
+        "credible": {"pass": {bool}, "evidence": "{text}"},
+        "nested_loops": {"pass": {bool}, "evidence": "{text}"},
+        "bucket_brigades": {"pass": {bool}, "evidence": "{text}"},
+        "emotional_arc": {"pass": {bool}, "evidence": "{text}"},
+        "scannability": {"pass": {bool}, "evidence": "{text}"},
+        "benefit_first": {"pass": {bool}, "evidence": "{text}"},
+        "dual_cta": {"pass": {bool}, "evidence": "{text}"}
+      }
+    },
+    "image_prompts": [{
+      "type": "{cover/inline}",
+      "section": "{section_title}",
+      "concept": "{concept}",
+      "prompt": "{full_prompt}",
+      "model": "{model}",
+      "style": "{style}",
+      "aspect_ratio": "{ratio}",
+      "resolution": "{resolution}"
+    }],
     "research_data": {
-      "key_data_points": [{data_points}],
+      "key_data_points": ["{data_points}"],
       "primary_pain_point": "{pain_point}",
-      "sources": [{sources}]
+      "sources": [{"name": "{source}", "url": "{url}"}]
     }
   }'
 ```
@@ -157,7 +216,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
 
 ### Step 0 — INPUT COLLECTION
 
-**Pipeline mode:** Parse inputs from CLI flags. Set topic, audience (derive from niche/topic), goal (default: Educate), product (default: None). Report progress at 5%.
+**Pipeline mode:** Parse inputs from CLI flags. Set topic, audience (derive from niche/topic), goal (default: Educate), product (default: None), keyword (from `--keyword` flag or auto-derive). Report progress at 5%.
 
 **Interactive mode:** Collect the following information from the user:
 
@@ -165,7 +224,8 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
 2. **Product/Service (optional):** Is there a product, service, or brand to weave into the article? If yes, get the name, what it does, and the key value proposition.
 3. **Target Audience:** Who is reading this? Get demographics, role, experience level, and primary pain point. "Small business owners who struggle with cash flow" is better than "business people."
 4. **Article Goal:** What should the reader DO after reading? Options: Educate (learn something new), Sell (buy a product/service), Convert (sign up, download, subscribe), Engage (share, comment, discuss).
-5. **Output Path (optional):** Does the user want the article written to a file? If yes, collect the directory path. If no, output to console.
+5. **Target Keyword (optional):** Does the user have a specific SEO keyword? If yes, collect it. If no, explain that a keyword will be auto-derived during topic research (Step 1) and presented for confirmation.
+6. **Output Path (optional):** Does the user want the article written to a file? If yes, collect the directory path. If no, output to console.
 
 If the user provides a brief or vague request, ask clarifying questions for items 1-4 before proceeding. Do not assume. Do not guess. Get explicit answers.
 
@@ -177,6 +237,7 @@ CONFIRMED INPUT:
 - Product/Service: [product or "None"]
 - Target Audience: [audience]
 - Goal: [educate/sell/convert/engage]
+- Target Keyword: [keyword or "Auto-derive in Step 1"]
 - Output Path: [path or "Console"]
 ```
 
@@ -195,6 +256,8 @@ Perform web research on the topic to gather current, verified information:
 3. **Identify the reader's primary pain point.** Based on research, define the single biggest problem the target audience faces related to this topic. This becomes the emotional anchor for the entire article.
 4. **Identify the reader's emotional state.** What does the reader feel BEFORE reading? Frustrated? Confused? Overwhelmed? Skeptical? This determines the emotional starting point for the arc.
 
+5. **Keyword research.** If a keyword was provided in Step 0, validate it (is it specific, natural, intent-matched?). If no keyword was provided, auto-derive 2-3 keyword suggestions from the topic research. Consider: search intent, specificity, natural fit in title, and audience alignment.
+
 Present findings to the user in this format:
 
 ```
@@ -204,9 +267,17 @@ TOPIC RESEARCH FINDINGS:
 - Reader's Starting Emotion: [emotional state before reading]
 - Recommended Angle: [the unique perspective or hook angle]
 - Sources Collected: [numbered list of 3-5 sources with URLs]
+
+KEYWORD OPTIONS:
+1. [keyword phrase] — [rationale: specificity, intent match, natural title fit]
+2. [keyword phrase] — [rationale]
+3. [keyword phrase] — [rationale]
+RECOMMENDATION: #[N] — [keyword] because [reason tied to topic + audience]
 ```
 
-**Pipeline mode:** Auto-proceed, no confirmation needed. Report progress: `step=topic_research, percentage=10`.
+User reviews keywords and confirms, modifies, or inputs a custom keyword. The confirmed keyword is used in all subsequent SEO steps.
+
+**Pipeline mode:** If `--keyword` flag provided, use it directly. Otherwise auto-derive and auto-select top recommendation. Report progress: `step=topic_research, percentage=10`.
 
 **Interactive mode:** Wait for user confirmation or adjustments before proceeding to Step 2.
 
@@ -425,9 +496,39 @@ Perform a complete editorial pass on the draft. This is a revision step — do n
 5. **Grade 5 readability check.** Review sentence length (target: 15-20 words average), word complexity (prefer 1-2 syllable words), and structure (active voice, subject-verb-object). If any passage reads above a Grade 7 level, simplify it.
 6. **AI writing pattern removal.** Scan for and eliminate: hedging language ("It's worth noting that," "One could argue that"), filler transitions ("In today's fast-paced world," "When it comes to"), passive voice where active is possible, and generic conclusions ("In conclusion," "To sum up").
 
-After completing the style pass, proceed to Step 8.
+After completing the style pass, proceed to Step 7.5.
 
-**Pipeline mode:** Report progress: `step=style_pass, percentage=80`.
+**Pipeline mode:** Report progress: `step=style_pass, percentage=78`.
+
+---
+
+### Step 7.5 — SEO OPTIMIZATION
+
+**Read:** `references/seo-rules-engine.md` (Sections 3 + 4)
+
+Optimize the article for the confirmed target keyword from Step 1. This is an optimization pass — not a scoring step. The goal is to ensure the article meets SEO thresholds BEFORE scoring in Step 10.5.
+
+1. **Title optimization.** Check current title against SEO rules:
+   - Length: adjust to 50–60 characters if outside range
+   - Keyword: verify keyword is present naturally in the title
+   - Word count: adjust to 6–10 words if outside range
+   - Title must still follow the Information Gap rule — keyword inclusion must serve the hook, not replace it
+
+2. **First 100 words.** Verify the target keyword appears within the first 100 words of the article body. If missing, weave it into the opening hook, problem statement, or first bucket brigade naturally.
+
+3. **H2/H3 headings.** Count keyword occurrences in all H2 and H3 headings:
+   - If 0: add keyword to 1–2 headings where it fits the information gap naturally
+   - If 1–2: optimal, no change needed
+   - If >3: replace some heading instances with synonyms to avoid keyword stuffing
+
+4. **Body keyword density.** Calculate: (keyword occurrences / total body words) × 100
+   - If <0.5%: add keyword naturally in topic sentences of 2–3 key sections
+   - If 0.5–1.5%: optimal, no change needed
+   - If >1.5%: replace some instances with synonyms or related terms
+
+5. **Natural integration check.** Re-read all keyword placements. If any sentence reads awkwardly due to keyword insertion, rephrase to sound natural. Readability always trumps keyword density.
+
+**Pipeline mode:** Report progress: `step=seo_optimization, percentage=82`.
 
 ---
 
@@ -572,7 +673,51 @@ Score the article against 10 quality criteria. Each criterion is worth 1 point. 
 
 After fixing, re-score. Repeat until the article scores 7/10 or higher.
 
-**Pipeline mode:** Report progress: `step=quality_gate, percentage=95`.
+**Pipeline mode:** Report progress: `step=quality_gate, percentage=94`.
+
+---
+
+### Step 10.5 — SEO SCORE
+
+**Read:** `references/seo-rules-engine.md` (Section 1 — Scoring System)
+
+Score the article against the 6 SEO metrics. Each metric uses the traffic light system: Green = 1 point, Amber = 0.5 points, Red = 0 points. Maximum 6/6. Minimum 4/6 to proceed.
+
+**Scoring criteria:**
+
+1. **Title Length (1 point max):** Count characters in the title. Green: 50–60. Amber: 40–50 or 60–70. Red: <40 or >70.
+
+2. **Keyword in Title (1 point max):** Check if the target keyword (case-insensitive) is present in the title. Green: present. Red: missing. (Binary — no Amber.)
+
+3. **Title Word Count (1 point max):** Count words in the title. Green: 6–10. Amber: 5 or 11–12. Red: <5 or >12.
+
+4. **Body Keyword Density (1 point max):** Count keyword occurrences in body text, divide by total words, multiply by 100. Green: 0.5–1.5%. Amber: 0.3–0.5% or 1.5–2.5%. Red: <0.3% or >3%.
+
+5. **Keyword in First 100 Words (1 point max):** Check if keyword appears in the first 100 words. Green: present. Red: missing. (Binary — no Amber.)
+
+6. **Keyword in H2/H3 Headings (1 point max):** Count headings containing the keyword. Green: 1–2. Amber: 0. Red: >3 (keyword stuffing).
+
+Present the SEO score:
+
+```
+SEO SCORE: [N]/6 — [PASS/NEEDS OPTIMIZATION]
+Target Keyword: [keyword]
+
+| # | Metric | Value | Status |
+|---|--------|-------|--------|
+| 1 | Title Length | [N] chars | [GREEN/AMBER/RED] |
+| 2 | Keyword in Title | [Yes/No] | [GREEN/RED] |
+| 3 | Title Words | [N] words | [GREEN/AMBER/RED] |
+| 4 | Body Keyword Density | [N]% ([count]/[total]) | [GREEN/AMBER/RED] |
+| 5 | Keyword in First 100 | [Yes/No] | [GREEN/RED] |
+| 6 | Keyword in Headings | [N] times | [GREEN/AMBER/RED] |
+```
+
+**If score >= 4/6: PASS.** Proceed to Step 11.
+
+**If score < 4/6: FAIL.** Apply per-metric optimization strategies from `references/seo-rules-engine.md` Section 7. Focus on Red metrics first (0 points), then Amber (0.5 points). Re-score after fixes. Repeat until 4/6 or higher.
+
+**Pipeline mode:** Report progress: `step=seo_score, percentage=97`.
 
 ---
 
@@ -603,8 +748,9 @@ Every article output MUST follow this exact structure:
 # [Article Title]
 
 **Framework:** [Selected] | **Hook:** [Type] ([engagement boost %]) | **Arc:** [Selected]
+**Keyword:** [target keyword]
 **Words:** [count] | **Citations:** [count] | **Images:** [count]
-**Quality:** [N]/10 | **Virality:** [N]/5
+**Quality:** [N]/10 | **Virality:** [N]/5 | **SEO:** [N]/6
 
 ---
 
@@ -660,6 +806,17 @@ Every article output MUST follow this exact structure:
 **Placement:** After [section] — [emotional turning point reason]
 
 ---
+
+## SEO Score: [N]/6 — [PASS/NEEDS OPTIMIZATION]
+**Target Keyword:** [keyword]
+| # | Metric | Value | Status |
+|---|--------|-------|--------|
+| 1 | Title Length | [N] chars | [GREEN/AMBER/RED] |
+| 2 | Keyword in Title | [Yes/No] | [GREEN/RED] |
+| 3 | Title Words | [N] words | [GREEN/AMBER/RED] |
+| 4 | Body Keyword Density | [N]% | [GREEN/AMBER/RED] |
+| 5 | Keyword in First 100 Words | [Yes/No] | [GREEN/RED] |
+| 6 | Keyword in Headings | [N] times | [GREEN/AMBER/RED] |
 
 ## Virality Score: [N]/5
 1. Social Currency: [PASS/FAIL] — [evidence]

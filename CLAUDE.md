@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Claude Code plugin for AI-powered long-form article writing with inline image prompt generation. 3 skills + 1 agent + 11 reference documents as RAG knowledge base.
+Claude Code plugin for AI-powered long-form article writing with inline image prompt generation. 4 skills + 1 agent + 12 reference documents as RAG knowledge base.
 
 ## Architecture
 
@@ -12,10 +12,11 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 | `hooks/hooks.json` | SessionStart hook definition |
 | `hooks/session-start.sh` | Session start script — announces available skills |
 | `skills/article-gen/SKILL.md` | Main skill — end-to-end article generation with image prompts |
-| `skills/article-validate/SKILL.md` | Dual scoring gate (Quality 10-point + Virality 5-point) |
+| `skills/article-validate/SKILL.md` | Triple scoring gate (Quality 10-point + Virality 5-point + SEO 6-point) |
+| `skills/article-seo/SKILL.md` | Standalone SEO analysis + optimization (6 metrics, traffic light) |
 | `skills/article-brief/SKILL.md` | Brainstorm + outline with virality pre-assessment |
 | `agents/article-writer.md` | Subagent for batch article writing |
-| `references/` | 11 reference docs read on-demand by skills/agent |
+| `references/` | 12 reference docs read on-demand by skills/agent |
 | `README.md` | Repo README |
 | `LICENSE` | MIT license |
 
@@ -30,6 +31,7 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 | `emotional-arcs.md` | Emotional planning — 4 arcs with neurotransmitter mapping, pacing metrics, completion-to-share resolution |
 | `virality-triggers.md` | Shareability — neuroscience of sharing, 5-point virality scoring guide with pass/fail definitions |
 | `image-prompt-guide.md` | Image prompts — GeminiGen.AI API docs, model/style guides, section→concept mapping, prompt best practices |
+| `seo-rules-engine.md` | SEO scoring — 6 metrics with traffic light thresholds, JS logic contract for Portfolio website, completion callback JSON schema |
 | `style-guide.md` | Style editing — 6 technical writing rules with before/after examples, forbidden vocabulary, AI pattern avoidance |
 | `quality-gate.md` | Final scoring — 10-point checklist with pass/fail definitions, revision priority guide |
 | `sources-index.md` | Research citations — 22 source documents from NotebookLM research |
@@ -46,6 +48,7 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 - **Quality Gate** — 10-point checklist (min 7/10): clear, concise, compelling, credible, nested loops, bucket brigades, emotional arc, scannability, benefit-first, dual CTA
 - **E-E-A-T Density** — 1 citation per 400 words; Experience, Expertise, Authoritativeness, Trustworthiness
 - **Neuroscience of Sharing** — Medial prefrontal cortex (self-processing → shareability), ventral striatum (reward), emotional arousal spectrum (high-arousal effective, low-arousal ineffective)
+- **SEO Rules Engine** — 6-metric traffic light scoring (title length, keyword in title, title words, keyword density, keyword in first 100 words, keyword in headings), 4/6 minimum, keyword auto-derive + user confirmation, JS logic contract for Portfolio website
 - **Image Prompt Generation** — GeminiGen.AI API with nano-banana-pro (free), 3-5 images per article (1 cover + 2-4 inline), section→concept mapping
 - **Forbidden Vocabulary** — 7 banned AI-sounding words (Unlock, Unleash, Supercharge, Empower, Enhance, Exceed, Maximize)
 - **Grade 5 Readability** — Flesch-Kincaid age 9-11, conversational people-first language
@@ -54,17 +57,18 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 ## Capabilities
 
 1. **End-to-end article generation** — topic research → framework selection → hook → outline → writing → style pass → image prompts → virality score → quality gate → output
-2. **Dual scoring gates** — Quality Gate (10-point, min 7/10) + Virality Score (5-point, min 3/5)
+2. **Triple scoring gates** — Quality Gate (10-point, min 7/10) + Virality Score (5-point, min 3/5) + SEO Score (6-point, min 4/6)
 3. **14 copywriting frameworks** — with automatic recommendation via decision matrix
 4. **8 hook types** — with engagement boost rankings and combining strategies
 5. **6 retention techniques** — psychologically-backed reader retention patterns
 6. **4 emotional arcs** — with neurotransmitter targeting and pacing guidance
 7. **Inline image prompts** — GeminiGen.AI compatible (nano-banana-pro/nano-banana-2/imagen-4), 3-5 per article
 8. **Virality engineering** — 5-trigger scoring with per-trigger improvement strategies
-9. **Article validation** — score any existing article against both gates with actionable fix recommendations
-10. **Article briefs** — structured outlines with virality pre-assessment and image concept planning
-11. **Batch production** — via article-writer subagent for multiple articles in sequence
-12. **Fact verification** — web-verify all claims before including, E-E-A-T citation density enforcement
+9. **Article validation** — score any existing article against all three gates with actionable fix recommendations
+10. **SEO analysis** — standalone keyword density, title optimization, heading analysis with traffic light scoring
+11. **Article briefs** — structured outlines with virality pre-assessment and image concept planning
+12. **Batch production** — via article-writer subagent for multiple articles in sequence
+13. **Fact verification** — web-verify all claims before including, E-E-A-T citation density enforcement
 
 ## Technical Defaults
 
@@ -85,6 +89,10 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 | Image aspect ratio | Per global-config.md Image Generation (`default_aspect_ratio`) |
 | Image count | Per global-config.md Image Generation (`image_count` + allocation table) |
 | Hook word limit | Per global-config.md Hook Defaults section |
+| SEO minimum | Per global-config.md SEO Rules Engine (`seo_minimum`) |
+| SEO keyword handling | Per global-config.md SEO Rules Engine (`keyword_handling`) |
+| Title length optimal | Per global-config.md SEO Rules Engine (`title_length_optimal`) |
+| Keyword density optimal | Per global-config.md SEO Rules Engine (`keyword_density_optimal`) |
 
 ## Conventions for Contributors
 
@@ -124,8 +132,14 @@ To change any configurable value (language, readability, image model, etc.):
 | No bucket brigades | Must be on own lines with colons — check retention-engine.md phrase library |
 | GeminiGen API error | Check GEMINIGEN_API_KEY env var, rate limit 5/min for nano-banana-pro |
 | Images don't match article tone | Verify section→concept mapping from image-prompt-guide.md |
+| Low SEO score | Check seo-rules-engine.md per-metric optimization strategies — fix Red metrics first |
+| Keyword stuffing in headings | Max 2 keyword appearances in H2/H3 — replace extras with synonyms |
+| Title too long/short | Target 50-60 chars — see seo-rules-engine.md title optimization |
+| Keyword density too high | >1.5% triggers warning, >3% is Red — replace with synonyms |
+| Keyword missing from first 100 words | Weave into opening hook or problem statement naturally |
+| SEO callback not sending | Check pipeline mode flags (--api-url, --api-token) and completion callback JSON schema in seo-rules-engine.md |
 
 ---
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Last Updated:** April 2026

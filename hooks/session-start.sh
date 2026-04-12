@@ -1,7 +1,8 @@
 #!/bin/bash
 echo "article-content-writer loaded. Skills available:"
 echo "  article-gen — end-to-end long-form article generation with inline image prompts"
-echo "  article-validate — dual scoring gate (Quality 10-point + Virality 5-point)"
+echo "  article-validate — triple scoring gate (Quality 10-point + Virality 5-point + SEO 6-point)"
+echo "  article-seo — standalone SEO analysis + optimization (6 metrics, traffic light)"
 echo "  article-brief — brainstorm + outline planning with virality pre-assessment"
 echo ""
 echo "Agent available:"

@@ -1,15 +1,15 @@
 ---
 name: article-validate
-description: Dual scoring gate (Quality 10-point + Virality 5-point) for any article or blog post. Use when the user wants to check, score, audit, or improve an existing article's quality and shareability. Triggers on validate, score, check article, quality gate, audit article, review article, virality check, cek artikel, or any request to evaluate written content.
+description: Triple scoring gate (Quality 10-point + Virality 5-point + SEO 6-point) for any article or blog post. Use when the user wants to check, score, audit, or improve an existing article's quality, shareability, and search optimization. Triggers on validate, score, check article, quality gate, audit article, review article, virality check, SEO check, cek artikel, or any request to evaluate written content.
 ---
 
-# Article Validator — Dual Scoring Gate
+# Article Validator — Triple Scoring Gate
 
-Scores any article against two gates: Quality (10-point, min 7/10) and Virality (5-point, min 3/5).
+Scores any article against three gates: Quality (10-point, min 7/10), Virality (5-point, min 3/5), and SEO (6-point, min 4/6).
 
 ## Reference Files
 
-- ALWAYS read: `references/global-config.md` + `references/quality-gate.md` + `references/virality-triggers.md`
+- ALWAYS read: `references/global-config.md` + `references/quality-gate.md` + `references/virality-triggers.md` + `references/seo-rules-engine.md`
 - For detailed checks: + `references/style-guide.md` + `references/retention-engine.md` + `references/hook-repository.md`
 
 ## Workflow: Article Validation
@@ -17,8 +17,9 @@ Scores any article against two gates: Quality (10-point, min 7/10) and Virality 
 ### Step 1 — INPUT
 
 - User provides article text (paste or file path).
+- User provides target SEO keyword (required for SEO scoring). If not provided, ask for it before proceeding.
 - Read the full article.
-- Confirm the article language and topic before proceeding.
+- Confirm the article language, topic, and keyword before proceeding.
 - If the article is provided as a file path, use the Read tool to load its contents.
 - If the article is pasted inline, capture it in full — do not truncate.
 
@@ -35,6 +36,21 @@ Score each trigger 0 or 1:
 5. **Cognitive Gap Closure** — PASS if narrative tension resolves satisfyingly (loops open and close with payoff). FAIL if conclusions given upfront or no tension.
 
 For each trigger, quote the specific sentence or passage that justifies the score. If scoring 0, explain exactly what is missing and where it should appear.
+
+### Step 2.5 — SEO SCORING (6 metrics)
+
+Read `references/seo-rules-engine.md` before scoring this section.
+
+Score each metric using the traffic light system (Green = 1 pt, Amber = 0.5 pt, Red = 0 pt):
+
+1. **Title Length** — Count characters. Green: 50–60. Amber: 40–50 or 60–70. Red: <40 or >70.
+2. **Keyword in Title** — Check case-insensitive presence. Green: present. Red: missing. (Binary.)
+3. **Title Word Count** — Count words. Green: 6–10. Amber: 5 or 11–12. Red: <5 or >12.
+4. **Body Keyword Density** — Calculate (occurrences / total words) × 100. Green: 0.5–1.5%. Amber: 0.3–0.5% or 1.5–2.5%. Red: <0.3% or >3%.
+5. **Keyword in First 100 Words** — Check presence. Green: present. Red: missing. (Binary.)
+6. **Keyword in H2/H3 Headings** — Count heading occurrences. Green: 1–2. Amber: 0. Red: >3 (stuffing).
+
+For each metric, report the exact value and traffic light status. If scoring Red, explain what specifically needs to change and where.
 
 ### Step 3 — QUALITY SCORING (10 criteria)
 
@@ -57,11 +73,12 @@ For each criterion, provide specific evidence (quote the line that passes/fails)
 
 ### Step 4 — REPORT
 
-Present BOTH scored checklists with evidence.
+Present ALL THREE scored checklists with evidence.
 
 - **Virality Score:** [N]/5 — PASS (>= 3) or NEEDS BOOST (< 3)
+- **SEO Score:** [N]/6 — PASS (>= 4) or NEEDS OPTIMIZATION (< 4)
 - **Quality Score:** [N]/10 — PASS (>= 7) or NEEDS REVISION (< 7)
-- **Combined verdict:** PUBLISH READY (both pass) / NEEDS WORK (either fails)
+- **Combined verdict:** PUBLISH READY (all three pass) / NEEDS WORK (any fails)
 - For each failing criterion/trigger: specific, actionable fix recommendation with an example rewrite of the offending passage.
 - Priority order for fixes (highest-impact first per `references/quality-gate.md` revision priority guide):
   1. Failing criteria that block the quality gate (score < 7)
@@ -86,6 +103,16 @@ If user wants fixes applied:
 
 ```
 ## Article Validation Report — [PUBLISH READY / NEEDS WORK]
+
+### SEO Score: [N]/6 — [PASS / NEEDS OPTIMIZATION]
+| # | Metric | Value | Status |
+|---|--------|-------|--------|
+| 1 | Title Length | [N] chars | [GREEN/AMBER/RED] |
+| 2 | Keyword in Title | [Yes/No] | [GREEN/RED] |
+| 3 | Title Words | [N] words | [GREEN/AMBER/RED] |
+| 4 | Body Keyword Density | [N]% | [GREEN/AMBER/RED] |
+| 5 | Keyword in First 100 Words | [Yes/No] | [GREEN/RED] |
+| 6 | Keyword in Headings | [N] times | [GREEN/AMBER/RED] |
 
 ### Virality Score: [N]/5 — [PASS / NEEDS BOOST]
 | # | Trigger | Score | Evidence |
@@ -121,7 +148,7 @@ If user wants fixes applied:
 
 ## Rules
 
-- NEVER skip a criterion or trigger. Score all 15 items every time.
+- NEVER skip a criterion, trigger, or metric. Score all 21 items every time (10 quality + 5 virality + 6 SEO).
 - NEVER assign a score without quoting evidence from the article.
 - NEVER inflate scores — if in doubt, score 0 and explain why.
 - ALWAYS read the reference files before scoring. The scoring definitions in the reference files override any conflicting definitions in this skill file.

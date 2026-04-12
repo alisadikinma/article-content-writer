@@ -156,3 +156,19 @@
 | Short (1,900 words) | 1 | 2 | 3 |
 | Standard (2,000–2,200 words) | 1 | 3 | 4 |
 | Long (2,200–2,400+ words) | 1 | 4 | 5 |
+
+---
+
+## 12. SEO Rules Engine
+
+| Setting | Value |
+|---------|-------|
+| `seo_minimum` | 4/6 to publish |
+| `seo_metrics_count` | 6 (all mandatory evaluation) |
+| `scoring_system` | Traffic light: Green (1 pt), Amber (0.5 pt), Red (0 pt) |
+| `keyword_handling` | Auto-derive from topic + user confirmation |
+| `title_length_optimal` | 50–60 characters |
+| `title_words_optimal` | 6–10 words |
+| `keyword_density_optimal` | 0.5–1.5% |
+| `keyword_in_headings_optimal` | 1–2 times (>3 = stuffing) |
+| `reference` | See seo-rules-engine.md for full scoring guide + JS logic contract |
