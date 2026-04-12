@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "article-content-writer loaded. Skills available:"
+echo "  article-gen — end-to-end long-form article generation with inline image prompts"
+echo "  article-validate — dual scoring gate (Quality 10-point + Virality 5-point)"
+echo "  article-brief — brainstorm + outline planning with virality pre-assessment"
+echo ""
+echo "Agent available:"
+echo "  article-writer — subagent for batch article writing"
+echo ""
+echo "REMINDER: Read references/global-config.md FIRST for any article generation."

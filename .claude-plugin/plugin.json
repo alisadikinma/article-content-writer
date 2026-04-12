@@ -1,0 +1,29 @@
+{
+  "name": "article-content-writer",
+  "description": "AI-powered long-form article writer with inline image prompt generation. Generates high-converting articles using research-backed copywriting frameworks, viral hook techniques, psychological retention patterns, and emotional arc sequencing. Includes 10-point quality gate, 5-point virality scoring, and GeminiGen.AI image prompts.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ali Sadikin",
+    "url": "https://github.com/alisadikinma"
+  },
+  "homepage": "https://github.com/alisadikinma/article-content-writer",
+  "repository": "https://github.com/alisadikinma/article-content-writer",
+  "license": "MIT",
+  "keywords": [
+    "article",
+    "content-writing",
+    "copywriting",
+    "long-form",
+    "blog",
+    "SEO",
+    "viral-content",
+    "PASO",
+    "StoryBrand",
+    "AIDA",
+    "hook-writing",
+    "content-marketing",
+    "image-prompt",
+    "GeminiGen",
+    "claude-code"
+  ]
+}

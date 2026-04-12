@@ -1,0 +1,131 @@
+---
+name: article-validate
+description: Dual scoring gate (Quality 10-point + Virality 5-point) for any article or blog post. Use when the user wants to check, score, audit, or improve an existing article's quality and shareability. Triggers on validate, score, check article, quality gate, audit article, review article, virality check, cek artikel, or any request to evaluate written content.
+---
+
+# Article Validator — Dual Scoring Gate
+
+Scores any article against two gates: Quality (10-point, min 7/10) and Virality (5-point, min 3/5).
+
+## Reference Files
+
+- ALWAYS read: `references/global-config.md` + `references/quality-gate.md` + `references/virality-triggers.md`
+- For detailed checks: + `references/style-guide.md` + `references/retention-engine.md` + `references/hook-repository.md`
+
+## Workflow: Article Validation
+
+### Step 1 — INPUT
+
+- User provides article text (paste or file path).
+- Read the full article.
+- Confirm the article language and topic before proceeding.
+- If the article is provided as a file path, use the Read tool to load its contents.
+- If the article is pasted inline, capture it in full — do not truncate.
+
+### Step 2 — VIRALITY SCORING (5 triggers)
+
+Read `references/virality-triggers.md` before scoring this section.
+
+Score each trigger 0 or 1:
+
+1. **Social Currency** — PASS if article has exclusive data, insider insights, or counterintuitive findings making sharer look knowledgeable. FAIL if generic publicly available info.
+2. **High-Arousal Emotion** — PASS if dominant tone triggers awe, excitement, or productive anger. FAIL if contentment or mild interest.
+3. **Practical Utility** — PASS if at least 1 section uses [Number]+[Superlative]+[Timeframe]+[Outcome]. FAIL if advice is vague/unquantified.
+4. **Identity Signaling** — PASS if reader can share to reinforce professional/cultural identity. FAIL if no identity hook for any group.
+5. **Cognitive Gap Closure** — PASS if narrative tension resolves satisfyingly (loops open and close with payoff). FAIL if conclusions given upfront or no tension.
+
+For each trigger, quote the specific sentence or passage that justifies the score. If scoring 0, explain exactly what is missing and where it should appear.
+
+### Step 3 — QUALITY SCORING (10 criteria)
+
+Read `references/quality-gate.md` before scoring this section.
+
+Score each criterion 0 or 1:
+
+1. **Clear** — Grade 5 readable, jargon-free. Run a mental readability check: would a 10-year-old understand the core message? Flag any sentence with 3+ syllable jargon words that lack immediate plain-language explanation.
+2. **Concise** — 20% fluff rubbed out, every sentence earns its place. Look for filler phrases ("it is important to note that", "in order to", "the fact that"), redundant adjectives, and paragraphs that repeat the same idea. Quote the worst offender.
+3. **Compelling** — Addresses specific urgent pain point in first 100 words. The reader must feel "this is about MY problem" within the opening. Quote the first 100 words and identify the pain point or note its absence.
+4. **Credible** — 1+ citation per 400 words, named sources. Count total word count, divide by 400, compare to actual citation count. List each citation found (source name + location in article).
+5. **Nested Loops** — 3+ unresolved loops in first 500 words. A nested loop is a story, question, or promise opened but not yet resolved. Quote each loop found in the first 500 words and note where (or if) it closes later.
+6. **Bucket Brigades** — On own lines with colons, 3+ present. These are short transitional phrases on their own line ending with a colon (e.g., "Here's the thing:", "But wait:", "It gets better:"). List each one found with its line location.
+7. **Emotional Arc** — Fast hook / slow build, matches a known arc pattern. Identify the arc pattern (e.g., Rags to Riches, Overcoming the Monster, Voyage and Return). Quote the hook and the emotional peak.
+8. **Scannability** — Bold subheadings every 200-300 words, no paragraph > 4 lines. Count words between each subheading. Flag any gap > 300 words. Flag any paragraph exceeding 4 lines.
+9. **Benefit-First** — Every section passes "So What?" test. For each major section, identify the reader benefit stated. Flag any section where the benefit is buried or absent.
+10. **Dual CTA** — Both Direct ("Buy now") and Transitional ("Download guide") present. Quote both CTAs. If only one type exists, note which is missing.
+
+For each criterion, provide specific evidence (quote the line that passes/fails).
+
+### Step 4 — REPORT
+
+Present BOTH scored checklists with evidence.
+
+- **Virality Score:** [N]/5 — PASS (>= 3) or NEEDS BOOST (< 3)
+- **Quality Score:** [N]/10 — PASS (>= 7) or NEEDS REVISION (< 7)
+- **Combined verdict:** PUBLISH READY (both pass) / NEEDS WORK (either fails)
+- For each failing criterion/trigger: specific, actionable fix recommendation with an example rewrite of the offending passage.
+- Priority order for fixes (highest-impact first per `references/quality-gate.md` revision priority guide):
+  1. Failing criteria that block the quality gate (score < 7)
+  2. Failing triggers that block the virality gate (score < 3)
+  3. Remaining failing criteria (nice-to-have improvements)
+  4. Remaining failing triggers (shareability uplift)
+
+### Step 5 — OPTIONAL REVISION
+
+If user wants fixes applied:
+
+- Revise targeting failing criteria first, then failing triggers, in priority order.
+- Apply changes in-place, preserving the article's voice and structure.
+- Re-score BOTH gates after revision.
+- Present before/after comparison for each changed section:
+  - Quote the original passage.
+  - Quote the revised passage.
+  - Note which criterion/trigger the change addresses and the new score.
+- If the article still does not pass after one revision round, list remaining failures and ask the user whether to continue revising or publish as-is.
+
+## Output Format
+
+```
+## Article Validation Report — [PUBLISH READY / NEEDS WORK]
+
+### Virality Score: [N]/5 — [PASS / NEEDS BOOST]
+| # | Trigger | Score | Evidence |
+|---|---------|-------|----------|
+| 1 | Social Currency | [0/1] | [specific observation] |
+| 2 | High-Arousal Emotion | [0/1] | [dominant emotion + arousal level] |
+| 3 | Practical Utility | [0/1] | [formula usage or absence] |
+| 4 | Identity Signaling | [0/1] | [target group or absence] |
+| 5 | Cognitive Gap Closure | [0/1] | [resolution quality] |
+
+### Quality Gate: [N]/10 — [PASS / NEEDS REVISION]
+| # | Criterion | Score | Evidence |
+|---|-----------|-------|----------|
+| 1 | Clear | [0/1] | [quote or observation] |
+| 2 | Concise | [0/1] | [quote or observation] |
+| 3 | Compelling | [0/1] | [quote or observation] |
+| 4 | Credible | [0/1] | [citation count / density] |
+| 5 | Nested Loops | [0/1] | [loops found in first 500 words] |
+| 6 | Bucket Brigades | [0/1] | [count + examples] |
+| 7 | Emotional Arc | [0/1] | [arc pattern + hook quote] |
+| 8 | Scannability | [0/1] | [max paragraph + header frequency] |
+| 9 | Benefit-First | [0/1] | [3 sections checked] |
+| 10 | Dual CTA | [0/1] | [both CTAs quoted] |
+
+### Fix Recommendations (Priority Order)
+1. [Criterion/Trigger]: [Specific fix recommendation with example rewrite]
+2. [Criterion/Trigger]: [Specific fix recommendation with example rewrite]
+...
+
+### Strengths
+- [What the article does well — call out at least 3 specific strengths with quotes]
+```
+
+## Rules
+
+- NEVER skip a criterion or trigger. Score all 15 items every time.
+- NEVER assign a score without quoting evidence from the article.
+- NEVER inflate scores — if in doubt, score 0 and explain why.
+- ALWAYS read the reference files before scoring. The scoring definitions in the reference files override any conflicting definitions in this skill file.
+- ALWAYS present the full report table even if the article passes both gates.
+- ALWAYS list at least 3 strengths, even for articles that need work.
+- If the article is shorter than 300 words, flag it as potentially too short for a full quality assessment but still score all criteria.
+- If the user provides multiple articles, score each one separately with its own report.
