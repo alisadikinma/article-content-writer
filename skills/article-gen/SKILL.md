@@ -73,9 +73,93 @@ Follow these steps in exact order. Do not skip steps. Do not combine steps. Pres
 
 ---
 
+### Pipeline Mode (Automated — via CLI flags)
+
+When invoked with `--idea-id` and `--api-url` flags, the skill runs in **pipeline mode** — fully automated with progress callbacks to the Portfolio API. This is used by the Content Engine admin panel.
+
+**Required flags:**
+- `--idea-id {id}` — Content idea ID in the Portfolio database
+- `--api-url {url}` — Base API URL (e.g., `https://alisadikinma.com/api`)
+- `--api-token {token}` — Authentication bearer token
+- `--topic "{topic}"` — Article topic
+- `--languages {en,id}` — Comma-separated output languages
+
+**Optional flags:**
+- `--instructions "{text}"` — Custom generation instructions
+
+**Pipeline mode behavior:**
+1. **Skip interactive input collection** — use the provided flags instead of asking the user
+2. **Report progress at each step** — call the progress API after completing each step
+3. **Auto-complete** — call the completion API with the generated article when done
+4. **No user confirmation gates** — proceed through all steps automatically
+
+**Progress reporting:** After completing each step, report progress using the Bash tool:
+
+```bash
+curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
+  -H "Authorization: Bearer {api_token}" \
+  -H "Content-Type: application/json" \
+  -d '{"step":"{step_name}","percentage":{pct},"message":"{description}"}'
+```
+
+**Step-to-percentage mapping:**
+| Step | Name | Percentage | Description |
+|------|------|-----------|-------------|
+| 0 | input_collection | 5 | Input parsed from CLI flags |
+| 1 | topic_research | 10 | Topic research completed |
+| 2 | framework_selection | 15 | Framework selected |
+| 3 | emotional_arc | 20 | Emotional arc mapped |
+| 4 | hook_generation | 25 | Hook generated |
+| 5 | outline_generation | 35 | Full outline created |
+| 6 | article_writing | 70 | Article draft completed |
+| 7 | style_pass | 80 | Style editing pass done |
+| 8 | image_prompts | 85 | Image prompts generated |
+| 9 | virality_score | 90 | Virality scoring done |
+| 10 | quality_gate | 95 | Quality gate passed |
+| 11 | completed | 100 | Article ready |
+
+**Completion callback:** After Step 10 passes, send the full article to the completion API:
+
+```bash
+curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
+  -H "Authorization: Bearer {api_token}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "generated_article": {
+      "title": "{article_title}",
+      "content": "{full_html_content}",
+      "word_count": {word_count},
+      "quality_score": {quality_score},
+      "virality_score": {virality_score},
+      "framework": "{framework_name}",
+      "hook_type": "{hook_type}",
+      "emotional_arc": "{arc_type}",
+      "image_prompts": [{image_prompt_objects}],
+      "sources": [{source_objects}]
+    },
+    "research_data": {
+      "key_data_points": [{data_points}],
+      "primary_pain_point": "{pain_point}",
+      "sources": [{sources}]
+    }
+  }'
+```
+
+**Error handling:** If any step fails, report it as progress with error detail:
+```bash
+curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
+  -H "Authorization: Bearer {api_token}" \
+  -H "Content-Type: application/json" \
+  -d '{"step":"failed","percentage":{last_pct},"message":"Error at {step_name}: {error_detail}"}'
+```
+
+---
+
 ### Step 0 — INPUT COLLECTION
 
-Before generating anything, collect the following information from the user:
+**Pipeline mode:** Parse inputs from CLI flags. Set topic, audience (derive from niche/topic), goal (default: Educate), product (default: None). Report progress at 5%.
+
+**Interactive mode:** Collect the following information from the user:
 
 1. **Topic:** What is the article about? Get as specific as possible. "Marketing" is too broad. "How SaaS startups can reduce churn using onboarding emails" is specific.
 2. **Product/Service (optional):** Is there a product, service, or brand to weave into the article? If yes, get the name, what it does, and the key value proposition.
@@ -96,7 +180,7 @@ CONFIRMED INPUT:
 - Output Path: [path or "Console"]
 ```
 
-Wait for user confirmation before proceeding to Step 1.
+Wait for user confirmation before proceeding to Step 1 (interactive mode only).
 
 ---
 
@@ -122,7 +206,9 @@ TOPIC RESEARCH FINDINGS:
 - Sources Collected: [numbered list of 3-5 sources with URLs]
 ```
 
-Wait for user confirmation or adjustments before proceeding to Step 2.
+**Pipeline mode:** Auto-proceed, no confirmation needed. Report progress: `step=topic_research, percentage=10`.
+
+**Interactive mode:** Wait for user confirmation or adjustments before proceeding to Step 2.
 
 ---
 
@@ -147,7 +233,9 @@ FRAMEWORK OPTIONS:
 RECOMMENDATION: [#] — [Framework Name] because [specific reason tied to topic and goal]
 ```
 
-Wait for the user to pick a framework before proceeding to Step 3.
+**Pipeline mode:** Auto-select recommended framework. Report progress: `step=framework_selection, percentage=15`.
+
+**Interactive mode:** Wait for the user to pick a framework before proceeding to Step 3.
 
 ---
 
@@ -179,7 +267,9 @@ EMOTIONAL ARC:
   - [... etc.]
 ```
 
-Wait for user confirmation before proceeding to Step 4.
+**Pipeline mode:** Auto-proceed. Report progress: `step=emotional_arc, percentage=20`.
+
+**Interactive mode:** Wait for user confirmation before proceeding to Step 4.
 
 ---
 
@@ -206,7 +296,9 @@ HOOK [1/2/3]: [PRIMARY / SECONDARY / WILDCARD]
 - Constraint Check: [PASS/FAIL on 15-word target, 25-word max, 25-char mobile preview]
 ```
 
-Present all 3 hooks and wait for the user to pick one (or request modifications) before proceeding to Step 5.
+**Pipeline mode:** Auto-select the PRIMARY hook. Report progress: `step=hook_generation, percentage=25`.
+
+**Interactive mode:** Present all 3 hooks and wait for the user to pick one (or request modifications) before proceeding to Step 5.
 
 ---
 
@@ -277,7 +369,9 @@ PRACTICAL UTILITY SECTION:
 - Example: "[the actual header]"
 ```
 
-Wait for user approval (or revision requests) before proceeding to Step 6.
+**Pipeline mode:** Auto-proceed. Report progress: `step=outline_generation, percentage=35`.
+
+**Interactive mode:** Wait for user approval (or revision requests) before proceeding to Step 6.
 
 ---
 
@@ -314,6 +408,8 @@ Write the article following the approved outline, framework commands, and emotio
 
 Write each section sequentially. After completing the full draft, proceed to Step 7.
 
+**Pipeline mode:** Report progress: `step=article_writing, percentage=70`.
+
 ---
 
 ### Step 7 — STYLE PASS
@@ -330,6 +426,8 @@ Perform a complete editorial pass on the draft. This is a revision step — do n
 6. **AI writing pattern removal.** Scan for and eliminate: hedging language ("It's worth noting that," "One could argue that"), filler transitions ("In today's fast-paced world," "When it comes to"), passive voice where active is possible, and generic conclusions ("In conclusion," "To sum up").
 
 After completing the style pass, proceed to Step 8.
+
+**Pipeline mode:** Report progress: `step=style_pass, percentage=80`.
 
 ---
 
@@ -395,7 +493,9 @@ Image 2: Section [N] — [Section Title]
 [... remaining images ...]
 ```
 
-Wait for user approval before proceeding to Step 9.
+**Pipeline mode:** Auto-approve all image prompts. Report progress: `step=image_prompts, percentage=85`.
+
+**Interactive mode:** Wait for user approval before proceeding to Step 9.
 
 ---
 
@@ -428,6 +528,8 @@ Score the article against the 5 virality triggers. Each trigger is worth 1 point
 - **Cognitive Gap Closure failing:** Strengthen the opening gap (make the question more compelling) and improve the resolution (make it more surprising or satisfying).
 
 After applying improvements, re-score. Repeat until the article scores 3/5 or higher.
+
+**Pipeline mode:** Report progress: `step=virality_score, percentage=90`.
 
 ---
 
@@ -470,11 +572,15 @@ Score the article against 10 quality criteria. Each criterion is worth 1 point. 
 
 After fixing, re-score. Repeat until the article scores 7/10 or higher.
 
+**Pipeline mode:** Report progress: `step=quality_gate, percentage=95`.
+
 ---
 
 ### Step 11 — OUTPUT
 
 Assemble the final output with all components.
+
+**Pipeline mode:** Send the completed article to the Portfolio API via the completion callback (see Pipeline Mode section above). The `generated_article` JSON must include: `title`, `content` (full HTML), `word_count`, `quality_score`, `virality_score`, `framework`, `hook_type`, `emotional_arc`, `image_prompts` (array of prompt objects), and `sources` (array of source objects). Report final progress: `step=completed, percentage=100`.
 
 **If output path was provided in Step 0:**
 - Write the complete article to `{path}/article.md`
