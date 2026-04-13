@@ -72,9 +72,9 @@ These 16 rules apply to EVERY article generated. Violation of any rule requires 
 
 ---
 
-## 3. Workflow: Full Article Generation
+## 3. Workflow: Full Article Generation (5-Step Optimized Pipeline)
 
-Follow these steps in exact order. Do not skip steps. Do not combine steps. Present output to the user at each checkpoint before proceeding.
+Follow these 5 steps in order. Each step consolidates multiple operations for efficiency while maintaining full quality enforcement.
 
 ---
 
@@ -111,20 +111,11 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
 **Step-to-percentage mapping:**
 | Step | Name | Percentage | Description |
 |------|------|-----------|-------------|
-| 0 | input_collection | 5 | Input parsed from CLI flags |
-| 1 | topic_research | 10 | Topic research completed |
-| 2 | framework_selection | 15 | Framework selected |
-| 3 | emotional_arc | 20 | Emotional arc mapped |
-| 4 | hook_generation | 25 | Hook generated |
-| 5 | outline_generation | 35 | Full outline created |
-| 6 | article_writing | 70 | Article draft completed |
-| 7 | style_pass | 78 | Style editing pass done |
-| 7.5 | seo_optimization | 82 | SEO optimization pass done |
-| 8 | image_prompts | 85 | Image prompts generated |
-| 9 | virality_score | 90 | Virality scoring done |
-| 10 | quality_gate | 94 | Quality gate passed |
-| 10.5 | seo_score | 97 | SEO score passed |
-| 11 | completed | 100 | Article ready |
+| 1 | research | 15 | Input parsed + topic research + keyword confirmed |
+| 2 | strategy | 25 | Framework + arc + hook selected |
+| 3 | outline | 35 | Full outline with retention + image concepts |
+| 4 | writing | 85 | Article written + styled + SEO optimized + images generated |
+| 5 | completed | 100 | Triple gate passed + output delivered |
 
 **Completion callback:** After all gates pass (Quality + Virality + SEO), send the FULL data package to the Portfolio API. See `references/seo-rules-engine.md` Section 5 for the complete JSON schema.
 
@@ -216,22 +207,32 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
 
 ---
 
-### Step 0 — INPUT COLLECTION
+### Step 1 — INPUT + RESEARCH
 
-**Pipeline mode:** Parse inputs from CLI flags. Set topic, audience (derive from niche/topic), goal (default: Educate), product (default: None), keyword (from `--keyword` flag or auto-derive). Report progress at 5%.
+**Read:** `references/global-config.md`
 
-**Interactive mode:** Collect the following information from the user:
+Collect all inputs and perform comprehensive upfront research in a single step. The goal is to gather ALL data needed for the entire article so that NO additional web searches are needed during writing.
 
-1. **Topic:** What is the article about? Get as specific as possible. "Marketing" is too broad. "How SaaS startups can reduce churn using onboarding emails" is specific.
-2. **Product/Service (optional):** Is there a product, service, or brand to weave into the article? If yes, get the name, what it does, and the key value proposition.
-3. **Target Audience:** Who is reading this? Get demographics, role, experience level, and primary pain point. "Small business owners who struggle with cash flow" is better than "business people."
-4. **Article Goal:** What should the reader DO after reading? Options: Educate (learn something new), Sell (buy a product/service), Convert (sign up, download, subscribe), Engage (share, comment, discuss).
-5. **Target Keyword (optional):** Does the user have a specific SEO keyword? If yes, collect it. If no, explain that a keyword will be auto-derived during topic research (Step 1) and presented for confirmation.
-6. **Output Path (optional):** Does the user want the article written to a file? If yes, collect the directory path. If no, output to console.
+**Pipeline mode:** Parse inputs from CLI flags. Set topic, audience (derive from niche/topic), goal (default: Educate), product (default: None), keyword (from `--keyword` flag or auto-derive).
 
-If the user provides a brief or vague request, ask clarifying questions for items 1-4 before proceeding. Do not assume. Do not guess. Get explicit answers.
+**Interactive mode:** Collect from the user:
+1. **Topic:** What is the article about? Get as specific as possible.
+2. **Product/Service (optional):** Product, service, or brand to weave in.
+3. **Target Audience:** Demographics, role, experience level, primary pain point.
+4. **Article Goal:** Educate / Sell / Convert / Engage.
+5. **Target Keyword (optional):** Specific SEO keyword, or auto-derived in research below.
+6. **Output Path (optional):** File path or console.
 
-Format the collected input as a confirmation block:
+**Web research (2-3 targeted searches):**
+1. Search 1: "[topic] statistics data 2024 2025" — recent stats, benchmarks, industry data
+2. Search 2: "[topic] case study expert opinion" — real examples, expert quotes, counterarguments
+3. Search 3 (if needed): "[topic] trends impact research" — only if first 2 lack sufficient data
+4. Read top 2-3 results from snippets. Only WebFetch if snippet lacks specific data.
+5. Collect **5-8 verified data points** with source names and URLs — enough for entire article.
+6. Identify reader's primary pain point and emotional state.
+7. **Keyword research:** If keyword provided, validate it. If not, auto-derive 2-3 suggestions.
+
+**Present findings:**
 
 ```
 CONFIRMED INPUT:
@@ -239,519 +240,241 @@ CONFIRMED INPUT:
 - Product/Service: [product or "None"]
 - Target Audience: [audience]
 - Goal: [educate/sell/convert/engage]
-- Target Keyword: [keyword or "Auto-derive in Step 1"]
 - Output Path: [path or "Console"]
-```
 
-Wait for user confirmation before proceeding to Step 1 (interactive mode only).
-
----
-
-### Step 1 — TOPIC RESEARCH
-
-**Read:** `references/global-config.md` (if not already read)
-
-Perform focused web research to gather ALL verified data needed for the entire article upfront. The goal is comprehensive upfront research so that NO additional web searches are needed during writing.
-
-1. **Run 2-3 targeted web searches.** Combine search intents efficiently:
-   - Search 1: "[topic] statistics data 2024 2025" — captures recent stats, benchmarks, and industry data
-   - Search 2: "[topic] case study expert opinion" — captures real examples, expert quotes, and counterarguments
-   - Search 3 (if needed): "[topic] trends impact research" — only if first 2 searches lack sufficient data points
-   Read the top 2-3 most relevant results from search snippets. Only use WebFetch on a page if the search snippet alone does not provide enough data (numbers, quotes, specifics).
-2. **Collect 3-5 reputable sources for E-E-A-T.** Prioritize: peer-reviewed studies, government data, industry reports (McKinsey, Gartner, HubSpot, etc.), established publications, and recognized experts. Avoid: personal blogs without credentials, content farms, and unverified social media claims.
-3. **Extract ALL data points needed for the full article.** During this step, collect enough verified statistics, quotes, and examples to support the ENTIRE article (minimum 5-8 data points). These will be reused in Step 6 without additional searches. Each data point must include: the specific claim, the source name, and the source URL.
-4. **Identify the reader's primary pain point.** Based on research, define the single biggest problem the target audience faces related to this topic. This becomes the emotional anchor for the entire article.
-5. **Identify the reader's emotional state.** What does the reader feel BEFORE reading? Frustrated? Confused? Overwhelmed? Skeptical? This determines the emotional starting point for the arc.
-
-6. **Keyword research.** If a keyword was provided in Step 0, validate it (is it specific, natural, intent-matched?). If no keyword was provided, auto-derive 2-3 keyword suggestions from the topic research. Consider: search intent, specificity, natural fit in title, and audience alignment.
-
-Present findings to the user in this format:
-
-```
-TOPIC RESEARCH FINDINGS:
-- Key Data Points: [5-8 verified statistics with sources — enough for the entire article]
+RESEARCH FINDINGS:
+- Key Data Points: [5-8 verified statistics with sources]
 - Primary Pain Point: [the core problem]
 - Reader's Starting Emotion: [emotional state before reading]
-- Recommended Angle: [the unique perspective or hook angle]
-- Sources Collected: [numbered list of 3-5 sources with URLs]
+- Sources: [numbered list of 3-5 sources with URLs]
 
 KEYWORD OPTIONS:
-1. [keyword phrase] — [rationale: specificity, intent match, natural title fit]
-2. [keyword phrase] — [rationale]
-3. [keyword phrase] — [rationale]
-RECOMMENDATION: #[N] — [keyword] because [reason tied to topic + audience]
+1. [keyword] — [rationale]
+2. [keyword] — [rationale]
+3. [keyword] — [rationale]
+RECOMMENDATION: #[N] — [keyword] because [reason]
 ```
 
-User reviews keywords and confirms, modifies, or inputs a custom keyword. The confirmed keyword is used in all subsequent SEO steps.
-
-**Pipeline mode:** If `--keyword` flag provided, use it directly. Otherwise auto-derive and auto-select top recommendation. Report progress: `step=topic_research, percentage=10`.
-
-**Interactive mode:** Wait for user confirmation or adjustments before proceeding to Step 2.
+**Pipeline mode:** Auto-select keyword, auto-proceed. Report progress: `step=research, percentage=15`.
+**Interactive mode:** User reviews findings + keyword. This is informational — the main pause point is after Step 3.
 
 ---
 
-### Step 2 — FRAMEWORK SELECTION
+### Step 2 — STRATEGY
 
-**Read:** `references/frameworks-library.md`
+**Read:** `references/frameworks-library.md` + `references/emotional-arcs.md` + `references/hook-repository.md` (all three at once)
 
-Use the Decision Matrix from the frameworks library to match the article goal to the optimal framework:
+Select framework, emotional arc, and hook in a single strategy pass:
 
-1. **Map goal to framework candidates.** Each goal (educate, sell, convert, engage) maps to 2-3 frameworks that perform best for that intent.
-2. **Evaluate topic fit.** Not every framework suits every topic. A storytelling framework works for case studies but not for technical how-tos.
-3. **Present 2-3 options with rationale.** For each option, explain: why this framework fits the goal, how it structures the content, and what makes it effective for this specific topic/audience combination.
+**Framework selection:**
+1. Use Decision Matrix: match article goal to framework candidates
+2. Evaluate topic fit for each candidate
+3. Select best framework with rationale
 
-Present to the user:
+**Emotional arc selection:**
+1. Match topic to arc type using Arc Selection Guide
+2. Map arc phases to planned article sections
+3. Define pacing plan (peaks, valleys, climax placement)
+
+**Hook generation (3 hooks):**
+1. **PRIMARY:** Safest, highest-probability hook for this context
+2. **SECONDARY:** Alternative angle — different hook type, different psychological driver
+3. **WILDCARD:** Engagement Multiplier — combines two hook types (e.g., Curiosity+Numbers, HotTake+Story, Before/After+FOMO)
+4. Each hook: type, psychological driver, engagement boost %, actual text, word count, mobile preview (25 chars), constraint check
+
+**Present strategy:**
 
 ```
-FRAMEWORK OPTIONS:
-1. [Framework Name] — [1-line rationale why it fits]
-2. [Framework Name] — [1-line rationale why it fits]
-3. [Framework Name] — [1-line rationale why it fits]
+STRATEGY:
+- Framework: [selected] — [rationale]
+- Arc: [selected] ([emotion sequence])
+- Pacing: [opening] → [build] → [peak] → [shift] → [resolution]
 
-RECOMMENDATION: [#] — [Framework Name] because [specific reason tied to topic and goal]
+HOOKS:
+1. PRIMARY: [type, boost %, text]
+2. SECONDARY: [type, boost %, text]
+3. WILDCARD: [combined types, boost %, text]
 ```
 
-**Pipeline mode:** Auto-select recommended framework. Report progress: `step=framework_selection, percentage=15`.
-
-**Interactive mode:** Wait for the user to pick a framework before proceeding to Step 3.
+**Pipeline mode:** Auto-select recommended framework + arc + PRIMARY hook. Report progress: `step=strategy, percentage=25`.
+**Interactive mode:** Selections presented to user as part of the Step 3 review block.
 
 ---
 
-### Step 3 — EMOTIONAL ARC SELECTION
+### Step 3 — OUTLINE
 
-**Read:** `references/emotional-arcs.md`
+**Read:** `references/retention-engine.md` + `references/image-prompt-guide.md`
 
-Match the topic and audience to an emotional arc that will carry the reader from their starting emotion to the desired end state:
+Build the complete article structure combining framework, arc, and hook:
 
-1. **Match topic to arc type.** The emotional arc defines the reader's emotional journey from start to finish. Different topics demand different arcs (e.g., a cautionary tale uses a rise-fall arc, an inspirational piece uses a progressive build).
-2. **Present recommendation with pacing plan.** Show how the arc maps to article length — where the peaks hit, where the valleys create contrast, and where the climax lands.
-3. **Map arc phases to article sections.** Each section of the article corresponds to a phase of the emotional arc. Make this mapping explicit so the writing stays on track.
-
-Present to the user:
-
-```
-EMOTIONAL ARC:
-- Arc Type: [name]
-- Starting Emotion: [from research] → Ending Emotion: [target]
-- Pacing Plan:
-  - Opening (0-15%): [emotion + intensity]
-  - Build (15-40%): [emotion + intensity]
-  - Peak (40-60%): [emotion + intensity]
-  - Shift (60-80%): [emotion + intensity]
-  - Resolution (80-100%): [emotion + intensity]
-- Section Mapping:
-  - Section 1 → [arc phase]
-  - Section 2 → [arc phase]
-  - [... etc.]
-```
-
-**Pipeline mode:** Auto-proceed. Report progress: `step=emotional_arc, percentage=20`.
-
-**Interactive mode:** Wait for user confirmation before proceeding to Step 4.
-
----
-
-### Step 4 — HOOK GENERATION
-
-**Read:** `references/hook-repository.md`
-
-Generate exactly 3 hooks for the user to choose from:
-
-1. **PRIMARY HOOK:** The safest, highest-probability hook based on the topic and audience. Uses the single most effective hook type for this context.
-2. **SECONDARY HOOK:** An alternative angle — different hook type, different psychological driver. Provides contrast to the primary.
-3. **WILDCARD HOOK:** Uses the Engagement Multiplier technique — combines two hook types for compounding effect. Examples: Curiosity + Numbers ("The 3 metrics nobody tracks that predict startup failure"), HotTake + Story ("I fired our best salesperson — here's why revenue went up"), Before/After + FOMO ("This abandoned strategy is outperforming every growth hack in 2026").
-
-For each hook, provide:
-
-```
-HOOK [1/2/3]: [PRIMARY / SECONDARY / WILDCARD]
-- Type: [hook type from repository]
-- Psychological Driver: [why this works on the brain]
-- Engagement Boost: [estimated % from repository data]
-- Hook Text: "[the actual hook sentence]"
-- Word Count: [X] words (target: 15, max: 25)
-- Mobile Preview: "[first 25 characters]..."
-- Constraint Check: [PASS/FAIL on 15-word target, 25-word max, 25-char mobile preview]
-```
-
-**Pipeline mode:** Auto-select the PRIMARY hook. Report progress: `step=hook_generation, percentage=25`.
-
-**Interactive mode:** Present all 3 hooks and wait for the user to pick one (or request modifications) before proceeding to Step 5.
-
----
-
-### Step 5 — OUTLINE GENERATION
-
-**Read:** `references/retention-engine.md`, `references/image-prompt-guide.md`
-
-Build the complete article structure by combining the selected framework, emotional arc, and hook:
-
-1. **Map framework sections to outline.** Use the selected framework's structure as the skeleton. Each framework defines specific section types and their order.
-2. **Overlay retention techniques per section.** For each section, plan which retention techniques will be used:
-   - **Bucket brigades:** Plan placement at every major transition point
-   - **Open loops:** Plant 3+ in the first 500 words, plan where each one resolves
-   - **Nested loops:** Open new narrative threads before closing previous ones — keeps the reader trapped in unresolved tension
-   - **"Trailer moments":** Mid-article teases that preview upcoming high-value content ("In section 4, I'll show you the exact template — but first, you need to understand why most templates fail")
+1. **Map framework sections to outline** — use selected framework's structure as skeleton
+2. **Overlay retention techniques per section:**
+   - Bucket brigades at every major transition
+   - 3+ open loops in first 500 words with planned resolution points
+   - Nested loops: open new threads before closing previous ones
+   - "Trailer moments" mid-section previewing upcoming value
+   - Pattern interrupts every 300-400 words
 3. **Map neurotransmitter targets per section:**
-   - **Oxytocin** (stories, empathy, personal anecdotes) → activates medial prefrontal cortex → drives shareability
-   - **Cortisol** (stakes, urgency, consequences of inaction) → encodes into long-term memory
-   - **Dopamine** (curiosity resolution, reward delivery, surprise reveals) → creates reward anticipation loops
-4. **Plan citations.** Minimum 1 per 400 words. Map specific data points from Step 1 research to their target sections.
-5. **Plan Practical Utility section(s).** At least 1 section using the [Number] + [Superlative] + [Timeframe] + [Outcome] formula. Identify where it fits naturally in the flow.
-6. **Plan Completion-to-Share resolution.** Define the final payoff — what narrative tension gets resolved, what reward the reader receives, and what makes them want to share at that exact moment.
-7. **Plan self-reflection trigger.** Identify at least 1 section where the reader is prompted to evaluate their own situation, beliefs, or actions. Self-reflection creates personal investment in the content.
-8. **Plan image concepts per section.** Read image-prompt-guide.md Section Type to Concept Mapping. For each planned image, note the section it belongs to, the emotional moment it captures, and the visual concept direction.
+   - Oxytocin (stories/empathy → medial prefrontal cortex → shareability)
+   - Cortisol (stakes/urgency → long-term memory encoding)
+   - Dopamine (curiosity resolution/rewards → reward anticipation loops)
+4. **Plan citations** — minimum 1 per 400 words, map Step 1 data points to sections
+5. **Plan Practical Utility section** — [Number]+[Superlative]+[Timeframe]+[Outcome]
+6. **Plan Completion-to-Share resolution** — final payoff + reader reward
+7. **Plan self-reflection trigger** — at least 1 section
+8. **Plan image concepts** — 1 cover + 2-4 inline per section type to concept mapping
 
-Present the full outline:
+**INTERACTIVE MODE — SINGLE PAUSE POINT:**
+
+Present ALL accumulated work (Steps 1-3) for user review in one block:
 
 ```
-ARTICLE OUTLINE:
-Title: [working title]
-Framework: [selected]
-Arc: [selected]
-Hook: [selected]
-Target Word Count: [range]
-Target Citations: [count]
-Target Images: [count]
+====================================
+REVIEW BEFORE WRITING
+====================================
 
-SECTION BREAKDOWN:
+RESEARCH: [key data points + sources]
+KEYWORD: [confirmed keyword]
+FRAMEWORK: [selected] — [rationale]
+ARC: [selected] ([emotion sequence])
+
+HOOK OPTIONS:
+1. PRIMARY: [type, boost %, text]
+2. SECONDARY: [type, boost %, text]
+3. WILDCARD: [combined types, boost %, text]
+→ Which hook? (1/2/3)
+
+OUTLINE:
 ---
 Section 1: [Title — information gap style]
-- Arc Phase: [phase]
-- Neurotransmitter: [target]
-- Retention: [techniques planned]
-- Citation: [planned data point]
-- Image: [Yes/No — concept if yes]
-- Open Loops Planted: [count and brief description]
+- Arc Phase: [phase] | Neurotransmitter: [target]
+- Retention: [techniques] | Citation: [planned data point]
+- Image: [Yes/No — concept] | Open Loops: [count]
 ---
-Section 2: [Title]
-- Arc Phase: [phase]
-- Neurotransmitter: [target]
-- Retention: [techniques planned]
-- Citation: [planned data point]
-- Image: [Yes/No — concept if yes]
-- Nested Loop: [what opens, what from previous remains unresolved]
----
-[... continue for all sections ...]
+[... all sections ...]
 ---
 Final Section: [Title]
-- Arc Phase: Resolution
-- Completion-to-Share: [how tension resolves + reader reward]
-- Self-Reflection Trigger: [planned in section X — description]
-- Dual CTA: [Direct CTA + Transitional CTA]
+- Completion-to-Share: [resolution plan]
+- Dual CTA: [Direct + Transitional]
 ---
 
-PRACTICAL UTILITY SECTION:
-- Location: Section [N]
-- Formula: [Number] + [Superlative] + [Timeframe] + [Outcome]
-- Example: "[the actual header]"
+IMAGES: [count] planned ([cover + inline breakdown])
+
+====================================
+Approve to start writing, or request changes.
+====================================
 ```
 
-**Pipeline mode:** Auto-proceed. Report progress: `step=outline_generation, percentage=35`.
+Wait for user approval + hook selection. After approval, Steps 4-5 run without any pause.
 
-**Interactive mode:** Wait for user approval (or revision requests) before proceeding to Step 6.
-
----
-
-### Step 6 — ARTICLE WRITING (Section by Section)
-
-**Read:** `references/retention-engine.md` (if not already loaded)
-
-Write the article following the approved outline, framework commands, and emotional arc. Apply all Hard Rules throughout.
-
-**CRITICAL — No additional web searches during writing.** Use ONLY the data points, statistics, sources, and examples collected in Step 1 (Topic Research). All fact-checking was completed upfront. If you need a data point not in Step 1 research, rephrase the claim using available data or make a general observation without specific numbers. Do NOT run WebSearch or WebFetch during this step.
-
-**Opening rules:**
-- The first line of the article MUST be short. This is the Slippery Slide principle — a short first sentence creates momentum. Target: 5-8 words.
-- The hook (from Step 4) is delivered within the first 1-2 sentences.
-- Plant 3+ open loops within the first 500 words. Each loop is a question, tease, or promise that remains unresolved.
-
-**Per-section rules:**
-- **Bucket brigades** at every transition between sections and at major thought shifts within sections. Each sits on its own line and ends with a colon.
-- **Pattern interrupts** every 300-400 words. Types: tone shift (serious to conversational), vulnerability moment (personal admission), format play (single-line paragraph, rhetorical question, list break), or direct reader address.
-- **Nested loops:** Open a new narrative thread before the previous one resolves. The reader cannot leave because there are always unresolved threads pulling them forward.
-- **"Trailer Moments"** placed mid-section to preview upcoming high-value content. These function like movie trailers — they show just enough to create anticipation without delivering the payoff.
-- **Neurotransmitter targeting per section:**
-  - Oxytocin sections: Include stories, personal anecdotes, empathy-driven language. Target the medial prefrontal cortex to increase shareability.
-  - Cortisol sections: Raise stakes, create urgency, describe consequences of inaction. These sections encode into long-term memory.
-  - Dopamine sections: Resolve curiosity gaps, deliver surprising insights, provide "aha" moments. These create the reward cycle that keeps readers engaged.
-- **Citations per E-E-A-T:** Weave data points from Step 1 research naturally into the narrative. Do not dump statistics — contextualize them. "A 2025 HubSpot study found that..." is better than "(Source: HubSpot, 2025)." Use only sources already collected — no new web searches.
-- **End each section with a Zeigarnik cliffhanger.** The last line of every section (except the final one) must leave something unresolved — a question unanswered, a story unfinished, a promise unfulfilled.
-- **Slippery Slide:** Every sentence must earn the next. If a sentence does not create enough curiosity, tension, or value to pull the reader into the following sentence, rewrite it.
-- **Actionable Depth (for numbered/list sections):** When writing numbered points ("7 ways," "5 steps," etc.), each point MUST include:
-  - **What:** The specific action (1-2 sentences)
-  - **How:** Step-by-step implementation — concrete enough to follow (2-4 sentences)
-  - **Example:** Real company, tool, or person with specific numbers (2-3 sentences). NOT generic "Company X saved time."
-  - **Outcome:** Measurable result with numbers (1-2 sentences)
-  - **Pitfall** (optional): Common mistake to avoid (1-2 sentences)
-  - Minimum 150-250 words per point. A one-liner is a table of contents, not an article.
-  - Apply the "Now What?" test: can the reader start doing this within 5 minutes of reading?
-
-**Final section rules:**
-- Deliver the key insight — the single most important takeaway.
-- Include a surprise resolution — resolve the primary open loop from the introduction in an unexpected way.
-- Execute the Completion-to-Share plan — the reader should feel both satisfied (tension resolved) and energized (high-arousal emotion) simultaneously. This is the moment they share.
-- Include the self-reflection trigger if not already placed earlier.
-- Close with Dual CTA: Direct CTA for ready buyers + Transitional CTA for those not yet ready.
-
-Write each section sequentially. After completing the full draft, proceed to Step 7.
-
-**Pipeline mode:** Report progress: `step=article_writing, percentage=70`.
+**Pipeline mode:** Auto-proceed, no pause. Report progress: `step=outline, percentage=35`.
 
 ---
 
-### Step 7 — STYLE PASS
+### Step 4 — WRITE + POLISH + IMAGES
 
-**Read:** `references/style-guide.md`
+**Read:** `references/style-guide.md` + `references/seo-rules-engine.md`
 
-Perform a complete editorial pass on the draft. This is a revision step — do not skip it.
+Write the article in a single comprehensive pass, applying all rules simultaneously. Then generate image prompts. No additional web searches during this step.
 
-1. **Forbidden vocabulary scan.** Search the entire draft for: Unlock, Unleash, Supercharge, Empower, Enhance, Exceed, Maximize. Replace every instance with a concrete, specific alternative.
-2. **Paragraph length check.** No paragraph exceeds 4 lines. Split any that do. Add white space generously — it is a retention tool, not wasted space.
-3. **"So What?" test.** Read each section and ask: "If the reader stopped here, did they get a concrete benefit?" Any section that only describes without delivering value gets rewritten to lead with the benefit.
-4. **20% fluff reduction.** Cut at least 20% of filler. Targets: "very," "really," "just," "actually," "basically," "literally," "in order to," "the fact that," "it is important to note that," "it goes without saying," and any sentence that restates the previous one without adding new information.
-5. **Grade 5 readability check.** Review sentence length (target: 15-20 words average), word complexity (prefer 1-2 syllable words), and structure (active voice, subject-verb-object). If any passage reads above a Grade 7 level, simplify it.
-6. **AI writing pattern removal.** Scan for and eliminate: hedging language ("It's worth noting that," "One could argue that"), filler transitions ("In today's fast-paced world," "When it comes to"), passive voice where active is possible, and generic conclusions ("In conclusion," "To sum up").
+**CRITICAL — No additional web searches during writing.** Use ONLY data points, statistics, sources, and examples collected in Step 1. If you need a data point not in Step 1 research, rephrase using available data or make a general observation without specific numbers.
 
-After completing the style pass, proceed to Step 7.5.
+**Writing rules (applied inline, not as separate passes):**
 
-**Pipeline mode:** Report progress: `step=style_pass, percentage=78`.
+**Opening:**
+- First line MUST be short (5-8 words) — Slippery Slide principle
+- Hook delivered in first 1-2 sentences
+- 3+ open loops planted in first 500 words
 
----
+**Per-section:**
+- Bucket brigades at every transition (own line, ending with colon)
+- Pattern interrupts every 300-400 words (tone shift, vulnerability, format play)
+- Nested loops: new thread opens before previous resolves
+- "Trailer Moments" mid-section previewing upcoming content
+- Neurotransmitter targeting per section (oxytocin/cortisol/dopamine per outline)
+- Citations woven naturally from Step 1 research — no new web searches
+- Zeigarnik cliffhanger at end of each section (except final)
+- Every sentence earns the next (Slippery Slide)
+- Actionable Depth for numbered sections: What + How + Example + Outcome, 150-250 words per point, "Now What?" test
 
-### Step 7.5 — SEO OPTIMIZATION
+**Style (applied during writing, not as separate pass):**
+- Forbidden vocabulary check inline — never write Unlock/Unleash/Supercharge/Empower/Enhance/Exceed/Maximize
+- Paragraphs max 3-4 lines
+- Grade 5 readability — short sentences, common words, active voice
+- "So What?" test per section — benefit before feature
+- Write tight from the start (20% fluff reduction mindset, not a separate cut pass)
+- No AI patterns — no hedging, no filler transitions, no passive voice
 
-**Read:** `references/seo-rules-engine.md` (Sections 3 + 4)
+**SEO (applied during writing, not as separate pass):**
+- Title: 50-60 chars, keyword present naturally, 6-10 words
+- Keyword in first 100 words (woven into hook/problem)
+- Keyword in 1-2 H2/H3 headings (not stuffing)
+- Body density target 0.5-1.5%
+- All keyword placements must read naturally
 
-Optimize the article for the confirmed target keyword from Step 1. This is an optimization pass — not a scoring step. The goal is to ensure the article meets SEO thresholds BEFORE scoring in Step 10.5.
+**Final section:**
+- Key insight + surprise resolution (Completion-to-Share)
+- Self-reflection trigger if not placed earlier
+- Dual CTA: Direct + Transitional
 
-1. **Title optimization.** Check current title against SEO rules:
-   - Length: adjust to 50–60 characters if outside range
-   - Keyword: verify keyword is present naturally in the title
-   - Word count: adjust to 6–10 words if outside range
-   - Title must still follow the Information Gap rule — keyword inclusion must serve the hook, not replace it
+**After article is complete — generate image prompts:**
+- Cover image (MANDATORY): hero visual, scroll-stopping, article theme
+- 2-4 inline images at emotional turning points per outline plan
+- Count: Short 1,900w = 3, Standard 2,000-2,200w = 4, Long 2,200+ = 5
+- Prompts: 20-80 words, NO text-in-image, consistent color palette
+- Parameters: model (nano-banana-pro), style (per section type), aspect_ratio (16:9), resolution (1K)
+- Section type to concept: Problem=dark/cool, Solution=bright/warm, Data=clean/pro, Story=cinematic, CTA=aspirational
 
-2. **First 100 words.** Verify the target keyword appears within the first 100 words of the article body. If missing, weave it into the opening hook, problem statement, or first bucket brigade naturally.
-
-3. **H2/H3 headings.** Count keyword occurrences in all H2 and H3 headings:
-   - If 0: add keyword to 1–2 headings where it fits the information gap naturally
-   - If 1–2: optimal, no change needed
-   - If >3: replace some heading instances with synonyms to avoid keyword stuffing
-
-4. **Body keyword density.** Calculate: (keyword occurrences / total body words) × 100
-   - If <0.5%: add keyword naturally in topic sentences of 2–3 key sections
-   - If 0.5–1.5%: optimal, no change needed
-   - If >1.5%: replace some instances with synonyms or related terms
-
-5. **Natural integration check.** Re-read all keyword placements. If any sentence reads awkwardly due to keyword insertion, rephrase to sound natural. Readability always trumps keyword density.
-
-**Pipeline mode:** Report progress: `step=seo_optimization, percentage=82`.
-
----
-
-### Step 8 — IMAGE PROMPT GENERATION
-
-**Read:** `references/image-prompt-guide.md`
-
-Generate image prompts that complement the article's emotional journey. Images are not decoration — they are retention tools placed at emotional turning points.
-
-**Image count by article length:**
-- Short articles (under 1,900 words): 1 cover + 2 inline = 3 total
-- Standard articles (2,000-2,200 words): 1 cover + 3 inline = 4 total
-- Long articles (2,200+ words): 1 cover + 4 inline = 5 total
-
-**Image 1: FEATURE/COVER IMAGE (MANDATORY)**
-- Purpose: Hero visual that stops the scroll. Works as the article header and social share thumbnail.
-- Requirements: Must visually represent the article's core theme. Must be scroll-stopping — bold, high-contrast, emotionally resonant. Must work at thumbnail size for social media previews.
-- Style: Portrait Cinematic or Photorealistic (best performing for cover images).
-- This image is always generated first regardless of article length.
-
-**Images 2-5: INLINE IMAGES**
-- Placement: At emotional turning points within the article — not evenly spaced, but at moments where the emotional arc shifts.
-- Concept mapping by section type:
-  - **Problem sections:** Dark, tense, cool-toned imagery. Shadows, isolation, visual weight. Creates visceral discomfort that mirrors the reader's pain point.
-  - **Solution sections:** Bright, warm, expansive imagery. Open space, light, forward motion. Creates relief and hope.
-  - **Data sections:** Clean, professional, structured imagery. Geometric patterns, clear compositions, neutral tones. Signals credibility and precision.
-  - **Story sections:** Cinematic, human-centered imagery. Close-ups, natural settings, emotional expressions. Triggers empathy and connection.
-  - **CTA sections:** Aspirational, warm, inviting imagery. Depicts the desired outcome. Creates forward pull toward action.
-
-**Prompt specifications:**
-- Length: 20-80 words per prompt. Descriptive and specific — not vague.
-- NO text-in-image: Never include words, letters, numbers, or text of any kind in the image prompt. Text in AI images renders poorly and looks unprofessional.
-- Consistent color palette: All images in a single article must share a cohesive color palette. Define the palette in the cover image and carry it through.
-- Parameters for each prompt:
-  - **model:** Default `nano-banana-pro`. Use `nano-banana-2` for stylized/artistic needs. Use `imagen-4` for photorealism requiring maximum fidelity.
-  - **style:** Match the section type and emotional moment.
-  - **aspect_ratio:** Default `16:9` for blog headers and inline. Use `1:1` for social thumbnails if specified.
-  - **resolution:** Default `1K`. Use `2K` for cover images if high-res needed. Use `4K` only when explicitly requested.
-
-Present all image prompts to the user for approval:
-
-```
-IMAGE PROMPTS ([N] images):
-
-Image 1: FEATURE/COVER IMAGE
-- Concept: [1-line description]
-- Prompt: "[20-80 word prompt]"
-- Model: [model]
-- Style: [style]
-- Aspect Ratio: [ratio]
-- Resolution: [resolution]
-- Placement: Article header / social share thumbnail
-
-Image 2: Section [N] — [Section Title]
-- Concept: [1-line description]
-- Prompt: "[20-80 word prompt]"
-- Model: [model]
-- Style: [style]
-- Aspect Ratio: [ratio]
-- Resolution: [resolution]
-- Placement: After [section name] — [reason this is an emotional turning point]
-
-[... remaining images ...]
-```
-
-**Pipeline mode:** Auto-approve all image prompts. Report progress: `step=image_prompts, percentage=85`.
-
-**Interactive mode:** Wait for user approval before proceeding to Step 9.
+**Pipeline mode:** Report progress: `step=writing, percentage=85`.
 
 ---
 
-### Step 9 — VIRALITY SCORE
+### Step 5 — TRIPLE GATE + OUTPUT
 
-**Read:** `references/virality-triggers.md` (Scoring Guide section)
+**Read:** `references/virality-triggers.md` + `references/quality-gate.md` + `references/seo-rules-engine.md`
 
-Score the article against the 5 virality triggers. Each trigger is worth 1 point. The article must score 3/5 or higher to proceed.
+Score the article against ALL three gates in a single pass, then deliver the final output.
 
-**Scoring criteria:**
+**Gate 1 — Virality Score (5 triggers, min 3/5):**
+1. **Social Currency** — exclusive/insider info that makes sharer look smart
+2. **High-Arousal Emotion** — awe, excitement, productive anger (NOT contentment)
+3. **Practical Utility** — [Number]+[Superlative]+[Timeframe]+[Outcome] formula present
+4. **Identity Signaling** — reader can share to reinforce professional identity
+5. **Cognitive Gap Closure** — narrative tension resolves satisfyingly
 
-1. **Social Currency (1 point):** Does the article make the sharer look smart, informed, or ahead of the curve? Does sharing it signal insider knowledge or good taste? If the reader would feel proud posting this to their LinkedIn or Twitter, it passes.
+**Gate 2 — Quality Gate (10 criteria, min 7/10):**
+1. Clear — Grade 5 readable
+2. Concise — tight writing, no fluff
+3. Compelling — specific pain point in first 100 words
+4. Credible — 1+ citation per 400 words
+5. Nested Loops — 3+ unresolved in first 500 words
+6. Bucket Brigades — own lines with colons, 3+ present
+7. Emotional Arc — fast hook / slow build pattern
+8. Scannability — headers every 200-300 words, paragraphs max 4 lines
+9. Benefit-First + Actionable Depth — "So What?" + "Now What?" tests pass
+10. Dual CTA — Direct + Transitional present
 
-2. **High-Arousal Emotion (1 point):** Does the article trigger awe, excitement, productive anger, anxiety, or surprise? These are high-arousal emotions that drive action. Low-arousal emotions (contentment, sadness, relaxation) do NOT pass. Identify the dominant emotion and verify it is high-arousal.
+**Gate 3 — SEO Score (6 metrics, min 4/6):**
+1. Title Length — Green: 50-60 chars, Amber: 40-50/60-70, Red: <40/>70
+2. Keyword in Title — Green: present, Red: missing
+3. Title Words — Green: 6-10, Amber: 5/11-12, Red: <5/>12
+4. Body Keyword Density — Green: 0.5-1.5%, Amber: 0.3-0.5%/1.5-2.5%, Red: <0.3%/>3%
+5. Keyword in First 100 — Green: present, Red: missing
+6. Keyword in Headings — Green: 1-2, Amber: 0, Red: >3
 
-3. **Practical Utility (1 point):** Does the article contain at least one section using the [Number] + [Superlative] + [Timeframe] + [Outcome] formula? Is there actionable, immediately usable advice? Would the reader bookmark or save this for future reference?
+**If ANY gate fails:**
+- Fix failing items using per-trigger/per-criterion/per-metric strategies from reference files
+- Re-score ONLY the failed gate
+- Repeat until all three gates pass
 
-4. **Identity Signaling (1 point):** Does sharing this article say something about who the reader IS? Does it align with a group identity, professional tribe, or value system? "I'm the kind of person who reads/shares this" must be a positive statement for the target audience.
+**Assemble final output** in the standard format (Section 4). Include: metadata header, full article, image prompts, SEO score, virality score, quality gate score, sources list.
 
-5. **Cognitive Gap Closure (1 point):** Does the article open a knowledge gap early and close it satisfyingly by the end? Is the resolution surprising or counterintuitive? Does the reader feel smarter after reading?
+**Pipeline mode:** Send full completion callback JSON (see Pipeline Mode section above). Report progress: `step=completed, percentage=100`.
 
-**If score >= 3/5: PASS.** Proceed to Step 10.
+**Interactive mode:** Present the finished article with all scores.
 
-**If score < 3/5: FAIL.** Apply the following per-trigger improvement strategies:
-
-- **Social Currency failing:** Add a counterintuitive finding, an insider framework, or exclusive data that makes the sharer look informed.
-- **High-Arousal Emotion failing:** Increase stakes in the problem section, add a provocative hot take, or amplify the transformation contrast.
-- **Practical Utility failing:** Add or strengthen the Practical Utility section with a clearer [Number] + [Superlative] + [Timeframe] + [Outcome] formula.
-- **Identity Signaling failing:** Sharpen the audience targeting — make the reader feel seen. Add "If you're the kind of [role] who [specific behavior]..." language.
-- **Cognitive Gap Closure failing:** Strengthen the opening gap (make the question more compelling) and improve the resolution (make it more surprising or satisfying).
-
-After applying improvements, re-score. Repeat until the article scores 3/5 or higher.
-
-**Pipeline mode:** Report progress: `step=virality_score, percentage=90`.
-
----
-
-### Step 10 — QUALITY GATE
-
-**Read:** `references/quality-gate.md`
-
-Score the article against 10 quality criteria. Each criterion is worth 1 point. The article must score 7/10 or higher to proceed.
-
-**Scoring criteria:**
-
-1. **Clear (1 point):** Can a Grade 5 reader understand the main message? Is the thesis stated explicitly within the first 200 words? Are there zero ambiguous pronouns or unclear references?
-
-2. **Concise (1 point):** Has the 20% fluff reduction been applied? Is every sentence necessary? Are there zero instances of restating the same idea in different words?
-
-3. **Compelling (1 point):** Does the hook grab attention within 2 seconds? Are there 3+ open loops in the first 500 words? Does the article maintain forward momentum from start to finish?
-
-4. **Credible (1 point):** Is there at least 1 citation per 400 words? Are all sources reputable and verifiable? Have all factual claims been web-verified?
-
-5. **Nested Loops (1 point):** Are there narrative threads that open before previous ones close? Does the reader always have at least one unresolved question pulling them forward?
-
-6. **Bucket Brigades (1 point):** Are bucket brigades present at every major transition? Do they sit on their own line? Do they end with a colon?
-
-7. **Emotional Arc (1 point):** Does the article follow the planned emotional arc from Step 3? Are there clear emotional peaks and valleys? Does the ending deliver a high-arousal emotional payoff?
-
-8. **Scannability (1 point):** Are paragraphs 3-4 lines max? Are headers creating information gaps (not summarizing)? Is there sufficient white space? Would a scanner get the gist from headers alone?
-
-9. **Benefit-First (1 point):** Does every section pass the "So What?" test? Are benefits stated before features? Does the reader gain something from each section?
-
-10. **Dual CTA (1 point):** Is there a Direct CTA for ready buyers? Is there a Transitional CTA for those not yet ready? Are both CTAs specific and actionable?
-
-**If score >= 7/10: PASS.** Proceed to Step 11.
-
-**If score < 7/10: FAIL.** Fix issues in priority order:
-
-1. **Critical (fix first):** Clear, Credible, Compelling — these affect whether the article gets read at all.
-2. **High (fix second):** Emotional Arc, Nested Loops, Benefit-First — these affect whether the article gets finished.
-3. **Medium (fix third):** Bucket Brigades, Scannability, Dual CTA — these affect conversion and retention.
-4. **Low (fix last):** Concise — polish after structural issues are resolved.
-
-After fixing, re-score. Repeat until the article scores 7/10 or higher.
-
-**Pipeline mode:** Report progress: `step=quality_gate, percentage=94`.
-
----
-
-### Step 10.5 — SEO SCORE
-
-**Read:** `references/seo-rules-engine.md` (Section 1 — Scoring System)
-
-Score the article against the 6 SEO metrics. Each metric uses the traffic light system: Green = 1 point, Amber = 0.5 points, Red = 0 points. Maximum 6/6. Minimum 4/6 to proceed.
-
-**Scoring criteria:**
-
-1. **Title Length (1 point max):** Count characters in the title. Green: 50–60. Amber: 40–50 or 60–70. Red: <40 or >70.
-
-2. **Keyword in Title (1 point max):** Check if the target keyword (case-insensitive) is present in the title. Green: present. Red: missing. (Binary — no Amber.)
-
-3. **Title Word Count (1 point max):** Count words in the title. Green: 6–10. Amber: 5 or 11–12. Red: <5 or >12.
-
-4. **Body Keyword Density (1 point max):** Count keyword occurrences in body text, divide by total words, multiply by 100. Green: 0.5–1.5%. Amber: 0.3–0.5% or 1.5–2.5%. Red: <0.3% or >3%.
-
-5. **Keyword in First 100 Words (1 point max):** Check if keyword appears in the first 100 words. Green: present. Red: missing. (Binary — no Amber.)
-
-6. **Keyword in H2/H3 Headings (1 point max):** Count headings containing the keyword. Green: 1–2. Amber: 0. Red: >3 (keyword stuffing).
-
-Present the SEO score:
-
-```
-SEO SCORE: [N]/6 — [PASS/NEEDS OPTIMIZATION]
-Target Keyword: [keyword]
-
-| # | Metric | Value | Status |
-|---|--------|-------|--------|
-| 1 | Title Length | [N] chars | [GREEN/AMBER/RED] |
-| 2 | Keyword in Title | [Yes/No] | [GREEN/RED] |
-| 3 | Title Words | [N] words | [GREEN/AMBER/RED] |
-| 4 | Body Keyword Density | [N]% ([count]/[total]) | [GREEN/AMBER/RED] |
-| 5 | Keyword in First 100 | [Yes/No] | [GREEN/RED] |
-| 6 | Keyword in Headings | [N] times | [GREEN/AMBER/RED] |
-```
-
-**If score >= 4/6: PASS.** Proceed to Step 11.
-
-**If score < 4/6: FAIL.** Apply per-metric optimization strategies from `references/seo-rules-engine.md` Section 7. Focus on Red metrics first (0 points), then Amber (0.5 points). Re-score after fixes. Repeat until 4/6 or higher.
-
-**Pipeline mode:** Report progress: `step=seo_score, percentage=97`.
-
----
-
-### Step 11 — OUTPUT
-
-Assemble the final output with all components.
-
-**Pipeline mode:** Send the completed article to the Portfolio API via the completion callback (see Pipeline Mode section above). The `generated_article` JSON must include: `title`, `content` (full HTML), `word_count`, `quality_score`, `virality_score`, `framework`, `hook_type`, `emotional_arc`, `image_prompts` (array of prompt objects), and `sources` (array of source objects). Report final progress: `step=completed, percentage=100`.
-
-**If output path was provided in Step 0:**
-- Write the complete article to `{path}/article.md`
-- Include the full metadata header, article content, image prompts, virality score, quality gate score, and sources list
-- Confirm the file path to the user
-
-**If no output path was provided:**
-- Print the complete article to the console
-- Include all the same components as the file output
+**If output path was provided:** Write to `{path}/article.md` with full content.
+**If no output path:** Print to console.
 
 The output must follow the exact format specified in Section 4 below.
 

@@ -60,7 +60,7 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 
 ## Capabilities
 
-1. **End-to-end article generation** — topic research → framework selection → hook → outline → writing → style pass → image prompts → virality score → quality gate → output
+1. **End-to-end article generation** — research → strategy → outline → write+polish → triple gate (5-step optimized pipeline)
 2. **Triple scoring gates** — Quality Gate (10-point, min 7/10) + Virality Score (5-point, min 3/5) + SEO Score (6-point, min 4/6)
 3. **14 copywriting frameworks** — with automatic recommendation via decision matrix
 4. **8 hook types** — with engagement boost rankings and combining strategies
