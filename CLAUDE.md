@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Claude Code plugin for AI-powered long-form article writing with inline image prompt generation. 4 skills + 1 agent + 13 reference documents as RAG knowledge base. Optimized 5-step pipeline generates articles in ~6-8 minutes with five scoring gates (Quality + Virality + SEO + AI Humanization + GEO), combined 100-point scoring, and 20 hard rules enforced on every output.
+Claude Code plugin for AI-powered long-form article writing with inline image prompt generation. 7 skills + 1 agent + 13 reference documents as RAG knowledge base. Optimized 5-step pipeline generates articles in ~6-8 minutes with five scoring gates (Quality + Virality + SEO + AI Humanization + GEO), combined 100-point scoring, and 20 hard rules enforced on every output. Split pipeline architecture (article-prep → article-write → article-score) with compiled reference injection and model switching (Sonnet/Opus) for optimized backend automation.
 
 ## Architecture
 
@@ -11,12 +11,17 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 | `.claude-plugin/plugin.json` | Plugin metadata (name, version, author) |
 | `hooks/hooks.json` | SessionStart hook definition |
 | `hooks/session-start.sh` | Session start script — announces available skills |
-| `skills/article-gen/SKILL.md` | Main skill — end-to-end 5-step article generation with image prompts |
+| `skills/article-gen/SKILL.md` | Main skill — end-to-end 5-step article generation with image prompts (interactive + single-session fallback) |
+| `skills/article-prep/SKILL.md` | Pipeline-only Steps 1-3 (Research + Strategy + Outline) — runs on Sonnet with `refs-prep.md` |
+| `skills/article-write/SKILL.md` | Pipeline-only Step 4 (Write + Polish + Images) — runs on Opus with `refs-write.md` |
+| `skills/article-score/SKILL.md` | Pipeline-only Step 5 (Five Gates + Combined Score) — runs on Sonnet with `refs-score.md` |
 | `skills/article-validate/SKILL.md` | Five-gate scoring (Quality + Virality + SEO + AI Humanization + GEO) with combined 100-point score |
 | `skills/article-seo/SKILL.md` | Standalone SEO + GEO/AEO analysis (6 SEO + 5 GEO metrics, traffic light) |
 | `skills/article-brief/SKILL.md` | Brainstorm + outline with virality pre-assessment |
 | `agents/article-writer.md` | Self-contained subagent for batch article writing (mirrors 5-step pipeline with all 20 rules + 5 gates) |
+| `scripts/compile-references.sh` | Builds 3 per-skill compiled reference files from individual refs |
 | `references/` | 13 reference docs read on-demand by skills/agent |
+| `references/compiled/` | 3 compiled ref bundles for system prompt injection (`refs-prep.md`, `refs-write.md`, `refs-score.md`) |
 | `README.md` | Repo README |
 | `LICENSE` | MIT license |
 
@@ -52,12 +57,33 @@ The article-gen skill and article-writer agent both use this consolidated 5-step
 
 ### Key Pipeline Behaviors
 
-- **Interactive mode:** 1 pause point after Step 3 (user reviews research + strategy + template + outline together, selects hook). Steps 4-5 run without pause after approval.
-- **Pipeline mode:** 0 pause points. Fully automated via CLI flags with progress callbacks to Portfolio API at each step.
+- **Interactive mode:** 1 pause point after Step 3 (user reviews research + strategy + template + outline together, selects hook). Steps 4-5 run without pause after approval. Uses `article-gen` skill.
+- **Pipeline mode (single-session):** 0 pause points. Fully automated via CLI flags with progress callbacks to Portfolio API at each step. Uses `article-gen` skill as fallback.
+- **Pipeline mode (split):** Backend calls 3 separate skills: `article-prep` (Sonnet) → `article-write` (Opus) → `article-score` (Sonnet). Each skill has compiled references injected via `--append-system-prompt-file`, eliminating Read tool calls. Data flows via backend API between skills.
 - **Research efficiency:** ALL web searches happen in Step 1 only. Zero web calls during writing (Step 4). Data collected upfront: 5-8 verified data points with sources.
 - **Single-pass writing:** Step 4 applies all rules simultaneously (style, AI humanization, SEO, GEO, retention, readability) instead of separate passes.
 - **Template-driven structure:** Step 2 auto-selects from 12 content templates based on topic characteristics. Template defines section structure, word count, tone.
 - **article-writer agent:** Mirrors the exact same 5-step workflow but is self-contained (all rules inline, no "see SKILL.md" references).
+
+### Split Pipeline Architecture
+
+For optimized backend automation, the pipeline is split into 3 skills with model switching:
+
+```
+Backend → article-prep (Sonnet, refs-prep.md)     → 5%, 15%, 25%, 35%
+       → article-write (Opus, refs-write.md)       → 50%, 70%, 78%, 82%, 85%
+       → article-score (Sonnet, refs-score.md)     → 90%, 94%, 97%, 100%
+```
+
+| Compiled Ref | Contents | Size |
+|-------------|----------|------|
+| `refs-prep.md` | global-config, frameworks-library, hook-repository, emotional-arcs, content-templates | ~55 KB |
+| `refs-write.md` | global-config, style-guide, retention-engine, image-prompt-guide, seo-rules-engine | ~68 KB |
+| `refs-score.md` | style-guide, seo-rules-engine, virality-triggers, quality-gate | ~58 KB |
+
+**Data flow:** article-prep saves prep_data to backend API → article-write fetches prep_data, saves article → article-score fetches article, sends completion callback. Each skill triggers the next via `POST /continue-pipeline`.
+
+**Rebuilding compiled refs:** Run `bash scripts/compile-references.sh` after editing any reference file. Script is idempotent.
 
 ## 20 Hard Rules
 
@@ -114,6 +140,8 @@ All blocking gates must pass AND combined score must reach 70+ before an article
 - **Image Prompt Generation** — GeminiGen.AI API with nano-banana-pro (free), 3-5 images per article (1 cover + 2-4 inline), section-to-concept mapping
 - **Actionable Depth** — Numbered sections require What + How + Example + Outcome per point (150-250 words each). "Now What?" test: reader can act within 5 minutes
 - **Pipeline Mode** — Automated article generation via CLI flags (`--idea-id`, `--api-url`, `--api-token`, `--topic`, `--keyword`, `--languages`, `--instructions`) with progress callbacks to Portfolio API at each step
+- **Split Pipeline** — 3-skill architecture for backend automation: `article-prep` (Sonnet, Steps 1-3) → `article-write` (Opus, Step 4) → `article-score` (Sonnet, Step 5). Compiled references injected via `--append-system-prompt-file`, eliminating Read tool calls. Data flows between skills via backend API endpoints.
+- **Compiled References** — `scripts/compile-references.sh` builds 3 per-skill reference bundles in `references/compiled/`. Each skill loads only what it needs (~55-68 KB) instead of all 13 files (~180 KB). Rebuild after editing any reference file.
 - **Completion Callback** — Pipeline mode sends FULL structured JSON to Portfolio API on completion: `article`, `seo_analysis`, `virality_score`, `quality_gate`, `ai_humanization`, `geo_score`, `combined_score`, `image_prompts`, `research_data`. Full JSON schema in `references/seo-rules-engine.md` Section 5
 - **JS Logic Contract** — `computeSeoAnalysis(content, title, keyword)` function in `references/seo-rules-engine.md` Section 4 defines exact SEO scoring logic for Portfolio website client-side re-implementation
 
@@ -138,6 +166,8 @@ All blocking gates must pass AND combined score must reach 70+ before an article
 17. **Batch production** — via article-writer subagent for multiple articles in sequence
 18. **Fact verification** — upfront web-verify all claims (Step 1 only), zero web calls during writing, E-E-A-T citation density enforcement
 19. **Pipeline mode** — fully automated generation via CLI flags with progress callbacks and full JSON completion callback to Portfolio API
+20. **Split pipeline** — 3-skill architecture (article-prep/article-write/article-score) with model switching (Sonnet/Opus) and compiled reference injection for ~50% faster generation
+21. **Compiled references** — `scripts/compile-references.sh` builds per-skill ref bundles, eliminating Read tool calls in pipeline mode
 
 ## Technical Defaults
 
@@ -176,14 +206,23 @@ To change any configurable value (language, readability, image model, etc.):
 When changing the article generation workflow:
 1. Edit `skills/article-gen/SKILL.md` Section 3 (Workflow)
 2. Mirror the same changes in `agents/article-writer.md` (agent is self-contained, all rules inline)
-3. Update the 5-Step Pipeline table in this CLAUDE.md
-4. Keep both files in sync — they must produce identical output
+3. Mirror relevant changes in the split pipeline skills (`skills/article-prep/`, `skills/article-write/`, `skills/article-score/`)
+4. Update the 5-Step Pipeline table in this CLAUDE.md
+5. Keep all files in sync — they must produce identical output
+
+### Rebuilding Compiled References
+After editing any file in `references/`:
+1. Run `bash scripts/compile-references.sh`
+2. Verify output sizes are reasonable
+3. Redeploy compiled files to VPS if in production
 
 ### Adding a New Reference File
 1. Create `.md` file in `references/`
 2. Add entry to the Reference Files table in relevant `SKILL.md` files
 3. Add entry to `agents/article-writer.md` Reference Files table
 4. Update this CLAUDE.md file (Reference Files table + relevant Key Concepts)
+5. Add to the appropriate compiled ref bundle in `scripts/compile-references.sh`
+6. Run `bash scripts/compile-references.sh` to rebuild
 
 ### Adding a New Hard Rule
 1. Add to `skills/article-gen/SKILL.md` Section 2 (Hard Rules) — update rule count in intro
@@ -233,9 +272,13 @@ When changing the article generation workflow:
 | No current-year data | Freshness Signals need 3+ current-year references — add recent data points |
 | Web searches during writing | Step 4 must use ONLY Step 1 research — zero web calls. Check global-config.md Research Efficiency |
 | SKILL.md and agent out of sync | Both must have identical 5-step workflow with 20 rules + 5 gates — mirror changes to both files |
+| Split skills out of sync | article-prep, article-write, article-score must match article-gen's workflow — mirror changes to all |
 | SEO callback not sending | Check pipeline mode flags and completion callback JSON schema (now includes ai_humanization, geo_score, combined_score) |
+| Compiled refs outdated | Run `bash scripts/compile-references.sh` after editing any reference file |
+| Split pipeline data flow broken | Check backend API endpoints: GET /{id}, PUT /save-prep, PUT /save-article, POST /continue-pipeline |
+| Wrong model used | article-prep + article-score use Sonnet, article-write uses Opus — check backend config |
 
 ---
 
-**Version:** 2.0.0
+**Version:** 2.1.0
 **Last Updated:** April 2026

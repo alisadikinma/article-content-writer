@@ -7,6 +7,8 @@ description: End-to-end long-form article generator with inline image prompts. U
 
 End-to-end long-form article generator with inline image prompts, retention engineering, emotional arc mapping, and virality optimization.
 
+> **Split Pipeline Architecture:** For optimized pipeline execution, the backend calls three separate skills instead of this one: `/article-prep` (Steps 1-3, Sonnet) → `/article-write` (Step 4, Opus) → `/article-score` (Step 5, Sonnet). Each skill has its own compiled reference file injected via `--append-system-prompt-file`, eliminating Read tool calls. This `/article-gen` skill remains the all-in-one option for interactive use and single-session fallback when the backend calls it directly.
+
 ---
 
 ## 1. Reference Files (Read On-Demand)
