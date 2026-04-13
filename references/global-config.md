@@ -91,6 +91,8 @@
 | `punctuation` | More periods, fewer commas |
 | `perspective` | Write as if speaking to one person, not an audience |
 | `so_what_test` | Every sentence must answer "So what?" — feature without benefit = delete |
+| `now_what_test` | Every numbered point must answer "Now what?" — reader must be able to act within 5 minutes |
+| `actionable_depth` | Numbered points: minimum 150-250 words each with What + How + Example + Outcome structure |
 | `hedging` | Avoid hedging language ("might", "could potentially", "it's possible that") — be direct |
 
 ---

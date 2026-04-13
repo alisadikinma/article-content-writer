@@ -80,6 +80,8 @@ These 16 rules apply to EVERY article you produce. Violation of any single rule 
 
 17. **ALWAYS score SEO Score (6 metrics) — minimum 4/6 to publish** — Every article must be scored against the 6 SEO metrics using the traffic light system (Green=1, Amber=0.5, Red=0). Metrics: title length (50-60 chars), keyword in title, title words (6-10), body keyword density (0.5-1.5%), keyword in first 100 words, keyword in headings (1-2 times). A score below 4/6 means the article needs SEO optimization before publishing.
 
+18. **ALWAYS enforce Actionable Depth in numbered sections** — When an article includes numbered lists ("7 ways," "5 steps," etc.), each point MUST have: What (the action, 1-2 sentences), How (implementation steps, 2-4 sentences), Example (real company/tool/person + specific numbers, 2-3 sentences), Outcome (measurable result, 1-2 sentences). Minimum 150-250 words per point. Apply the "Now What?" test: can the reader start doing this within 5 minutes of reading? A one-liner with a dash explanation is a table of contents, not an article.
+
 ---
 
 ## WORKFLOW: FULL ARTICLE GENERATION
@@ -458,11 +460,17 @@ Wait for user approval before proceeding.
    - Include the self-reflection trigger
    - Place Dual CTA: Direct + Transitional
 
-8. **Practical Utility Section:**
+8. **Practical Utility Section — with Actionable Depth:**
    - Format: [Number] + [Superlative] + [Timeframe] + [Outcome]
-   - Use numbered list or step-by-step format
-   - Each item must be immediately actionable
-   - Include at least one item with a specific metric
+   - Each numbered point MUST include:
+     - **What:** The specific action (1-2 sentences)
+     - **How:** Step-by-step implementation — concrete enough to follow (2-4 sentences)
+     - **Example:** Real company, tool, or person with specific numbers (2-3 sentences). NOT generic.
+     - **Outcome:** Measurable result with numbers (1-2 sentences)
+     - **Pitfall** (optional): Common mistake to avoid (1-2 sentences)
+   - Minimum 150-250 words per point. A one-liner is a table of contents, not an article.
+   - Apply "Now What?" test: can the reader start doing this within 5 minutes?
+   - A numbered section that reads like a bullet list of tips = REWRITE with full depth
 
 ---
 

@@ -51,6 +51,7 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 - **SEO Rules Engine** — 6-metric traffic light scoring (title length, keyword in title, title words, keyword density, keyword in first 100 words, keyword in headings), 4/6 minimum, keyword auto-derive + user confirmation, JS logic contract for Portfolio website
 - **Image Prompt Generation** — GeminiGen.AI API with nano-banana-pro (free), 3-5 images per article (1 cover + 2-4 inline), section→concept mapping
 - **Forbidden Vocabulary** — 7 banned AI-sounding words (Unlock, Unleash, Supercharge, Empower, Enhance, Exceed, Maximize)
+- **Actionable Depth** — Numbered sections require What + How + Example + Outcome per point (150-250 words each). "Now What?" test: reader can act within 5 minutes. One-liners = table of contents, not article
 - **Grade 5 Readability** — Flesch-Kincaid age 9-11, conversational people-first language
 - **2025 Depth Trend** — Algorithms reward sustained attention + engagement depth over quick taps; long-form (1,900-2,400 words) outperforms micro-content
 - **Pipeline Mode** — Automated article generation via CLI flags (`--idea-id`, `--api-url`, `--api-token`, `--topic`, `--keyword`, `--languages`, `--instructions`) with progress callbacks to Portfolio API at each step
@@ -131,6 +132,8 @@ To change any configurable value (language, readability, image model, etc.):
 | Image too generic | Add article topic context to prompt — see image-prompt-guide.md best practices |
 | Readability too high | Target Grade 5 — short sentences, common words, active voice per style-guide.md |
 | Missing citations | E-E-A-T requires 1 per 400 words — verify citation placement in outline |
+| Numbered points too shallow | Each point needs What+How+Example+Outcome (150-250 words) — check style-guide.md Rule 7 Actionable Depth |
+| Reader can't act on advice | Apply "Now What?" test — can reader start within 5 minutes? Add specific tools, steps, metrics |
 | Hook too long | Max 15 words / 25 chars mobile — check hook-repository.md constraints |
 | No open loops | Zeigarnik mandates 3+ in first 500 words — check retention-engine.md |
 | No bucket brigades | Must be on own lines with colons — check retention-engine.md phrase library |

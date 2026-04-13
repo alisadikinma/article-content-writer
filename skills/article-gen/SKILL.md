@@ -68,6 +68,8 @@ These 16 rules apply to EVERY article generated. Violation of any rule requires 
 
 17. **ALWAYS score SEO Score (6 metrics) — minimum 4/6 to publish.** Every article must be scored against the 6 SEO metrics (title length, keyword in title, title words, body keyword density, keyword in first 100 words, keyword in headings). A score below 4/6 means the article is not SEO-ready. Apply optimization strategies and re-score until the threshold is met.
 
+18. **ALWAYS enforce Actionable Depth in numbered sections.** When an article includes numbered lists ("7 ways," "5 steps," etc.), each point MUST have: What (the action, 1-2 sentences), How (implementation steps, 2-4 sentences), Example (real company/tool/person + numbers, 2-3 sentences), Outcome (measurable result, 1-2 sentences). Minimum 150-250 words per point. A one-liner with a dash explanation is a table of contents, not an article. Apply the "Now What?" test: can the reader start doing this within 5 minutes?
+
 ---
 
 ## 3. Workflow: Full Article Generation
@@ -469,6 +471,14 @@ Write the article following the approved outline, framework commands, and emotio
 - **Citations per E-E-A-T:** Weave data points naturally into the narrative. Do not dump statistics — contextualize them. "A 2025 HubSpot study found that..." is better than "(Source: HubSpot, 2025)."
 - **End each section with a Zeigarnik cliffhanger.** The last line of every section (except the final one) must leave something unresolved — a question unanswered, a story unfinished, a promise unfulfilled.
 - **Slippery Slide:** Every sentence must earn the next. If a sentence does not create enough curiosity, tension, or value to pull the reader into the following sentence, rewrite it.
+- **Actionable Depth (for numbered/list sections):** When writing numbered points ("7 ways," "5 steps," etc.), each point MUST include:
+  - **What:** The specific action (1-2 sentences)
+  - **How:** Step-by-step implementation — concrete enough to follow (2-4 sentences)
+  - **Example:** Real company, tool, or person with specific numbers (2-3 sentences). NOT generic "Company X saved time."
+  - **Outcome:** Measurable result with numbers (1-2 sentences)
+  - **Pitfall** (optional): Common mistake to avoid (1-2 sentences)
+  - Minimum 150-250 words per point. A one-liner is a table of contents, not an article.
+  - Apply the "Now What?" test: can the reader start doing this within 5 minutes of reading?
 
 **Final section rules:**
 - Deliver the key insight — the single most important takeaway.

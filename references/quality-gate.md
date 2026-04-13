@@ -104,14 +104,14 @@
 
 ---
 
-### 9. Benefit-First
-**Question:** Does every section pass the "So What?" test (Benefit vs. Feature)?
+### 9. Benefit-First + Actionable Depth
+**Question:** Does every section pass both the "So What?" test AND the "Now What?" test?
 
-**PASS (1 point):** Every section leads with a reader benefit or answers "why should I care?" Features are translated into benefits. No section is purely descriptive without connecting to reader impact.
+**PASS (1 point):** Every section leads with a reader benefit ("So What?"). AND for numbered/list-based sections, each point has actionable depth — the reader can start implementing within 5 minutes of reading ("Now What?"). Each numbered point includes: What (the action), How (step-by-step), Example (real company/numbers), Outcome (measurable result). Minimum 150-250 words per numbered point.
 
-**FAIL (0 points):** Sections describe features, tools, or processes without connecting to reader benefit. Reader must work to figure out why information matters to them.
+**FAIL (0 points):** Sections describe features without benefits. OR numbered points are one-liners without implementation depth — reader knows "what" but not "how." Lists that read like a table of contents instead of actionable guidance.
 
-**Evidence format:** Check 3 random sections. For each, identify the benefit stated. If all 3 lead with benefits, PASS.
+**Evidence format:** Check 3 random sections. For each, identify the benefit AND the actionable depth. For numbered sections: check that each point has What + How + Example + Outcome. If any numbered point is a single line without implementation detail, FAIL.
 
 ---
 
