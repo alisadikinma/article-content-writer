@@ -54,7 +54,7 @@ These 16 rules apply to EVERY article generated. Violation of any rule requires 
 
 10. **ALWAYS perform a 20% fluff reduction on the second pass.** After the first draft, cut at least 20% of filler words, redundant phrases, and weak modifiers. Target: "very," "really," "just," "actually," "basically," "literally," "in order to," "the fact that," and any sentence that restates the previous one.
 
-11. **ALWAYS web-verify factual claims before including them.** Every statistic, data point, or factual claim must be verified via web search before inclusion. Do not fabricate or hallucinate data. If a claim cannot be verified, either find a verified alternative or remove it.
+11. **ALWAYS web-verify factual claims during research (Step 1).** All statistics, data points, and factual claims must be verified via web search during the research step. Collect ALL data needed for the entire article upfront. During writing (Step 6), use ONLY data and sources gathered in Step 1 — do NOT run additional web searches. If a claim cannot be supported by Step 1 research, rephrase using available data or remove it. Do not fabricate or hallucinate data.
 
 12. **NEVER exceed 25 words in the hook (15 preferred, 25 characters for mobile scannability).** The hook is the first sentence. It must be brutally short. 15 words is the target. 25 words is the absolute maximum. The social share preview on mobile shows roughly 25 characters — the hook must land within that window.
 
@@ -251,20 +251,25 @@ Wait for user confirmation before proceeding to Step 1 (interactive mode only).
 
 **Read:** `references/global-config.md` (if not already read)
 
-Perform web research on the topic to gather current, verified information:
+Perform focused web research to gather ALL verified data needed for the entire article upfront. The goal is comprehensive upfront research so that NO additional web searches are needed during writing.
 
-1. **Search for current facts and data points.** Run 3-5 web searches targeting: recent statistics (within 2 years), industry benchmarks, expert opinions, case studies, and counterarguments.
+1. **Run 2-3 targeted web searches.** Combine search intents efficiently:
+   - Search 1: "[topic] statistics data 2024 2025" — captures recent stats, benchmarks, and industry data
+   - Search 2: "[topic] case study expert opinion" — captures real examples, expert quotes, and counterarguments
+   - Search 3 (if needed): "[topic] trends impact research" — only if first 2 searches lack sufficient data points
+   Read the top 2-3 most relevant results from search snippets. Only use WebFetch on a page if the search snippet alone does not provide enough data (numbers, quotes, specifics).
 2. **Collect 3-5 reputable sources for E-E-A-T.** Prioritize: peer-reviewed studies, government data, industry reports (McKinsey, Gartner, HubSpot, etc.), established publications, and recognized experts. Avoid: personal blogs without credentials, content farms, and unverified social media claims.
-3. **Identify the reader's primary pain point.** Based on research, define the single biggest problem the target audience faces related to this topic. This becomes the emotional anchor for the entire article.
-4. **Identify the reader's emotional state.** What does the reader feel BEFORE reading? Frustrated? Confused? Overwhelmed? Skeptical? This determines the emotional starting point for the arc.
+3. **Extract ALL data points needed for the full article.** During this step, collect enough verified statistics, quotes, and examples to support the ENTIRE article (minimum 5-8 data points). These will be reused in Step 6 without additional searches. Each data point must include: the specific claim, the source name, and the source URL.
+4. **Identify the reader's primary pain point.** Based on research, define the single biggest problem the target audience faces related to this topic. This becomes the emotional anchor for the entire article.
+5. **Identify the reader's emotional state.** What does the reader feel BEFORE reading? Frustrated? Confused? Overwhelmed? Skeptical? This determines the emotional starting point for the arc.
 
-5. **Keyword research.** If a keyword was provided in Step 0, validate it (is it specific, natural, intent-matched?). If no keyword was provided, auto-derive 2-3 keyword suggestions from the topic research. Consider: search intent, specificity, natural fit in title, and audience alignment.
+6. **Keyword research.** If a keyword was provided in Step 0, validate it (is it specific, natural, intent-matched?). If no keyword was provided, auto-derive 2-3 keyword suggestions from the topic research. Consider: search intent, specificity, natural fit in title, and audience alignment.
 
 Present findings to the user in this format:
 
 ```
 TOPIC RESEARCH FINDINGS:
-- Key Data Points: [3-5 verified statistics with sources]
+- Key Data Points: [5-8 verified statistics with sources — enough for the entire article]
 - Primary Pain Point: [the core problem]
 - Reader's Starting Emotion: [emotional state before reading]
 - Recommended Angle: [the unique perspective or hook angle]
@@ -454,6 +459,8 @@ PRACTICAL UTILITY SECTION:
 
 Write the article following the approved outline, framework commands, and emotional arc. Apply all Hard Rules throughout.
 
+**CRITICAL — No additional web searches during writing.** Use ONLY the data points, statistics, sources, and examples collected in Step 1 (Topic Research). All fact-checking was completed upfront. If you need a data point not in Step 1 research, rephrase the claim using available data or make a general observation without specific numbers. Do NOT run WebSearch or WebFetch during this step.
+
 **Opening rules:**
 - The first line of the article MUST be short. This is the Slippery Slide principle — a short first sentence creates momentum. Target: 5-8 words.
 - The hook (from Step 4) is delivered within the first 1-2 sentences.
@@ -468,7 +475,7 @@ Write the article following the approved outline, framework commands, and emotio
   - Oxytocin sections: Include stories, personal anecdotes, empathy-driven language. Target the medial prefrontal cortex to increase shareability.
   - Cortisol sections: Raise stakes, create urgency, describe consequences of inaction. These sections encode into long-term memory.
   - Dopamine sections: Resolve curiosity gaps, deliver surprising insights, provide "aha" moments. These create the reward cycle that keeps readers engaged.
-- **Citations per E-E-A-T:** Weave data points naturally into the narrative. Do not dump statistics — contextualize them. "A 2025 HubSpot study found that..." is better than "(Source: HubSpot, 2025)."
+- **Citations per E-E-A-T:** Weave data points from Step 1 research naturally into the narrative. Do not dump statistics — contextualize them. "A 2025 HubSpot study found that..." is better than "(Source: HubSpot, 2025)." Use only sources already collected — no new web searches.
 - **End each section with a Zeigarnik cliffhanger.** The last line of every section (except the final one) must leave something unresolved — a question unanswered, a story unfinished, a promise unfulfilled.
 - **Slippery Slide:** Every sentence must earn the next. If a sentence does not create enough curiosity, tension, or value to pull the reader into the following sentence, rewrite it.
 - **Actionable Depth (for numbered/list sections):** When writing numbered points ("7 ways," "5 steps," etc.), each point MUST include:

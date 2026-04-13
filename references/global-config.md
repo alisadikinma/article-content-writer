@@ -108,6 +108,16 @@
 | `authoritativeness` | Detailed case studies, unique methodologies, original data | |
 | `trustworthiness` | Facts, social proof, reputable citations | Increases AI Overview feature likelihood [5] |
 
+## 8.1. Research Efficiency
+
+| Setting | Value | Rationale |
+|---------|-------|-----------|
+| `max_web_searches` | 2-3 per article | Targeted queries reduce latency while maintaining E-E-A-T |
+| `max_web_fetches` | 1-2 per article | Only fetch full pages when search snippets lack specific data |
+| `research_strategy` | Upfront-only | ALL data collected in Step 1, zero web calls during writing |
+| `min_data_points` | 5-8 per article | Enough to support 1 citation per 400 words across 2,000 words |
+| `writing_web_calls` | 0 | Writing step uses ONLY Step 1 research — no re-verification |
+
 ---
 
 ## 9. Emotional Arc Defaults
