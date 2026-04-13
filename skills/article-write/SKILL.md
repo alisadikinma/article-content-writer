@@ -225,12 +225,15 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
 }
 ```
 
-**Multi-language output:** If the prep data includes multiple languages (e.g., `["en", "id"]`), write the FULL article separately for EACH language. Do NOT translate — write natively in each language with localized examples, idioms, and cultural references. Indonesian articles use Gen-Z Bahasa (casual, conversational). The JSON payload should nest by language:
+**Single-language output:** Write the article in the PRIMARY language from prep data (first language in the list). If Indonesian (`id`), use Gen-Z Bahasa (casual, conversational, localized idioms and examples). If English (`en`), write in English. Output ONE article only — translation to other languages is handled separately after approval via Haiku (not in this step).
+
+The JSON payload uses flat format (single language):
 
 ```json
 {
-  "en": { "title": "English Title", "content": "<full English article>" },
-  "id": { "title": "Judul Indonesia", "content": "<full Indonesian article>" },
+  "title": "Article Title in primary language",
+  "content": "<full article in primary language>",
+  "language": "id",
   "word_count": 2100,
   "keyword": "target keyword",
   ...

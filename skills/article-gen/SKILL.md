@@ -468,9 +468,9 @@ Write the article in a single comprehensive pass, applying all rules simultaneou
 - Self-reflection trigger if not placed earlier
 - Dual CTA: Direct + Transitional
 
-**Multi-language output:** If `--languages` includes multiple languages (e.g., `en,id`), write the FULL article separately for EACH language. Do NOT translate — write natively in each language with localized examples, idioms, and cultural references. Indonesian articles use Gen-Z Bahasa (casual, conversational). Output format: `{ "en": { "title": "...", "content": "..." }, "id": { "title": "...", "content": "..." } }`.
+**Single-language output:** Write the article in the PRIMARY language specified by `--languages` (first language in the list). If `--languages id` or `--languages id,en`, write in Indonesian using Gen-Z Bahasa (casual, conversational, localized idioms). If `--languages en`, write in English. Output ONE article only — translation to other languages is handled separately after approval (via Haiku, not in this step).
 
-**NOTE:** Image prompts are NOT generated in this step. They are generated separately after article approval (Gate 1) using the `/article-images` skill or the admin panel's image pipeline.
+**NOTE:** Image prompts are NOT generated in this step. They are generated separately after article approval (Gate 1) using the admin panel's image pipeline.
 
 **Pipeline mode:** Report progress: `step=writing, percentage=85`.
 
