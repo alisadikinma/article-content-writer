@@ -166,3 +166,78 @@ When an article scores below 7/10, fix criteria in this order (highest impact fi
 ### Fix Recommendations (Priority Order)
 1. [Criterion]: [Specific, actionable fix]
 ```
+
+---
+
+## AI Humanization Scoring (20 Points)
+
+Measures how human-sounding the article is. Scored by deductions from a 20-point base. Uses the 3-tier word system and 36 AI pattern categories from `style-guide.md` Rules 3 + 8.
+
+### Deduction Rules
+
+| Violation Type | Deduction | Max Deduction | Source |
+|---------------|-----------|---------------|--------|
+| Tier 1 word found | -2 points per word | -10 | style-guide.md Rule 3, Tier 1 (52 words) |
+| Tier 2 cluster (2+ in same paragraph) | -1 point per violating paragraph | -5 | style-guide.md Rule 3, Tier 2 (43 words) |
+| Tier 3 density exceeded (>3%) | -1 point per word exceeding threshold | -3 | style-guide.md Rule 3, Tier 3 (12 words) |
+| AI pattern detected | -0.5 points per category found | -2 | style-guide.md Rule 8 (36 categories) |
+
+**Base score:** 20 points.
+**Final score:** max(0, 20 - total_deductions).
+**Target:** 18+ for publication-ready content.
+
+### AI Humanization Output Format
+
+```
+## AI Humanization Score: [N]/20
+
+- Tier 1 violations: [count] words found ([list of words])
+- Tier 2 clusters: [count] paragraphs with 2+ Tier 2 words
+- Tier 3 density: [word]: [N]% ([status])
+- AI patterns: [count] detected ([list of categories])
+
+Total deductions: [N] points
+```
+
+---
+
+## Combined Article Score (100-Point Scale)
+
+All scoring gates combine into a single weighted score. This provides a holistic quality assessment.
+
+### Weight Table
+
+| Category | Source | Raw Score | Weight | Weighted Max |
+|----------|--------|-----------|--------|-------------|
+| Content Quality | Quality Gate (10 criteria) | 0-10 | x3 | 30 pts |
+| Virality | Virality Score (5 triggers) | 0-5 | x4 | 20 pts |
+| SEO | SEO Score (6 metrics) | 0-6 | x2.5 | 15 pts |
+| AI Humanization | AI Humanization check | 0-20 | x1 | 20 pts |
+| GEO/AEO Readiness | GEO Score (5 metrics) | 0-5 | x3 | 15 pts |
+| **Total** | | | | **100 pts** |
+
+### Scoring Bands
+
+| Band | Score | Meaning |
+|------|-------|---------|
+| Exceptional | 90-100 | Top-tier content ready for premium publication |
+| Strong | 80-89 | High quality, minor improvements possible |
+| Acceptable | 70-79 | Meets minimum standard for publication |
+| Below Standard | 60-69 | Needs significant revision before publishing |
+| Rewrite | <60 | Fundamental issues — start over or major overhaul |
+
+**Minimum to publish: 70 (Acceptable)**
+
+### Combined Score Output Format
+
+```
+## Combined Article Score: [N]/100 — [BAND]
+
+| Category | Raw | Weight | Score |
+|----------|-----|--------|-------|
+| Content Quality | [N]/10 | x3 | [N]/30 |
+| Virality | [N]/5 | x4 | [N]/20 |
+| SEO | [N]/6 | x2.5 | [N]/15 |
+| AI Humanization | [N]/20 | x1 | [N]/20 |
+| GEO/AEO | [N]/5 | x3 | [N]/15 |
+```

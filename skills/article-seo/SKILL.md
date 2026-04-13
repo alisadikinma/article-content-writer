@@ -5,7 +5,7 @@ description: SEO analysis and optimization for any article. Scores 6 SEO metrics
 
 # Article SEO — Search Optimization Analyzer
 
-Standalone SEO analysis and optimization. Scores 6 metrics using a green/amber/red traffic light system with minimum 4/6 to pass.
+Standalone SEO analysis and optimization. Scores 6 SEO metrics + 5 GEO metrics using a green/amber/red traffic light system. SEO minimum 4/6, GEO contributes to combined score.
 
 ## Reference Files
 
@@ -89,9 +89,23 @@ Count how many H2 (`##`) and H3 (`###`) headings contain the target keyword (cas
 | AMBER | 0 headings contain keyword | 0.5 |
 | RED | >3 headings contain keyword (stuffing) | 0 |
 
+### Step 2.5 — GEO/AEO ANALYSIS (5 metrics)
+
+Read `references/seo-rules-engine.md` Sections 8 + 9 for GEO scoring criteria.
+
+Score all 5 GEO metrics using the traffic light system (Green = 1 pt, Amber = 0.5 pt, Red = 0 pt):
+
+1. **Answer-First H2s** — Check each H2 section opening for a 40-60 word stat-rich paragraph that directly answers the heading. Green: all comply. Amber: 50%+ comply. Red: <50%.
+2. **Passage Citability** — Assess whether key sections are structured as 50-150 word self-contained extractable chunks. Green: all key sections. Amber: most. Red: few or none.
+3. **FAQ Presence** — Count FAQ-format Q&A pairs with 40-60 word answers. Green: 2+. Amber: 1. Red: none.
+4. **Entity Clarity** — Check whether factual claims name specific entities (people, companies, studies) + dates. Green: all claims. Amber: most. Red: vague attributions.
+5. **Freshness Signals** — Count current-year references in the content. Green: 3+. Amber: 1-2. Red: none.
+
+For each metric, provide specific evidence and quote examples from the article.
+
 ### Step 3 — REPORT
 
-Generate the full SEO analysis report:
+Generate the full SEO + GEO analysis report:
 
 1. **Overall verdict**: Sum all points. PASS if >= 4/6, NEEDS OPTIMIZATION if < 4/6.
 2. **Traffic light table**: All 6 metrics with exact measured values, status color, and points awarded.
@@ -161,8 +175,21 @@ After optimization is applied, re-run the full 6-metric analysis on the updated 
 ### Strengths
 [What is already well-optimized — list GREEN metrics and why they work]
 
+### GEO Score: [N]/5
+| # | Metric | Value | Status | Points |
+|---|--------|-------|--------|--------|
+| 1 | Answer-First H2s | [X/Y comply] | [GREEN/AMBER/RED] | [1/0.5/0] |
+| 2 | Passage Citability | [assessment] | [GREEN/AMBER/RED] | [1/0.5/0] |
+| 3 | FAQ Presence | [count] pairs | [GREEN/AMBER/RED] | [1/0.5/0] |
+| 4 | Entity Clarity | [assessment] | [GREEN/AMBER/RED] | [1/0.5/0] |
+| 5 | Freshness Signals | [count] current-year refs | [GREEN/AMBER/RED] | [1/0.5/0] |
+
+### GEO Recommendations
+[For each RED metric: specific fix with example]
+[For each AMBER metric: improvement to reach GREEN]
+
 ### Overall Assessment
-[2-3 sentence summary: SEO health, biggest win, highest-impact next action]
+[2-3 sentence summary: SEO + GEO health, biggest win, highest-impact next action]
 ```
 
 For re-scores after optimization, use this extended format:

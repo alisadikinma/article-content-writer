@@ -184,3 +184,58 @@
 | `keyword_density_optimal` | 0.5–1.5% |
 | `keyword_in_headings_optimal` | 1–2 times (>3 = stuffing) |
 | `reference` | See seo-rules-engine.md for full scoring guide + JS logic contract |
+
+---
+
+## 13. AI Humanization
+
+| Setting | Value |
+|---------|-------|
+| `ai_word_tiers` | 3 (Tier 1: always replace, Tier 2: cluster flag, Tier 3: density flag) |
+| `tier1_word_count` | 52 (always replace on sight) |
+| `tier2_word_count` | 43 (flag when 2+ in same paragraph) |
+| `tier3_word_count` | 12 (flag when >3% density) |
+| `ai_pattern_categories` | 36 (4 groups: Structural 10, Language 12, Tone 8, Advanced 6) |
+| `ai_humanization_max_score` | 20 points (deduction-based) |
+| `reference` | See style-guide.md Rules 3 + 8 |
+
+---
+
+## 14. GEO/AEO Readiness
+
+| Setting | Value |
+|---------|-------|
+| `geo_minimum` | Not a blocking gate (contributes to combined score) |
+| `geo_metrics_count` | 5 |
+| `answer_first_target` | 40-60 words per H2 opening paragraph |
+| `passage_citability_target` | 50-150 word self-contained chunks |
+| `faq_minimum` | 2 Q&A pairs with 40-60 word answers |
+| `freshness_target` | 3+ current-year references |
+| `reference` | See seo-rules-engine.md Sections 8 + 9 |
+
+---
+
+## 15. Combined Scoring
+
+| Setting | Value |
+|---------|-------|
+| `combined_score_max` | 100 points |
+| `combined_minimum` | 70 (Acceptable band) |
+| `scoring_bands` | Exceptional (90-100), Strong (80-89), Acceptable (70-79), Below Standard (60-69), Rewrite (<60) |
+| `content_weight` | Quality Gate x3 = 30 pts max |
+| `virality_weight` | Virality Score x4 = 20 pts max |
+| `seo_weight` | SEO Score x2.5 = 15 pts max |
+| `humanization_weight` | AI Humanization x1 = 20 pts max |
+| `geo_weight` | GEO Score x3 = 15 pts max |
+| `reference` | See quality-gate.md Combined Article Score section |
+
+---
+
+## 16. Content Templates
+
+| Setting | Value |
+|---------|-------|
+| `template_count` | 12 |
+| `template_auto_select` | Yes — based on topic characteristics |
+| `template_override` | User can override auto-selection |
+| `reference` | See content-templates.md |

@@ -1,16 +1,16 @@
 ---
 name: article-validate
-description: Triple scoring gate (Quality 10-point + Virality 5-point + SEO 6-point) for any article or blog post. Use when the user wants to check, score, audit, or improve an existing article's quality, shareability, and search optimization. Triggers on validate, score, check article, quality gate, audit article, review article, virality check, SEO check, cek artikel, or any request to evaluate written content.
+description: Five-gate scoring (Quality 10-point + Virality 5-point + SEO 6-point + AI Humanization 20-point + GEO 5-point) with combined 100-point score for any article or blog post. Use when the user wants to check, score, audit, or improve an existing article's quality, shareability, search optimization, AI humanization, or GEO readiness. Triggers on validate, score, check article, quality gate, audit article, review article, virality check, SEO check, cek artikel, or any request to evaluate written content.
 ---
 
-# Article Validator — Triple Scoring Gate
+# Article Validator — Five-Gate Scoring + Combined 100-Point Score
 
-Scores any article against three gates: Quality (10-point, min 7/10), Virality (5-point, min 3/5), and SEO (6-point, min 4/6).
+Scores any article against five gates: Quality (10-point, min 7/10), Virality (5-point, min 3/5), SEO (6-point, min 4/6), AI Humanization (20-point), and GEO (5-point). Calculates a combined 100-point weighted score with minimum 70 to publish.
 
 ## Reference Files
 
-- ALWAYS read: `references/global-config.md` + `references/quality-gate.md` + `references/virality-triggers.md` + `references/seo-rules-engine.md`
-- For detailed checks: + `references/style-guide.md` + `references/retention-engine.md` + `references/hook-repository.md`
+- ALWAYS read: `references/global-config.md` + `references/quality-gate.md` + `references/virality-triggers.md` + `references/seo-rules-engine.md` + `references/style-guide.md`
+- For detailed checks: + `references/retention-engine.md` + `references/hook-repository.md`
 
 ## Workflow: Article Validation
 
@@ -52,6 +52,33 @@ Score each metric using the traffic light system (Green = 1 pt, Amber = 0.5 pt, 
 
 For each metric, report the exact value and traffic light status. If scoring Red, explain what specifically needs to change and where.
 
+### Step 2.7 — AI HUMANIZATION SCORING (20 points)
+
+Read `references/style-guide.md` Rules 3 + 8 before scoring this section.
+
+Score by deductions from a 20-point base:
+
+1. **Tier 1 scan** — Check for ALL 52 Tier 1 words. Each found = -2 points (max -10). List every violation.
+2. **Tier 2 cluster scan** — Check each paragraph for 2+ Tier 2 words. Each violating paragraph = -1 point (max -5). Quote the cluster.
+3. **Tier 3 density scan** — Check each of the 12 Tier 3 words. If any exceeds 3% density = -1 point per word (max -3). Report the density.
+4. **AI pattern scan** — Check for all 36 AI pattern categories. Each detected = -0.5 points (max -2). Name the pattern category and quote the offending passage.
+
+Final score: max(0, 20 - total_deductions).
+
+### Step 2.8 — GEO SCORING (5 metrics)
+
+Read `references/seo-rules-engine.md` Sections 8 + 9 before scoring this section.
+
+Score each metric using the traffic light system (Green = 1 pt, Amber = 0.5 pt, Red = 0 pt):
+
+1. **Answer-First H2s** — Check each H2 section opening. Green: all H2s open with 40-60 word fact paragraph. Amber: 50%+ comply. Red: <50% comply.
+2. **Passage Citability** — Assess whether key sections are 50-150 word self-contained extractable chunks. Green: all key sections. Amber: most. Red: few or none.
+3. **FAQ Presence** — Count FAQ-format Q&A pairs with 40-60 word answers. Green: 2+. Amber: 1. Red: none.
+4. **Entity Clarity** — Check whether claims name specific entities + dates. Green: all claims. Amber: most. Red: vague attributions.
+5. **Freshness Signals** — Count current-year references. Green: 3+. Amber: 1-2. Red: none.
+
+For each metric, provide specific evidence and quote examples.
+
 ### Step 3 — QUALITY SCORING (10 criteria)
 
 Read `references/quality-gate.md` before scoring this section.
@@ -73,18 +100,23 @@ For each criterion, provide specific evidence (quote the line that passes/fails)
 
 ### Step 4 — REPORT
 
-Present ALL THREE scored checklists with evidence.
+Present ALL FIVE scored gates with evidence, then the combined 100-point score.
 
 - **Virality Score:** [N]/5 — PASS (>= 3) or NEEDS BOOST (< 3)
 - **SEO Score:** [N]/6 — PASS (>= 4) or NEEDS OPTIMIZATION (< 4)
+- **AI Humanization:** [N]/20 — report deductions
+- **GEO Score:** [N]/5 — report per metric
 - **Quality Score:** [N]/10 — PASS (>= 7) or NEEDS REVISION (< 7)
-- **Combined verdict:** PUBLISH READY (all three pass) / NEEDS WORK (any fails)
+- **Combined Score:** [N]/100 — [BAND] (Exceptional/Strong/Acceptable/Below Standard/Rewrite)
+- **Combined verdict:** PUBLISH READY (Combined >= 70 AND Quality >= 7 AND Virality >= 3 AND SEO >= 4) / NEEDS WORK (any fails)
 - For each failing criterion/trigger: specific, actionable fix recommendation with an example rewrite of the offending passage.
 - Priority order for fixes (highest-impact first per `references/quality-gate.md` revision priority guide):
   1. Failing criteria that block the quality gate (score < 7)
   2. Failing triggers that block the virality gate (score < 3)
-  3. Remaining failing criteria (nice-to-have improvements)
-  4. Remaining failing triggers (shareability uplift)
+  3. SEO metrics scoring Red
+  4. AI Humanization violations (highest deduction first)
+  5. GEO metrics scoring Red
+  6. Remaining improvements to push Combined Score higher
 
 ### Step 5 — OPTIONAL REVISION
 
@@ -142,13 +174,37 @@ If user wants fixes applied:
 2. [Criterion/Trigger]: [Specific fix recommendation with example rewrite]
 ...
 
+### AI Humanization Score: [N]/20
+- Tier 1 violations: [count] words found ([list])
+- Tier 2 clusters: [count] paragraphs with 2+ Tier 2 words
+- Tier 3 density: [word]: [N]% ([status])
+- AI patterns: [count] detected ([list])
+
+### GEO Score: [N]/5
+| # | Metric | Value | Status |
+|---|--------|-------|--------|
+| 1 | Answer-First H2s | [X/Y comply] | [GREEN/AMBER/RED] |
+| 2 | Passage Citability | [assessment] | [GREEN/AMBER/RED] |
+| 3 | FAQ Presence | [count] pairs | [GREEN/AMBER/RED] |
+| 4 | Entity Clarity | [assessment] | [GREEN/AMBER/RED] |
+| 5 | Freshness Signals | [count] current-year refs | [GREEN/AMBER/RED] |
+
+### Combined Article Score: [N]/100 — [BAND]
+| Category | Raw | Weight | Score |
+|----------|-----|--------|-------|
+| Content Quality | [N]/10 | x3 | [N]/30 |
+| Virality | [N]/5 | x4 | [N]/20 |
+| SEO | [N]/6 | x2.5 | [N]/15 |
+| AI Humanization | [N]/20 | x1 | [N]/20 |
+| GEO/AEO | [N]/5 | x3 | [N]/15 |
+
 ### Strengths
 - [What the article does well — call out at least 3 specific strengths with quotes]
 ```
 
 ## Rules
 
-- NEVER skip a criterion, trigger, or metric. Score all 21 items every time (10 quality + 5 virality + 6 SEO).
+- NEVER skip a criterion, trigger, or metric. Score all 5 gates every time (10 quality + 5 virality + 6 SEO + 20 humanization + 5 GEO).
 - NEVER assign a score without quoting evidence from the article.
 - NEVER inflate scores — if in doubt, score 0 and explain why.
 - ALWAYS read the reference files before scoring. The scoring definitions in the reference files override any conflicting definitions in this skill file.

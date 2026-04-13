@@ -1,6 +1,6 @@
 # Style Guide: Technical Writing Rules for Article Quality
 
-> These 6 rules form the style enforcement layer. Every article draft must pass through ALL rules before quality gate scoring.
+> These 8 rules form the style enforcement layer. Every article draft must pass through ALL rules before quality gate scoring.
 
 ---
 
@@ -38,32 +38,139 @@ Every sentence must answer the reader's unconscious question: "So what? Why shou
 
 ---
 
-## Rule 3: Forbidden Vocabulary
+## Rule 3: AI Word Replacement System (107 Words, 3 Tiers)
 
-**DO NOT USE these 7 words:**
+**Three-tier system for detecting and replacing AI-sounding vocabulary.** Words are classified by how strongly they signal machine-generated text.
 
-| Forbidden Word | Why | Use Instead |
-|---------------|-----|-------------|
-| Unlock | AI cliche, overused, empty verb | Find, discover, access, open up |
-| Unleash | Dramatic without substance | Put to work, apply, use |
-| Supercharge | Hyperbolic, triggers skepticism | Speed up, boost, accelerate |
-| Empower | Corporate jargon, vague | Give the tools, enable, help |
-| Enhance | Bland, says nothing specific | Improve, sharpen, strengthen |
-| Exceed | Promises without specifics | Beat, outperform, go beyond |
-| Maximize | Business-speak, impersonal | Get the most from, make the most of |
+### Tier 1 — Always Replace (52 words)
 
-**Additional AI Writing Patterns to Avoid:**
+These appear 5-20x more frequently in AI text than human text. Replace on sight. Zero tolerance.
 
-| Pattern | Example | Fix |
-|---------|---------|-----|
-| Hedging language | "It could potentially help you..." | "It helps you..." — be direct |
-| Filler transitions | "In today's fast-paced world..." | Delete. Start with the point. |
-| Listicle padding | "Another great option is..." | Lead with the specific value |
-| Empty superlatives | "This incredible tool is amazing" | "This tool cut our load time by 40%" |
-| Passive voice | "Mistakes were made" | "We made mistakes" |
-| Throat-clearing | "It's worth noting that..." | Delete. Just note it. |
-| Weasel words | "Many experts believe..." | Name the expert or cite the source |
-| Double hedging | "It might possibly..." | Pick one or commit |
+| Replace | With |
+|---------|------|
+| delve / delve into | explore, dig into, look at |
+| landscape (metaphor) | field, space, industry, world |
+| tapestry | describe the actual complexity |
+| realm | area, field, domain |
+| paradigm | model, approach, framework |
+| embark | start, begin |
+| beacon | rewrite entirely |
+| testament to | shows, proves, demonstrates |
+| robust | strong, reliable, solid |
+| comprehensive | thorough, complete, full |
+| cutting-edge | latest, newest, advanced |
+| leverage (verb) | use |
+| pivotal | important, key, critical |
+| underscores | highlights, shows |
+| meticulous / meticulously | careful, detailed, precise |
+| seamless / seamlessly | smooth, easy, without friction |
+| game-changer / game-changing | describe what specifically changed |
+| utilize | use |
+| watershed moment | turning point, shift |
+| nestled | is located, sits |
+| vibrant | describe what makes it active, or cut |
+| thriving | growing, active |
+| showcasing | showing, demonstrating |
+| deep dive / dive into | look at, examine, explore |
+| unpack / unpacking | explain, break down, walk through |
+| bustling | busy, active |
+| intricate / intricacies | complex, detailed |
+| ever-evolving | changing, growing |
+| daunting | hard, difficult, challenging |
+| holistic / holistically | complete, full, whole |
+| actionable | practical, useful, concrete |
+| impactful | effective, significant |
+| learnings | lessons, findings, takeaways |
+| thought leader / thought leadership | expert, authority |
+| best practices | what works, proven methods |
+| at its core | cut — just state the thing |
+| synergy / synergies | describe actual combined effect |
+| interplay | relationship, connection |
+| in order to | to |
+| due to the fact that | because |
+| serves as | is |
+| features (verb) | has, includes |
+| boasts | has |
+| commence | start, begin |
+| ascertain | find out, determine |
+| endeavor | effort, attempt, try |
+| symphony (metaphor) | describe actual coordination |
+| embrace (metaphor) | adopt, accept, use |
+| unlock | find, discover, access |
+| unleash | release, enable, put to work |
+| supercharge | speed up, boost |
+| enhance | improve, sharpen, strengthen |
+| exceed | beat, outperform |
+| maximize | get the most from |
+
+### Tier 2 — Flag in Clusters (43 words)
+
+Individually fine. **2+ in the same paragraph = AI signal.** Replace extras to break the cluster.
+
+| Replace | With |
+|---------|------|
+| harness | use, take advantage of |
+| navigate / navigating | work through, handle |
+| foster | encourage, support, build |
+| elevate | improve, raise |
+| streamline | simplify, speed up |
+| empower | enable, let, allow |
+| bolster | support, strengthen |
+| spearhead | lead, drive |
+| resonate / resonates with | connect with, matter to |
+| revolutionize | change, reshape |
+| facilitate | enable, help, allow |
+| underpin | support, form the basis of |
+| nuanced | specific, subtle |
+| crucial | important, key |
+| multifaceted | describe actual facets |
+| ecosystem (metaphor) | system, community, market |
+| myriad | many |
+| plethora | many, a lot of |
+| encompass | include, cover |
+| catalyze | start, trigger |
+| reimagine | rethink, redesign |
+| augment | add to, expand |
+| cultivate | build, develop, grow |
+| illuminate | clarify, explain |
+| elucidate | explain, spell out |
+| juxtapose | compare, contrast |
+| paradigm-shifting | describe what actually shifted |
+| transformative / transformation | describe what changed and how |
+| cornerstone | foundation, key part |
+| paramount | most important |
+| poised (to) | ready, about to |
+| burgeoning | growing, emerging |
+| nascent | new, early-stage |
+| quintessential | typical, classic |
+| overarching | main, central |
+| galvanize | motivate, rally |
+| underpinning / underpinnings | basis, foundation |
+| optimal / optimize | best, improve |
+| stakeholder | people involved, team, customer |
+| bandwidth | time, capacity |
+| synergize | work together |
+| ideate | brainstorm, plan |
+| iterate | repeat, refine, try again |
+
+### Tier 3 — Flag at High Density (12 words)
+
+Only flag when **>3% of total words.** These are normal words that become AI signals at high density.
+
+| Word | Replace with |
+|------|-------------|
+| significant / significantly | cite specific numbers |
+| innovative / innovation | describe what's actually new |
+| effective / effectively | say how or cite a metric |
+| dynamic / dynamics | name actual forces or changes |
+| scalable / scalability | describe what scales and to what |
+| compelling | say why it compels |
+| unprecedented | name the precedent it breaks |
+| exceptional / exceptionally | cite what makes it the exception |
+| remarkable / remarkably | say what's worth remarking on |
+| sophisticated | describe the sophistication |
+| instrumental | say what role it played |
+| world-class / state-of-the-art / best-in-class | cite benchmark or comparison |
 
 ---
 
@@ -202,17 +309,81 @@ The "Now What?" test extends the "So What?" test. "So What?" ensures benefit. "N
 
 ---
 
+## Rule 8: AI Pattern Detection (36 Categories)
+
+**Detect and eliminate structural, linguistic, tonal, and advanced patterns that signal AI-generated text.** These patterns are invisible to the writer but obvious to experienced readers and AI detection systems.
+
+### Structural Patterns (10)
+
+| # | Pattern | Fix |
+|---|---------|-----|
+| 1 | Em-dash overuse | Replace with commas, periods, or rewrite the sentence |
+| 2 | Bold overuse | Strip most bold; restructure sentences to emphasize through word choice |
+| 3 | Excessive bullet lists | Convert to prose paragraphs — not everything needs a list |
+| 4 | Compulsive rule of three | Vary groupings — use two or four instead of always three |
+| 5 | Numbered list inflation | Use lists only when items are genuinely parallel |
+| 6 | Inline-header lists | Remove bold headers within lists; write directly |
+| 7 | Title case headings | Use sentence case for subheadings (capitalize first word only) |
+| 8 | Uniform paragraph length | Vary sentence and paragraph lengths — mix short and long |
+| 9 | Missing bridge sentences | Add connective tissue between paragraphs |
+| 10 | Excessive structure | Too many headers or lists — let prose breathe |
+
+### Language Patterns (12)
+
+| # | Pattern | Fix |
+|---|---------|-----|
+| 11 | Formulaic openings | Lead with news or insight, not broad context ("In today's world...") |
+| 12 | "It's not X — it's Y" construction | Rewrite as a direct positive statement |
+| 13 | Hollow intensifiers | Cut "genuine", "real", "truly", "quite frankly" |
+| 14 | Hedging language | Cut "perhaps", "could potentially", "it's important to note" |
+| 15 | Copula avoidance | Default to "is" or "has" instead of fancy substitutes |
+| 16 | Synonym cycling | Repeat the clearest word instead of forcing variation |
+| 17 | Vague attributions | Name specific sources or drop the attribution entirely |
+| 18 | Transition phrase overuse | Replace "Moreover", "Furthermore", "Additionally" with direct flow |
+| 19 | Superficial -ing analyses | Replace present-participle chains with specific facts |
+| 20 | Promotional language | Replace tourism-brochure prose with plain description |
+| 21 | Formulaic challenges | Name actual challenges, not vague resilience claims |
+| 22 | False ranges | List actual topics instead of unrelated extremes ("from X to Y") |
+
+### Tone Patterns (8)
+
+| # | Pattern | Fix |
+|---|---------|-----|
+| 23 | Generic conclusions | Cut "The future looks bright", "Only time will tell" |
+| 24 | Chatbot artifacts | Remove "I hope this helps!", "Great question!" |
+| 25 | "Let's" constructions | Cut transition-functioning "let's"; start with the point |
+| 26 | Sycophantic tone | Remove conversational rewards validating the reader |
+| 27 | Acknowledgment loops | Cut restatements of the prompt or prior section |
+| 28 | Emotional flatline | Show emotion through content, not by announcing it |
+| 29 | Confidence calibration phrases | Cut "Interestingly", "Notably", "It's worth noting" |
+| 30 | Rhetorical question openers | State the answer directly instead |
+
+### Advanced Patterns (6)
+
+| # | Pattern | Fix |
+|---|---------|-----|
+| 31 | Notability name-dropping | Use one specific source with context, not a list of famous names |
+| 32 | Parenthetical hedging | Give asides their own sentence or cut them |
+| 33 | Vague endorsement ("worth verbing") | Replace with specific reasons why |
+| 34 | False concession structure | Make concessions specific or pick a side |
+| 35 | Reasoning chain artifacts | State conclusions then evidence; cut scaffolding |
+| 36 | Cutoff disclaimers | Remove "As of my last update" or "I don't have real-time data" |
+
+---
+
 ## Style Pass Checklist
 
 Run this checklist on every draft before quality gate scoring:
 
 - [ ] No paragraph exceeds 4 lines
 - [ ] Every section passes the "So What?" test (benefit, not feature)
-- [ ] Zero forbidden vocabulary words present
+- [ ] Tier 1 words: zero present (scan all 52)
+- [ ] Tier 2 words: no clusters (max 1 per paragraph)
+- [ ] Tier 3 words: density under 3%
+- [ ] AI patterns: none of the 36 categories detected
 - [ ] 20% fluff reduction pass completed
 - [ ] Readability at Grade 5 level (short sentences, common words, active voice)
 - [ ] Minimum 1 citation per 400 words (E-E-A-T density)
-- [ ] No AI writing patterns present (hedging, filler, passive voice, empty superlatives)
 - [ ] No weasel words or unattributed claims
 - [ ] Every numbered point passes "Now What?" test (reader can act within 5 minutes)
 - [ ] Numbered points have minimum structure: What + How + Example + Outcome (150-250 words each)

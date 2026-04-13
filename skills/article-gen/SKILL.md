@@ -24,6 +24,7 @@ Before any task, read the relevant reference files. ALWAYS read `global-config.m
 | Image prompts | + `references/image-prompt-guide.md` |
 | Style editing | + `references/style-guide.md` |
 | SEO optimization | + `references/seo-rules-engine.md` |
+| Content templates | + `references/content-templates.md` |
 | Final scoring | + `references/quality-gate.md` |
 
 **How to use this table:** Each row adds (+) to the base requirement. For example, when writing the body you read `global-config.md` first, then `retention-engine.md`. Multiple tasks in one step means reading all listed files for those tasks.
@@ -32,7 +33,7 @@ Before any task, read the relevant reference files. ALWAYS read `global-config.m
 
 ## 2. Hard Rules (NON-NEGOTIABLE)
 
-These 16 rules apply to EVERY article generated. Violation of any rule requires immediate correction before output.
+These 20 rules apply to EVERY article generated. Violation of any rule requires immediate correction before output.
 
 1. **NEVER use forbidden vocabulary.** The following words are permanently banned from all output: Unlock, Unleash, Supercharge, Empower, Enhance, Exceed, Maximize. If any of these appear during writing, replace immediately with concrete, specific alternatives.
 
@@ -54,7 +55,7 @@ These 16 rules apply to EVERY article generated. Violation of any rule requires 
 
 10. **ALWAYS perform a 20% fluff reduction on the second pass.** After the first draft, cut at least 20% of filler words, redundant phrases, and weak modifiers. Target: "very," "really," "just," "actually," "basically," "literally," "in order to," "the fact that," and any sentence that restates the previous one.
 
-11. **ALWAYS web-verify factual claims during research (Step 1).** All statistics, data points, and factual claims must be verified via web search during the research step. Collect ALL data needed for the entire article upfront. During writing (Step 6), use ONLY data and sources gathered in Step 1 — do NOT run additional web searches. If a claim cannot be supported by Step 1 research, rephrase using available data or remove it. Do not fabricate or hallucinate data.
+11. **ALWAYS web-verify factual claims during research (Step 1).** All statistics, data points, and factual claims must be verified via web search during the research step. Collect ALL data needed for the entire article upfront. During writing (Step 4), use ONLY data and sources gathered in Step 1 — do NOT run additional web searches. If a claim cannot be supported by Step 1 research, rephrase using available data or remove it. Do not fabricate or hallucinate data.
 
 12. **NEVER exceed 25 words in the hook (15 preferred, 25 characters for mobile scannability).** The hook is the first sentence. It must be brutally short. 15 words is the target. 25 words is the absolute maximum. The social share preview on mobile shows roughly 25 characters — the hook must land within that window.
 
@@ -69,6 +70,10 @@ These 16 rules apply to EVERY article generated. Violation of any rule requires 
 17. **ALWAYS score SEO Score (6 metrics) — minimum 4/6 to publish.** Every article must be scored against the 6 SEO metrics (title length, keyword in title, title words, body keyword density, keyword in first 100 words, keyword in headings). A score below 4/6 means the article is not SEO-ready. Apply optimization strategies and re-score until the threshold is met.
 
 18. **ALWAYS enforce Actionable Depth in numbered sections.** When an article includes numbered lists ("7 ways," "5 steps," etc.), each point MUST have: What (the action, 1-2 sentences), How (implementation steps, 2-4 sentences), Example (real company/tool/person + numbers, 2-3 sentences), Outcome (measurable result, 1-2 sentences). Minimum 150-250 words per point. A one-liner with a dash explanation is a table of contents, not an article. Apply the "Now What?" test: can the reader start doing this within 5 minutes?
+
+19. **ALWAYS apply AI Humanization rules during writing.** Zero Tier 1 words allowed (52 words — always replace on sight). Maximum 1 Tier 2 word per paragraph (43 words — flag clusters of 2+). Tier 3 words must stay under 3% density (12 words). None of the 36 AI patterns (structural, language, tone, advanced) should be detectable in the output. See style-guide.md Rules 3 + 8.
+
+20. **ALWAYS apply GEO/AEO formatting.** Every H2 must open with a 40-60 word stat-rich paragraph that directly answers the heading (Answer-First). Structure content in 50-150 word self-contained extractable chunks (Passage Citability). Include 2+ FAQ Q&A pairs with 40-60 word answers. Name specific entities for all claims (Entity Clarity). Include 3+ current-year references (Freshness Signals). See seo-rules-engine.md Sections 8 + 9.
 
 ---
 
@@ -189,6 +194,31 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
       "aspect_ratio": "{ratio}",
       "resolution": "{resolution}"
     }],
+    "ai_humanization": {
+      "score": {score},
+      "max_score": 20,
+      "tier1_violations": ["{words}"],
+      "tier2_clusters": {count},
+      "tier3_density_issues": ["{word_and_pct}"],
+      "pattern_violations": ["{categories}"]
+    },
+    "geo_score": {
+      "score": {geo_score},
+      "max_score": 5,
+      "metrics": {
+        "answer_first_h2s": {"value": "{X/Y}", "status": "{good/warning/bad}"},
+        "passage_citability": {"value": "{assessment}", "status": "{good/warning/bad}"},
+        "faq_presence": {"value": {count}, "status": "{good/warning/bad}"},
+        "entity_clarity": {"value": "{assessment}", "status": "{good/warning/bad}"},
+        "freshness_signals": {"value": {count}, "status": "{good/warning/bad}"}
+      }
+    },
+    "combined_score": {
+      "score": {combined},
+      "max_score": 100,
+      "band": "{Exceptional/Strong/Acceptable/Below Standard/Rewrite}",
+      "pass": {true_if_gte_70}
+    },
     "research_data": {
       "key_data_points": ["{data_points}"],
       "primary_pain_point": "{pain_point}",
@@ -262,9 +292,9 @@ RECOMMENDATION: #[N] — [keyword] because [reason]
 
 ### Step 2 — STRATEGY
 
-**Read:** `references/frameworks-library.md` + `references/emotional-arcs.md` + `references/hook-repository.md` (all three at once)
+**Read:** `references/frameworks-library.md` + `references/emotional-arcs.md` + `references/hook-repository.md` + `references/content-templates.md` (all four at once)
 
-Select framework, emotional arc, and hook in a single strategy pass:
+Select framework, emotional arc, hook, and content template in a single strategy pass:
 
 **Framework selection:**
 1. Use Decision Matrix: match article goal to framework candidates
@@ -282,10 +312,17 @@ Select framework, emotional arc, and hook in a single strategy pass:
 3. **WILDCARD:** Engagement Multiplier — combines two hook types (e.g., Curiosity+Numbers, HotTake+Story, Before/After+FOMO)
 4. Each hook: type, psychological driver, engagement boost %, actual text, word count, mobile preview (25 chars), constraint check
 
+**Content template selection:**
+1. Match topic characteristics to template using Auto-Selection Guide in content-templates.md
+2. Template determines: target word count, section structure, tone, recommended framework + arc
+3. If template's framework recommendation conflicts with Decision Matrix, prefer the Decision Matrix result
+4. User can override template choice
+
 **Present strategy:**
 
 ```
 STRATEGY:
+- Template: [selected] ([word count range]) — [rationale]
 - Framework: [selected] — [rationale]
 - Arc: [selected] ([emotion sequence])
 - Pacing: [opening] → [build] → [peak] → [shift] → [resolution]
@@ -296,7 +333,7 @@ HOOKS:
 3. WILDCARD: [combined types, boost %, text]
 ```
 
-**Pipeline mode:** Auto-select recommended framework + arc + PRIMARY hook. Report progress: `step=strategy, percentage=25`.
+**Pipeline mode:** Auto-select recommended template + framework + arc + PRIMARY hook. Report progress: `step=strategy, percentage=25`.
 **Interactive mode:** Selections presented to user as part of the Step 3 review block.
 
 ---
@@ -397,20 +434,32 @@ Write the article in a single comprehensive pass, applying all rules simultaneou
 - Every sentence earns the next (Slippery Slide)
 - Actionable Depth for numbered sections: What + How + Example + Outcome, 150-250 words per point, "Now What?" test
 
-**Style (applied during writing, not as separate pass):**
-- Forbidden vocabulary check inline — never write Unlock/Unleash/Supercharge/Empower/Enhance/Exceed/Maximize
+**Style + AI Humanization (applied during writing, not as separate pass):**
+- Zero Tier 1 words (52 words — scan and replace on sight per style-guide.md Rule 3)
+- No Tier 2 clusters (max 1 Tier 2 word per paragraph — 43 words)
+- Tier 3 words under 3% density (12 words)
+- No AI patterns from 36 categories (structural, language, tone, advanced — style-guide.md Rule 8)
 - Paragraphs max 3-4 lines
 - Grade 5 readability — short sentences, common words, active voice
 - "So What?" test per section — benefit before feature
 - Write tight from the start (20% fluff reduction mindset, not a separate cut pass)
-- No AI patterns — no hedging, no filler transitions, no passive voice
 
-**SEO (applied during writing, not as separate pass):**
+**SEO + GEO/AEO (applied during writing, not as separate pass):**
 - Title: 50-60 chars, keyword present naturally, 6-10 words
 - Keyword in first 100 words (woven into hook/problem)
 - Keyword in 1-2 H2/H3 headings (not stuffing)
 - Body density target 0.5-1.5%
 - All keyword placements must read naturally
+- GEO: Every H2 opens with 40-60 word stat-rich answer paragraph (Answer-First)
+- GEO: Content structured in 50-150 word extractable passages (Passage Citability)
+- GEO: 2+ FAQ Q&A pairs with 40-60 word answers (near end, before CTA)
+- GEO: Name specific entities for all claims (Entity Clarity)
+- GEO: 3+ current-year references (Freshness Signals)
+
+**Template structure:**
+- Follow the selected content template section structure from Step 2
+- Template defines section order, word allocation, and tone per section
+- Adapt template sections to the specific topic while maintaining the structure
 
 **Final section:**
 - Key insight + surprise resolution (Completion-to-Share)
@@ -429,11 +478,11 @@ Write the article in a single comprehensive pass, applying all rules simultaneou
 
 ---
 
-### Step 5 — TRIPLE GATE + OUTPUT
+### Step 5 — FIVE GATES + COMBINED SCORE + OUTPUT
 
 **Read:** `references/virality-triggers.md` + `references/quality-gate.md` + `references/seo-rules-engine.md`
 
-Score the article against ALL three gates in a single pass, then deliver the final output.
+Score the article against ALL five gates in a single pass, calculate the combined 100-point score, then deliver the final output.
 
 **Gate 1 — Virality Score (5 triggers, min 3/5):**
 1. **Social Currency** — exclusive/insider info that makes sharer look smart
@@ -462,12 +511,36 @@ Score the article against ALL three gates in a single pass, then deliver the fin
 5. Keyword in First 100 — Green: present, Red: missing
 6. Keyword in Headings — Green: 1-2, Amber: 0, Red: >3
 
-**If ANY gate fails:**
+**Gate 4 — AI Humanization Score (20 points, deduction-based):**
+- Base score: 20. Deduct for violations found in final article.
+- Tier 1 violations: -2 per word (max -10)
+- Tier 2 cluster violations: -1 per paragraph with 2+ Tier 2 words (max -5)
+- Tier 3 density violations: -1 per word exceeding 3% density (max -3)
+- AI pattern violations: -0.5 per category detected (max -2)
+- Final score: max(0, 20 - total_deductions)
+
+**Gate 5 — GEO Score (5 metrics, traffic light):**
+1. Answer-First H2s — Green: all H2s comply, Amber: 50%+, Red: <50%
+2. Passage Citability — Green: all key sections extractable, Amber: most, Red: few
+3. FAQ Presence — Green: 2+ pairs, Amber: 1 pair, Red: none
+4. Entity Clarity — Green: all claims specific, Amber: most, Red: vague
+5. Freshness Signals — Green: 3+ current-year refs, Amber: 1-2, Red: none
+
+**Combined Score (100-point weighted):**
+- Content Quality: [Quality Gate] x3 = max 30 pts
+- Virality: [Virality Score] x4 = max 20 pts
+- SEO: [SEO Score] x2.5 = max 15 pts
+- AI Humanization: [Humanization Score] x1 = max 20 pts
+- GEO/AEO: [GEO Score] x3 = max 15 pts
+- Bands: Exceptional (90-100), Strong (80-89), Acceptable (70-79), Below Standard (60-69), Rewrite (<60)
+- **Minimum to publish: Combined Score >= 70 (Acceptable)**
+
+**If ANY blocking gate fails (Virality <3/5, Quality <7/10, SEO <4/6, or Combined <70):**
 - Fix failing items using per-trigger/per-criterion/per-metric strategies from reference files
 - Re-score ONLY the failed gate
-- Repeat until all three gates pass
+- Repeat until all blocking gates pass and Combined >= 70
 
-**Assemble final output** in the standard format (Section 4). Include: metadata header, full article, image prompts, SEO score, virality score, quality gate score, sources list.
+**Assemble final output** in the standard format (Section 4). Include: metadata header, full article, image prompts, all 5 scores, combined score with band, sources list.
 
 **Pipeline mode:** Send full completion callback JSON (see Pipeline Mode section above). Report progress: `step=completed, percentage=100`.
 
@@ -487,10 +560,11 @@ Every article output MUST follow this exact structure:
 ```
 # [Article Title]
 
-**Framework:** [Selected] | **Hook:** [Type] ([engagement boost %]) | **Arc:** [Selected]
+**Template:** [selected template] | **Framework:** [Selected] | **Hook:** [Type] ([engagement boost %]) | **Arc:** [Selected]
 **Keyword:** [target keyword]
 **Words:** [count] | **Citations:** [count] | **Images:** [count]
-**Quality:** [N]/10 | **Virality:** [N]/5 | **SEO:** [N]/6
+**Quality:** [N]/10 | **Virality:** [N]/5 | **SEO:** [N]/6 | **Humanization:** [N]/20 | **GEO:** [N]/5
+**Combined:** [N]/100 ([BAND])
 
 ---
 
@@ -577,6 +651,30 @@ Every article output MUST follow this exact structure:
 9. Benefit-First: [PASS/FAIL] — [note]
 10. Dual CTA: [PASS/FAIL] — [note]
 
+## AI Humanization Score: [N]/20
+- Tier 1 violations: [count] words found ([list])
+- Tier 2 clusters: [count] paragraphs with 2+ Tier 2 words
+- Tier 3 density: [word]: [N]% ([status])
+- AI patterns: [count] detected ([list])
+
+## GEO Score: [N]/5
+| # | Metric | Value | Status |
+|---|--------|-------|--------|
+| 1 | Answer-First H2s | [X/Y comply] | [GREEN/AMBER/RED] |
+| 2 | Passage Citability | [assessment] | [GREEN/AMBER/RED] |
+| 3 | FAQ Presence | [count] pairs | [GREEN/AMBER/RED] |
+| 4 | Entity Clarity | [assessment] | [GREEN/AMBER/RED] |
+| 5 | Freshness Signals | [count] current-year refs | [GREEN/AMBER/RED] |
+
+## Combined Article Score: [N]/100 — [BAND]
+| Category | Raw | Weight | Score |
+|----------|-----|--------|-------|
+| Content Quality | [N]/10 | x3 | [N]/30 |
+| Virality | [N]/5 | x4 | [N]/20 |
+| SEO | [N]/6 | x2.5 | [N]/15 |
+| AI Humanization | [N]/20 | x1 | [N]/20 |
+| GEO/AEO | [N]/5 | x3 | [N]/15 |
+
 ## Sources
 [Numbered list of all citations used in the article with URLs where available]
 ```
@@ -585,7 +683,7 @@ Every article output MUST follow this exact structure:
 
 ## GeminiGen.AI API Call Reference
 
-Use this API to generate images from the approved prompts in Step 8.
+Use this API to generate images from the approved prompts in Step 4.
 
 ```bash
 curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
@@ -600,7 +698,7 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
 ```
 
 **Parameters:**
-- `prompt` (required): The image prompt text from Step 8. Must be 20-80 words.
+- `prompt` (required): The image prompt text from Step 4. Must be 20-80 words.
 - `model` (required): One of `nano-banana-pro` (default, best general purpose), `nano-banana-2` (stylized/artistic), or `imagen-4` (maximum photorealism fidelity).
 - `aspect_ratio` (required): Default `16:9`. Options: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`.
 - `style` (required): Matches the style field from the image prompt (e.g., Photorealistic, Portrait Cinematic, Cinematic, Minimalist, etc.).

@@ -296,6 +296,16 @@ When pipeline mode completes, the full data package is sent to the Portfolio API
 | 6 | Keyword in Headings | [N] times | [GREEN/AMBER/RED] |
 
 **Target Keyword:** [keyword]
+
+## GEO Score: [N]/5 — [status]
+
+| # | Metric | Value | Status |
+|---|--------|-------|--------|
+| 1 | Answer-First H2s | [X/Y comply] | [GREEN/AMBER/RED] |
+| 2 | Passage Citability | [assessment] | [GREEN/AMBER/RED] |
+| 3 | FAQ Presence | [count] pairs | [GREEN/AMBER/RED] |
+| 4 | Entity Clarity | [assessment] | [GREEN/AMBER/RED] |
+| 5 | Freshness Signals | [count] current-year refs | [GREEN/AMBER/RED] |
 ```
 
 ---
@@ -332,3 +342,83 @@ When a metric scores Amber or Red, apply these fixes:
 - Keep keyword in the most important H2 (usually the main solution/value section)
 - Vary heading language: "Email Automation Strategy" → "How to Set Up Automated Sequences"
 - If 0 headings have the keyword: add it to 1–2 headings where it fits the information gap naturally
+
+---
+
+## 8. GEO/AEO Optimization Rules
+
+These rules ensure articles are optimized for AI citation in Google AI Overviews, ChatGPT web search, Perplexity, and other AI-powered search systems. GEO (Generative Engine Optimization) and AEO (Answer Engine Optimization) target the extractability and citability of content by AI systems.
+
+### 8.1 Answer-First Formatting
+
+Every H2 section must open with a **40-60 word stat-rich paragraph** that directly answers the section heading. This paragraph must be self-contained — extractable by AI systems as a standalone answer.
+
+- Lead with the fact or answer, then explain
+- Bad: "In recent years, there has been a growing trend toward AI-powered onboarding systems that many companies are beginning to adopt across various industries."
+- Good: "Companies using AI-powered onboarding see 34% higher retention within 90 days, according to a 2025 Gartner report. Here's how that works."
+
+### 8.2 Passage Citability
+
+Structure content in **50-150 word self-contained chunks.** Each chunk should answer one specific question. AI systems prefer clear, quotable passages over long narrative blocks.
+
+- Each passage should be independently meaningful if extracted
+- Use question-style headings (H2/H3) that match search queries
+- Avoid passages that require reading prior context to understand
+
+### 8.3 FAQ Schema Hints
+
+Include at least **2-3 FAQ-format Q&A pairs** within the article. Each answer: 40-60 words, factual, directly responsive.
+
+- Position FAQs near the end (before CTA) or as a dedicated section
+- Each Q&A becomes eligible for FAQ rich results AND AI citation
+- Questions should match real search queries about the topic
+- Answers should be self-contained — no "as mentioned above" references
+
+### 8.4 Entity Clarity
+
+Name specific entities (people, companies, tools, studies) rather than vague references. Helps AI systems verify and cite with confidence.
+
+- "A McKinsey 2025 report" beats "a recent study"
+- "Shopify's checkout optimization tool" beats "an e-commerce platform"
+- "Dr. Sarah Chen, AI researcher at Stanford" beats "experts say"
+- Every claim with a source should name the specific source
+
+### 8.5 Freshness Signals
+
+Include current year references in the content. AI systems prefer fresh, recently-updated content for citations.
+
+- Include 3+ current-year data points or references
+- Mention recent developments (within 12 months when possible)
+- Use specific dates rather than "recently" or "lately"
+- Update any legacy data to current versions when available
+
+---
+
+## 9. GEO Score (5 Metrics)
+
+Separate scoring for AI citation readiness. Uses the same traffic light system as SEO scoring.
+
+| # | Metric | Green (1 pt) | Amber (0.5 pt) | Red (0 pt) |
+|---|--------|-------------|-----------------|------------|
+| 1 | Answer-first H2s | All H2s open with 40-60 word fact paragraph | 50%+ of H2s comply | <50% comply |
+| 2 | Passage citability | All key sections are 50-150 word extractable chunks | Most sections comply | Few or none |
+| 3 | FAQ presence | 2+ FAQ Q&A pairs with 40-60 word answers | 1 FAQ pair | No FAQ format |
+| 4 | Entity clarity | All claims name specific entities + dates | Most claims | Vague attributions |
+| 5 | Freshness signals | 3+ current-year references | 1-2 current-year refs | No current-year data |
+
+**Scoring:** Green = 1 point, Amber = 0.5 point, Red = 0 points.
+**Maximum:** 5/5. **Not a blocking gate** — contributes to combined 100-point score.
+
+### GEO Score Output Format
+
+```
+## GEO Score: [N]/5 — [status]
+
+| # | Metric | Value | Status |
+|---|--------|-------|--------|
+| 1 | Answer-First H2s | [X/Y comply] | [GREEN/AMBER/RED] |
+| 2 | Passage Citability | [assessment] | [GREEN/AMBER/RED] |
+| 3 | FAQ Presence | [count] pairs | [GREEN/AMBER/RED] |
+| 4 | Entity Clarity | [assessment] | [GREEN/AMBER/RED] |
+| 5 | Freshness Signals | [count] current-year refs | [GREEN/AMBER/RED] |
+```
