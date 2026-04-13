@@ -53,6 +53,9 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 - **Forbidden Vocabulary** — 7 banned AI-sounding words (Unlock, Unleash, Supercharge, Empower, Enhance, Exceed, Maximize)
 - **Grade 5 Readability** — Flesch-Kincaid age 9-11, conversational people-first language
 - **2025 Depth Trend** — Algorithms reward sustained attention + engagement depth over quick taps; long-form (1,900-2,400 words) outperforms micro-content
+- **Pipeline Mode** — Automated article generation via CLI flags (`--idea-id`, `--api-url`, `--api-token`, `--topic`, `--keyword`, `--languages`, `--instructions`) with progress callbacks to Portfolio API at each step
+- **Completion Callback** — Pipeline mode sends FULL structured JSON to Portfolio API on completion: `article` (title, content, keyword, word_count, citation_count, image_count, framework, hook_type, hook_boost, emotional_arc), `seo_analysis` (score, pass, 6 metrics with value+status), `virality_score` (score, pass, 5 triggers with pass+evidence), `quality_gate` (score, pass, 10 criteria with pass+evidence), `image_prompts` (array of prompt objects), `research_data` (data points, pain point, sources). Full JSON schema in `references/seo-rules-engine.md` Section 5
+- **JS Logic Contract** — `computeSeoAnalysis(content, title, keyword)` function in `references/seo-rules-engine.md` Section 4 defines exact SEO scoring logic for Portfolio website client-side re-implementation. Returns: density, inTitle, inFirst100, inHeadings, titleLength, titleWords (each with value + status). Status maps to traffic light: `good`=Green(1pt), `warning`=Amber(0.5pt), `bad`=Red(0pt)
 
 ## Capabilities
 
@@ -69,6 +72,7 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 11. **Article briefs** — structured outlines with virality pre-assessment and image concept planning
 12. **Batch production** — via article-writer subagent for multiple articles in sequence
 13. **Fact verification** — web-verify all claims before including, E-E-A-T citation density enforcement
+14. **Pipeline mode** — fully automated generation via CLI flags with progress callbacks and full JSON completion callback to Portfolio API
 
 ## Technical Defaults
 
