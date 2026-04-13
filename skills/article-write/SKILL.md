@@ -1,13 +1,13 @@
 ---
 name: article-write
-description: "Pipeline-only skill for article generation Step 4 (Write + Polish + Images). Runs on Opus with refs-write.md injected via --append-system-prompt-file. Reads prep data from backend API, writes full article. Part of the split pipeline: article-prep → article-write → article-score."
+description: "Pipeline-only skill for article generation Step 4 (Write + Polish). Runs on Sonnet/Opus with refs-write.md injected via --append-system-prompt-file. Reads prep data from backend API, writes full article. Image prompts generated separately after approval. Part of the split pipeline: article-prep → article-write → article-score."
 ---
 
 # Article Write Skill (Step 4)
 
-Pipeline-only skill that handles Writing, Polishing, and Image Prompt Generation for the split article generation pipeline. Designed to run on **Opus** for maximum writing quality.
+Pipeline-only skill that handles Writing and Polishing for the split article generation pipeline. Image prompts are generated separately after article approval (not in this step).
 
-> **DO NOT read reference files with the Read tool.** All references (global-config, style-guide, retention-engine, image-prompt-guide, seo-rules-engine) are injected via `--append-system-prompt-file refs-write.md`. They are already in your system prompt. Reading them again wastes time and tokens.
+> **DO NOT read reference files with the Read tool.** All references (global-config, style-guide, retention-engine, seo-rules-engine) are injected via `--append-system-prompt-file refs-write.md`. They are already in your system prompt. Reading them again wastes time and tokens.
 
 ---
 
@@ -37,8 +37,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
 | Writing started | writing_started | 50 | Prep data loaded, writing begins |
 | Draft complete | draft_complete | 70 | First draft with all rules applied |
 | Style pass done | style_pass | 78 | AI humanization + readability verified |
-| SEO pass done | seo_pass | 82 | Keyword placement + GEO formatting verified |
-| Images generated | images_generated | 85 | Image prompts created |
+| SEO pass done | seo_pass | 85 | Keyword placement + GEO formatting verified |
 
 ---
 
@@ -173,26 +172,11 @@ These 20 rules apply during writing. All reference details are in your system pr
 
 ---
 
-## 6. Image Prompt Generation
+## 6. Completion — Save Article Data
 
-After article is complete, generate image prompts:
+**NOTE:** Image prompts are NOT generated in this step. They are generated separately after article approval (Gate 1) via the admin panel's image pipeline.
 
-- **Cover image (MANDATORY):** hero visual, scroll-stopping, article theme — placed BEFORE the first paragraph
-- **2-4 inline images evenly distributed** throughout the article — NOT clustered together
-- **Placement rule:** Divide total article sections by image count. Place 1 inline image every N sections (e.g., 8 sections / 3 inline = after sections 2, 5, 7). NEVER place 2+ images in consecutive sections.
-- Each image prompt MUST include `insert_after_heading` field with the exact H2 heading text
-- **Count:** Short 1,900w = 3, Standard 2,000-2,200w = 4, Long 2,200+ = 5
-- **Prompts:** 20-80 words, NO text-in-image, consistent color palette
-- **Parameters:** model (nano-banana-pro), style (per section type), aspect_ratio (16:9), resolution (1K)
-- **Section type mapping:** Problem=dark/cool, Solution=bright/warm, Data=clean/pro, Story=cinematic, CTA=aspirational
-
-**Report progress: 85% (images_generated)**
-
----
-
-## 7. Completion — Save Article Data
-
-Save the written article and image prompts:
+Save the written article:
 
 ```bash
 curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \

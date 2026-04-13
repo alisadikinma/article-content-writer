@@ -410,11 +410,11 @@ Wait for user approval + hook selection. After approval, Steps 4-5 run without a
 
 ---
 
-### Step 4 — WRITE + POLISH + IMAGES
+### Step 4 — WRITE + POLISH
 
 **Read:** `references/style-guide.md` + `references/seo-rules-engine.md`
 
-Write the article in a single comprehensive pass, applying all rules simultaneously. Then generate image prompts. No additional web searches during this step.
+Write the article in a single comprehensive pass, applying all rules simultaneously. No additional web searches during this step. Image prompts are generated separately after article approval (not in this step).
 
 **CRITICAL — No additional web searches during writing.** Use ONLY data points, statistics, sources, and examples collected in Step 1. If you need a data point not in Step 1 research, rephrase using available data or make a general observation without specific numbers.
 
@@ -468,17 +468,9 @@ Write the article in a single comprehensive pass, applying all rules simultaneou
 - Self-reflection trigger if not placed earlier
 - Dual CTA: Direct + Transitional
 
-**After article is complete — generate image prompts:**
-- Cover image (MANDATORY): hero visual, scroll-stopping, article theme — placed BEFORE the first paragraph
-- 2-4 inline images **evenly distributed** throughout the article — NOT clustered together
-- **Placement rule:** Divide total article sections by image count. Place 1 inline image every N sections (e.g., 8 sections / 3 inline images = place after sections 2, 5, 7). NEVER place 2+ images in consecutive sections.
-- Each image prompt MUST include `insert_after_heading` field with the exact H2 heading text it should appear below
-- Count: Short 1,900w = 3, Standard 2,000-2,200w = 4, Long 2,200+ = 5
-- Prompts: 20-80 words, NO text-in-image, consistent color palette
-- Parameters: model (nano-banana-pro), style (per section type), aspect_ratio (16:9), resolution (1K)
-- Section type to concept: Problem=dark/cool, Solution=bright/warm, Data=clean/pro, Story=cinematic, CTA=aspirational
-
 **Multi-language output:** If `--languages` includes multiple languages (e.g., `en,id`), write the FULL article separately for EACH language. Do NOT translate — write natively in each language with localized examples, idioms, and cultural references. Indonesian articles use Gen-Z Bahasa (casual, conversational). Output format: `{ "en": { "title": "...", "content": "..." }, "id": { "title": "...", "content": "..." } }`.
+
+**NOTE:** Image prompts are NOT generated in this step. They are generated separately after article approval (Gate 1) using the `/article-images` skill or the admin panel's image pipeline.
 
 **Pipeline mode:** Report progress: `step=writing, percentage=85`.
 

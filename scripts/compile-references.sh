@@ -46,20 +46,20 @@ append_ref "$PREP" "$REFS_DIR/hook-repository.md"
 append_ref "$PREP" "$REFS_DIR/emotional-arcs.md"
 append_ref "$PREP" "$REFS_DIR/content-templates.md"
 
-# --- refs-write.md (Step 4: Writing + Polish + Images) ---
+# --- refs-write.md (Step 4: Writing + Polish) ---
 WRITE="$OUT_DIR/refs-write.md"
 cat > "$WRITE" << 'HEADER'
 # Article Generation Reference — Write (Step 4)
 
 System prompt reference for the `/article-write` skill.
-Contains: global-config, style-guide, retention-engine, image-prompt-guide, seo-rules-engine.
+Contains: global-config, style-guide, retention-engine, seo-rules-engine.
 These references are injected via --append-system-prompt-file. Do NOT read them with the Read tool.
+Note: image-prompt-guide is NOT included — image prompts are generated separately after article approval.
 HEADER
 
 append_ref "$WRITE" "$REFS_DIR/global-config.md"
 append_ref "$WRITE" "$REFS_DIR/style-guide.md"
 append_ref "$WRITE" "$REFS_DIR/retention-engine.md"
-append_ref "$WRITE" "$REFS_DIR/image-prompt-guide.md"
 append_ref "$WRITE" "$REFS_DIR/seo-rules-engine.md"
 
 # --- refs-score.md (Step 5: Five Gates + Combined Score) ---
