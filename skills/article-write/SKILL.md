@@ -177,8 +177,10 @@ These 20 rules apply during writing. All reference details are in your system pr
 
 After article is complete, generate image prompts:
 
-- **Cover image (MANDATORY):** hero visual, scroll-stopping, article theme
-- **2-4 inline images** at emotional turning points per outline plan
+- **Cover image (MANDATORY):** hero visual, scroll-stopping, article theme — placed BEFORE the first paragraph
+- **2-4 inline images evenly distributed** throughout the article — NOT clustered together
+- **Placement rule:** Divide total article sections by image count. Place 1 inline image every N sections (e.g., 8 sections / 3 inline = after sections 2, 5, 7). NEVER place 2+ images in consecutive sections.
+- Each image prompt MUST include `insert_after_heading` field with the exact H2 heading text
 - **Count:** Short 1,900w = 3, Standard 2,000-2,200w = 4, Long 2,200+ = 5
 - **Prompts:** 20-80 words, NO text-in-image, consistent color palette
 - **Parameters:** model (nano-banana-pro), style (per section type), aspect_ratio (16:9), resolution (1K)
@@ -216,6 +218,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
     {
       "type": "cover",
       "section": "Header",
+      "insert_after_heading": null,
       "concept": "hero concept description",
       "prompt": "20-80 word image prompt",
       "model": "nano-banana-pro",
@@ -226,6 +229,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
     {
       "type": "inline",
       "section": "Section Title",
+      "insert_after_heading": "The exact H2 heading text this image appears below",
       "concept": "concept description",
       "prompt": "20-80 word image prompt",
       "model": "nano-banana-pro",
@@ -234,6 +238,18 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
       "resolution": "1K"
     }
   ]
+}
+```
+
+**Multi-language output:** If the prep data includes multiple languages (e.g., `["en", "id"]`), write the FULL article separately for EACH language. Do NOT translate — write natively in each language with localized examples, idioms, and cultural references. Indonesian articles use Gen-Z Bahasa (casual, conversational). The JSON payload should nest by language:
+
+```json
+{
+  "en": { "title": "English Title", "content": "<full English article>" },
+  "id": { "title": "Judul Indonesia", "content": "<full Indonesian article>" },
+  "word_count": 2100,
+  "keyword": "target keyword",
+  ...
 }
 ```
 

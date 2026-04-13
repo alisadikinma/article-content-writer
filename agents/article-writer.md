@@ -321,7 +321,7 @@ Combine framework + arc + hook into sections. For each section, plan:
 1. **Practical Utility section:** Identify where to place [Number] + [Superlative] + [Timeframe] + [Outcome] section
 2. **Completion-to-Share resolution:** Design the ending — resolve all narrative tension, deliver reward that triggers share impulse
 3. **Self-reflection trigger:** Plan one moment where the reader pauses to think about their own situation
-4. **Image concepts:** 1 cover + 2-4 inline images mapped to emotional turning points
+4. **Image concepts:** 1 cover + 2-4 inline images **evenly distributed** (divide sections by image count, NEVER 2+ images in consecutive sections)
 
 **3C — Retention Map**
 
@@ -454,8 +454,9 @@ After the article is complete, generate GeminiGen.AI-compatible image prompts.
 - Requirements: Must work at both full-width AND thumbnail size
 - Style: High impact, clear focal point, no text in image
 
-**Images 2-5: INLINE IMAGES**
-- Placement: At emotional turning points in the article
+**Images 2-5: INLINE IMAGES (evenly distributed)**
+- **Placement rule:** Divide total article sections by inline image count. Place 1 image every N sections (e.g., 8 sections / 3 inline = after sections 2, 5, 7). NEVER place 2+ images in consecutive sections.
+- Each image MUST specify `insert_after_heading` with exact H2 heading text
 - Purpose: Reinforce the emotional beat of the section, provide visual breathing room
 - Must align with the section's arc phase and target emotion
 
@@ -646,6 +647,8 @@ If any blocking gate fails (Virality < 3/5, Quality < 7/10, SEO < 4/6, or Combin
 Deliver the final article in the standard OUTPUT FORMAT (see below).
 
 If the user provided an output file path, write the article to that path. Otherwise, print to console.
+
+**Multi-language output:** If languages include multiple (e.g., `en,id`), write the FULL article separately for EACH language. Do NOT translate — write natively in each language with localized examples, idioms, and cultural references. Indonesian articles use Gen-Z Bahasa (casual, conversational). Output format nests by language: `{ "en": { "title": "...", "content": "..." }, "id": { "title": "...", "content": "..." } }`.
 
 **Pipeline mode:** Send completion callback JSON to Portfolio API with full structured data (article, seo_analysis, virality_score, quality_gate, ai_humanization, geo_score, combined_score, image_prompts, research_data). See `references/seo-rules-engine.md` Section 5 for full JSON schema.
 
