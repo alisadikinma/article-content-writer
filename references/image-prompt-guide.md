@@ -164,10 +164,13 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
 - Aspect ratio: 16:9 (widescreen — optimal for blog headers and social shares)
 
 ### Images 2-5: Inline Section Images
-- Placed at key emotional turning points in the article (NOT evenly spaced)
+- **SPREAD images from top to bottom of article** — readers need visual breaks throughout the entire piece, not just at the beginning. If article has 6 H2 sections and 3 inline images, place at sections 2, 4, 6 (not 1, 2, 3).
+- Place at emotional turning points BUT ensure coverage across the full article length
 - Each image must visually reinforce the section's emotional arc phase
 - All inline images share consistent color palette and mood progression
+- `insert_after_heading` MUST match an actual H2 heading in the article content (exact text match)
 - Aspect ratio: 16:9 (default) or 4:3 for square-format content
+- **NEVER cluster 2+ images in consecutive sections** — minimum 1 text-only section between images
 
 ---
 
@@ -235,8 +238,28 @@ Write prompts in this order:
 **Style:** [selected style]
 **Aspect Ratio:** [16:9 / 4:3 / 1:1]
 **Resolution:** [1K / 2K / 4K]
-**Placement:** [Article header / After section X — emotional turning point reason]
+**Placement:** [Article header / After "[Exact H2 heading text]" — reason]
 ```
+
+### JSON Output Format (for API callbacks)
+
+When outputting image_prompts in JSON (e.g., for save-article or completion callbacks), use this structure:
+
+```json
+{
+  "type": "inline",
+  "section": "Section Title",
+  "insert_after_heading": "The exact H2 heading text this image appears below",
+  "concept": "1-line concept",
+  "prompt": "20-80 word descriptive prompt",
+  "model": "nano-banana-pro",
+  "style": "Photorealistic",
+  "aspect_ratio": "16:9",
+  "resolution": "1K"
+}
+```
+
+**Critical:** `insert_after_heading` must be the **exact text** of an H2 heading in the article. The frontend uses this to position images correctly. For cover images, set `insert_after_heading` to `null`.
 
 ---
 

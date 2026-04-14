@@ -282,7 +282,7 @@ Plan across the full article using techniques from `retention-engine.md`:
 
 After the article is complete, generate image prompts using the specifications in `references/image-prompt-guide.md` and `references/global-config.md` (Image Generation section).
 
-**Image allocation:** 1 cover + 2-4 inline (based on article length per global-config table). Inline images evenly distributed — NEVER 2+ in consecutive sections.
+**Image allocation:** 1 cover + 2-4 inline (based on article length per global-config table). Inline images SPREAD from top to bottom of article — if 6 sections and 3 inline images, place at sections 2, 4, 6 (not 1, 2, 3). NEVER 2+ in consecutive sections. Each image's `insert_after_heading` must match an actual H2 heading text exactly.
 
 **Per image, specify:** concept, prompt (20-80 words), model, style, aspect_ratio, resolution, placement. Follow the section-to-style mapping and prompt writing rules in `image-prompt-guide.md`. NO text in images. Consistent color palette across all images.
 
@@ -356,7 +356,8 @@ Every completed article MUST be delivered in this exact format:
 **Style:** [style]
 **Aspect Ratio:** [ratio]
 **Resolution:** [resolution]
-**Placement:** After [section] — [reason]
+**Placement:** After "[Exact H2 heading text]" — [reason]
+**insert_after_heading:** [exact H2 heading text from article]
 
 ---
 

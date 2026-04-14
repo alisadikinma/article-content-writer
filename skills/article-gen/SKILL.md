@@ -190,6 +190,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
     "image_prompts": [{
       "type": "{cover/inline}",
       "section": "{section_title}",
+      "insert_after_heading": "{exact H2 text or null for cover}",
       "concept": "{concept}",
       "prompt": "{full_prompt}",
       "model": "{model}",
@@ -362,7 +363,7 @@ Build the complete article structure combining framework, arc, and hook:
 5. **Plan Practical Utility section** — [Number]+[Superlative]+[Timeframe]+[Outcome]
 6. **Plan Completion-to-Share resolution** — final payoff + reader reward
 7. **Plan self-reflection trigger** — at least 1 section
-8. **Plan image concepts** — 1 cover + 2-4 inline per section type to concept mapping
+8. **Plan image concepts** — 1 cover + 2-4 inline per section type to concept mapping. SPREAD images from top to bottom (e.g., sections 2, 4, 6 — not 1, 2, 3). NEVER cluster 2+ in consecutive sections.
 
 **INTERACTIVE MODE — SINGLE PAUSE POINT:**
 
@@ -550,7 +551,7 @@ Every article output MUST follow this exact structure:
 **Style:** [style]
 **Aspect Ratio:** [ratio]
 **Resolution:** [resolution]
-**Placement:** After [section] — [emotional turning point reason]
+**Placement:** After "[Exact H2 heading text]" — [emotional turning point reason]
 
 ### Image 3: Section [N] — [Title]
 **Concept:** [1-line concept]

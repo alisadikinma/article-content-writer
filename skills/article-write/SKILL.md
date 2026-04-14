@@ -176,6 +176,8 @@ These 20 rules apply during writing. All reference details are in your system pr
 
 **NOTE:** Image *files* are NOT generated in this step. The write step generates image prompt text (included in the payload below). Actual image generation happens after article approval via the admin panel's image pipeline.
 
+**Image distribution rule:** SPREAD inline images from top to bottom of the article. If the article has 6 H2 sections and 3 inline images, place at sections 2, 4, 6 — NOT 1, 2, 3. Images serve as visual breaks to keep readers engaged throughout the entire piece. NEVER cluster 2+ images in consecutive sections. Each `insert_after_heading` must match an actual H2 heading in the article content (exact text).
+
 Save the written article:
 
 ```bash
