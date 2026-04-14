@@ -190,7 +190,7 @@ Combine framework + arc + hook + template into sections. For each section, plan:
 1. **Practical Utility section:** Place [Number]+[Superlative]+[Timeframe]+[Outcome] formula
 2. **Completion-to-Share resolution:** Design the ending to resolve all tension and trigger share
 3. **Self-reflection trigger:** Plan one moment where reader pauses to think about their situation
-4. **Image concepts:** 1 cover + 2-4 inline, evenly distributed (divide sections by image count, NEVER 2+ in consecutive sections)
+4. **Image sections:** Mark which H2 sections will have images (1 cover + 2-4 inline). Criteria: emotional turning points, spread from top to bottom, minimum 1 text-only section between images. Image concepts generated FROM each section's content during writing (Step 4B).
 
 **3C — Retention Map**
 
@@ -278,13 +278,25 @@ Plan across the full article using techniques from `retention-engine.md`:
 - Self-reflection trigger
 - Dual CTA: Direct + Transitional (use CTA Copy Formulas from `quality-gate.md`)
 
-**4B — Generate Image Prompts**
+**4B — Generate Section-Bound Image Prompts**
 
-After the article is complete, generate image prompts using the specifications in `references/image-prompt-guide.md` and `references/global-config.md` (Image Generation section).
+Generate image prompts using `references/image-prompt-guide.md` and `references/global-config.md`. Each image is BORN from a specific section — not assigned generically after writing.
 
-**Image allocation:** 1 cover + 2-4 inline (based on article length per global-config table). Inline images SPREAD from top to bottom of article — if 6 sections and 3 inline images, place at sections 2, 4, 6 (not 1, 2, 3). NEVER 2+ in consecutive sections. Each image's `insert_after_heading` must match an actual H2 heading text exactly.
+**Image allocation:** 1 cover (hero from article theme) + 2-4 inline (based on article length per global-config table).
 
-**Per image, specify:** concept, prompt (20-80 words), model, style, aspect_ratio, resolution, placement. Follow the section-to-style mapping and prompt writing rules in `image-prompt-guide.md`. NO text in images. Consistent color palette across all images.
+**Per H2 section, decide:** Does this section need an image?
+1. Minimum 1 text-only section since last image (no clustering)
+2. Section is at an emotional turning point (Problem→Solution, Data reveal, Story beat, CTA)
+3. Under max inline count (3 for ≤2200 words, 4 for >2200 words)
+
+**If YES → generate image prompt FROM this section's content:**
+- `concept` = visual metaphor of what THIS section communicates (not generic)
+- `insert_after_heading` = exact H2 heading text of THIS section (MANDATORY)
+- `prompt` = 20-80 words describing a scene that SUPPORTS this section's message
+- `style` matches section's emotional arc phase (see section-to-style mapping in image-prompt-guide)
+- NO text in images. Consistent color palette across all images.
+
+**Goal:** Reader glances at the image and instantly understands the section's topic. Images serve as visual anchors spread from top to bottom of the article, keeping readers engaged throughout.
 
 ---
 

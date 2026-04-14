@@ -163,14 +163,28 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
 - Recommended styles: Portrait Cinematic or Photorealistic (highest engagement)
 - Aspect ratio: 16:9 (widescreen — optimal for blog headers and social shares)
 
-### Images 2-5: Inline Section Images
-- **SPREAD images from top to bottom of article** — readers need visual breaks throughout the entire piece, not just at the beginning. If article has 6 H2 sections and 3 inline images, place at sections 2, 4, 6 (not 1, 2, 3).
-- Place at emotional turning points BUT ensure coverage across the full article length
-- Each image must visually reinforce the section's emotional arc phase
+### Images 2-5: Inline Section Images (Section-Bound)
+
+Images are NOT decorations — they are **visual anchors** that support each section's narrative. Each inline image is BORN from its section's content.
+
+**Generation process (per H2 section):**
+After writing each H2 section, decide if it needs an image:
+1. Is there minimum 1 text-only section since last image? (no clustering)
+2. Is this section at an emotional turning point? (Problem→Solution, Data reveal, Story beat, CTA)
+3. Under max inline image count for this article length?
+
+If YES → generate image prompt FROM this section's content:
+- `concept` = visual metaphor of what THIS section communicates
+- `insert_after_heading` = exact H2 heading text of THIS section (MANDATORY — no exceptions)
+- `prompt` = 20-80 words describing a scene that SUPPORTS the section's message
+- Reader should glance at the image and instantly understand the section's topic
+
+**Rules:**
+- Images SPREAD from top to bottom — if 6 sections and 3 inline, place at sections 2, 4, 6 (not 1, 2, 3)
+- NEVER cluster 2+ images in consecutive sections
+- Each image reinforces the section's emotional arc phase
 - All inline images share consistent color palette and mood progression
-- `insert_after_heading` MUST match an actual H2 heading in the article content (exact text match)
 - Aspect ratio: 16:9 (default) or 4:3 for square-format content
-- **NEVER cluster 2+ images in consecutive sections** — minimum 1 text-only section between images
 
 ---
 

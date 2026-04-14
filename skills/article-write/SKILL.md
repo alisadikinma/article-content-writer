@@ -132,6 +132,22 @@ These 20 rules apply during writing. All reference details are in your system pr
 - Zeigarnik cliffhanger at end of each section (except final)
 - Actionable Depth for numbered sections
 
+### Section-Bound Image Analysis (per H2 section)
+After writing each H2 section, decide if this section needs an image:
+
+**Decision criteria (all must be true):**
+1. Minimum 1 text-only section since last image (no clustering)
+2. Section is at an emotional turning point (Problem→Solution, Data reveal, Story beat, CTA)
+3. Under max inline image count (3 for standard ≤2200 words, 4 for long >2200 words)
+
+**If YES — generate image prompt FROM this section's content:**
+- `concept` = visual metaphor of what THIS section communicates (not generic decoration)
+- `insert_after_heading` = exact H2 heading text of THIS section (MANDATORY, no exceptions)
+- `style` + `mood` = matches this section's emotional arc phase (see section-to-style mapping in image-prompt-guide)
+- `prompt` = 20-80 words describing a scene that SUPPORTS this section's message
+
+**Goal:** Images are visual anchors that reinforce the section's narrative. A reader should glance at the image and immediately understand what the section is about. Images keep readers engaged through the full article length — they must be SPREAD from top to bottom, not clustered at the beginning.
+
 ### Style + AI Humanization (inline, not separate pass)
 - Scan for Tier 1 words and replace on sight (see style-guide in system prompt)
 - Monitor Tier 2 clusters per paragraph
@@ -176,7 +192,7 @@ These 20 rules apply during writing. All reference details are in your system pr
 
 **NOTE:** Image *files* are NOT generated in this step. The write step generates image prompt text (included in the payload below). Actual image generation happens after article approval via the admin panel's image pipeline.
 
-**Image distribution rule:** SPREAD inline images from top to bottom of the article. If the article has 6 H2 sections and 3 inline images, place at sections 2, 4, 6 — NOT 1, 2, 3. Images serve as visual breaks to keep readers engaged throughout the entire piece. NEVER cluster 2+ images in consecutive sections. Each `insert_after_heading` must match an actual H2 heading in the article content (exact text).
+**CRITICAL:** Every inline image MUST have `insert_after_heading` set to the exact H2 heading text of the section it belongs to. Images without this field will be positioned incorrectly in the preview. The concept and prompt must be derived FROM the section content — not generic stock imagery.
 
 Save the written article:
 

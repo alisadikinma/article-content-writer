@@ -363,7 +363,7 @@ Build the complete article structure combining framework, arc, and hook:
 5. **Plan Practical Utility section** — [Number]+[Superlative]+[Timeframe]+[Outcome]
 6. **Plan Completion-to-Share resolution** — final payoff + reader reward
 7. **Plan self-reflection trigger** — at least 1 section
-8. **Plan image concepts** — 1 cover + 2-4 inline per section type to concept mapping. SPREAD images from top to bottom (e.g., sections 2, 4, 6 — not 1, 2, 3). NEVER cluster 2+ in consecutive sections.
+8. **Plan image sections** — Mark which H2 sections will have images (1 cover + 2-4 inline). Criteria: emotional turning points, spread from top to bottom, minimum 1 text-only section between images. Image concepts will be generated FROM each section's content during writing (Step 4), not here.
 
 **INTERACTIVE MODE — SINGLE PAUSE POINT:**
 
@@ -437,6 +437,16 @@ Write the article in a single comprehensive pass, applying all rules simultaneou
 - Zeigarnik cliffhanger at end of each section (except final)
 - Every sentence earns the next (Slippery Slide)
 - Actionable Depth for numbered sections: What + How + Example + Outcome, 150-250 words per point, "Now What?" test
+
+**Section-bound image analysis (per H2 section):**
+After writing each H2 section, decide if it needs an image:
+1. Is there minimum 1 text-only section since last image? (no clustering)
+2. Is this section at an emotional turning point? (Problem→Solution, Data reveal, Story beat, CTA)
+3. Under max inline count? (3 for ≤2200 words, 4 for >2200 words)
+If YES → generate image prompt FROM this section's content:
+- `concept` = visual metaphor of what THIS section communicates
+- `insert_after_heading` = exact H2 heading text (MANDATORY)
+- Image must SUPPORT this section's narrative, not generic decoration
 
 **Style + AI Humanization (applied during writing, not as separate pass):**
 - Zero Tier 1 words (52 words — scan and replace on sight per style-guide.md Rule 3)
