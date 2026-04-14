@@ -893,4 +893,14 @@ Separate scoring for AI citation readiness. Uses the same traffic light system a
 ### GEO Score Output Format
 
 ```
+## GEO Score: [N]/5 — [status]
+
+| # | Metric | Value | Status |
+|---|--------|-------|--------|
+| 1 | Answer-First H2s | [X/Y comply] | [GREEN/AMBER/RED] |
+| 2 | Passage Citability | [assessment] | [GREEN/AMBER/RED] |
+| 3 | FAQ Presence | [count] pairs | [GREEN/AMBER/RED] |
+| 4 | Entity Clarity | [assessment] | [GREEN/AMBER/RED] |
+| 5 | Freshness Signals | [count] current-year refs | [GREEN/AMBER/RED] |
+```
 
