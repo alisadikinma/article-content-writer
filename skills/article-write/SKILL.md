@@ -1,11 +1,11 @@
 ---
 name: article-write
-description: "Pipeline-only skill for article generation Step 4 (Write + Polish). Runs on Sonnet/Opus with refs-write.md injected via --append-system-prompt-file. Reads prep data from backend API, writes full article. Image prompts generated separately after approval. Part of the split pipeline: article-prep → article-write → article-score."
+description: "Pipeline-only skill for article generation Step 4 (Write + Polish + Image Prompts). Runs on Sonnet/Opus with refs-write.md injected via --append-system-prompt-file. Reads prep data from backend API, writes full article with image prompt text. Image files generated separately after approval. Part of the split pipeline: article-prep → article-write → article-score."
 ---
 
 # Article Write Skill (Step 4)
 
-Pipeline-only skill that handles Writing and Polishing for the split article generation pipeline. Image prompts are generated separately after article approval (not in this step).
+Pipeline-only skill that handles Writing, Polishing, and Image Prompt generation for the split article generation pipeline. Image *files* are generated separately after article approval (not in this step).
 
 > **DO NOT read reference files with the Read tool.** All references (global-config, style-guide, retention-engine, seo-rules-engine) are injected via `--append-system-prompt-file refs-write.md`. They are already in your system prompt. Reading them again wastes time and tokens.
 
@@ -168,13 +168,13 @@ These 20 rules apply during writing. All reference details are in your system pr
 - Verify keyword placement (title, first 100 words, headings, body density)
 - Verify GEO formatting (Answer-First H2s, FAQ pairs, entity clarity, freshness)
 
-**Report progress: 82% (seo_pass)**
+**Report progress: 85% (seo_pass)**
 
 ---
 
 ## 6. Completion — Save Article Data
 
-**NOTE:** Image prompts are NOT generated in this step. They are generated separately after article approval (Gate 1) via the admin panel's image pipeline.
+**NOTE:** Image *files* are NOT generated in this step. The write step generates image prompt text (included in the payload below). Actual image generation happens after article approval via the admin panel's image pipeline.
 
 Save the written article:
 
@@ -242,7 +242,7 @@ The JSON payload uses flat format (single language):
 
 ---
 
-## 8. Pipeline Continuation
+## 7. Pipeline Continuation
 
 After saving article data, trigger the scoring step:
 
@@ -255,7 +255,7 @@ curl -s -X POST "{api_url}/automation/content-ideas/{idea_id}/continue-pipeline"
 
 ---
 
-## 9. Error Handling
+## 8. Error Handling
 
 If any step fails:
 

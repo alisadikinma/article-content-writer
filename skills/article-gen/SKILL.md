@@ -139,6 +139,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
       "citation_count": {citation_count},
       "image_count": {image_count},
       "framework": "{framework_name}",
+      "template": "{template_name}",
       "hook_type": "{hook_type}",
       "hook_boost": "{engagement_boost_pct}",
       "emotional_arc": "{arc_type}"

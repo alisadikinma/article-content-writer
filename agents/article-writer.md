@@ -313,9 +313,9 @@ Score the article against ALL five gates using the detailed criteria in the refe
 
 **Assemble final output** in the OUTPUT FORMAT below. Include: metadata header, full article, image prompts, all 5 scores, combined score with band, sources list.
 
-**Multi-language output:** If languages include multiple, write FULL article separately for EACH language. Do NOT translate — write natively with localized examples and idioms. Indonesian articles use Gen-Z Bahasa.
+**Single-language output:** Write the article in the PRIMARY language specified (first in the languages list). If Indonesian (`id`), use Gen-Z Bahasa (casual, conversational, localized idioms). If English (`en`), write in English. Output ONE article only — translation to other languages is handled separately after approval.
 
-**Pipeline mode:** Send completion callback JSON to Portfolio API with full structured data. See `references/seo-rules-engine.md` Section 5 for JSON schema.
+**Pipeline mode:** Send completion callback JSON to Portfolio API with full structured data. See `references/seo-rules-engine.md` "Completion Callback JSON" section for JSON schema.
 
 ---
 

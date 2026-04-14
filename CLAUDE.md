@@ -75,9 +75,9 @@ Backend → article-prep (Sonnet, refs-prep.md)     → 5%, 15%, 25%, 35%
 
 | Compiled Ref | Contents | Size |
 |-------------|----------|------|
-| `refs-prep.md` | global-config, frameworks-library, hook-repository, emotional-arcs, content-templates | ~55 KB |
-| `refs-write.md` | global-config (trimmed), style-guide, retention-engine, seo-rules-engine (trimmed) | ~42 KB |
-| `refs-score.md` | style-guide, seo-rules-engine, virality-triggers, quality-gate | ~58 KB |
+| `refs-prep.md` | global-config, frameworks-library, hook-repository, emotional-arcs, content-templates | ~57 KB |
+| `refs-write.md` | global-config (trimmed), style-guide, retention-engine, seo-rules-engine (trimmed) | ~43 KB |
+| `refs-score.md` | style-guide, seo-rules-engine (trimmed), virality-triggers, quality-gate | ~49 KB |
 
 **refs-write.md trimming:** The compile script excludes scoring-only content from refs-write to reduce token load during writing (~25% smaller). Removed: JS Logic Contract, Completion Callback JSON, SEO/GEO Score Output Formats, Per-Metric Optimization Strategies, Keyword Handling (done in prep), Image Generation config (images generated post-approval), Content Templates (already in prep_data). Full content remains in refs-score.md.
 

@@ -33,6 +33,8 @@ append_ref() {
 # Helper: append a reference file but SKIP specific ## sections
 # Usage: append_ref_excluding OUTFILE REFFILE "pattern1" "pattern2" ...
 # Patterns match against ## heading lines (substring match)
+# NOTE: awk does not distinguish headings inside code fences (```).
+# Avoid exclusion patterns that match headings in code blocks.
 append_ref_excluding() {
   local outfile="$1"
   local reffile="$2"
@@ -103,7 +105,6 @@ HEADER
 # — images handled post-approval, templates already in prep_data
 append_ref_excluding "$WRITE" "$REFS_DIR/global-config.md" \
   "## 11. Image Generation" \
-  "### Image Count by Article Length" \
   "## 16. Content Templates"
 
 append_ref "$WRITE" "$REFS_DIR/style-guide.md"
