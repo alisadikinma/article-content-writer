@@ -480,63 +480,24 @@ Write the article in a single comprehensive pass, applying all rules simultaneou
 
 **Read:** `references/virality-triggers.md` + `references/quality-gate.md` + `references/seo-rules-engine.md`
 
-Score the article against ALL five gates in a single pass, calculate the combined 100-point score, then deliver the final output.
+Score the article against ALL five gates in a single pass using the detailed criteria in the reference files read above. Calculate the combined 100-point score, then deliver the final output.
 
-**Gate 1 — Virality Score (5 triggers, min 3/5):**
-1. **Social Currency** — exclusive/insider info that makes sharer look smart
-2. **High-Arousal Emotion** — awe, excitement, productive anger (NOT contentment)
-3. **Practical Utility** — [Number]+[Superlative]+[Timeframe]+[Outcome] formula present
-4. **Identity Signaling** — reader can share to reinforce professional identity
-5. **Cognitive Gap Closure** — narrative tension resolves satisfyingly
+**Five Gates (score using detailed criteria from refs):**
 
-**Gate 2 — Quality Gate (10 criteria, min 7/10):**
-1. Clear — Grade 5 readable
-2. Concise — tight writing, no fluff
-3. Compelling — specific pain point in first 100 words
-4. Credible — 1+ citation per 400 words
-5. Nested Loops — 3+ unresolved in first 500 words
-6. Bucket Brigades — own lines with colons, 3+ present
-7. Emotional Arc — fast hook / slow build pattern
-8. Scannability — headers every 200-300 words, paragraphs max 4 lines
-9. Benefit-First + Actionable Depth — "So What?" + "Now What?" tests pass
-10. Dual CTA — Direct + Transitional present
+| Gate | Source | Min | Weight | Max Pts |
+|------|--------|-----|--------|---------|
+| Virality (5 triggers) | `virality-triggers.md` Scoring Guide | 3/5 | x4 | 20 |
+| Quality (10 criteria) | `quality-gate.md` The 10 Criteria | 7/10 | x3 | 30 |
+| SEO (6 metrics) | `seo-rules-engine.md` §1 | 4/6 | x2.5 | 15 |
+| AI Humanization (20pt) | `quality-gate.md` AI Humanization | — | x1 | 20 |
+| GEO (5 metrics) | `seo-rules-engine.md` §8-9 | — | x3 | 15 |
 
-**Gate 3 — SEO Score (6 metrics, min 4/6):**
-1. Title Length — Green: 50-60 chars, Amber: 40-50/60-70, Red: <40/>70
-2. Keyword in Title — Green: present, Red: missing
-3. Title Words — Green: 6-10, Amber: 5/11-12, Red: <5/>12
-4. Body Keyword Density — Green: 0.5-1.5%, Amber: 0.3-0.5%/1.5-2.5%, Red: <0.3%/>3%
-5. Keyword in First 100 — Green: present, Red: missing
-6. Keyword in Headings — Green: 1-2, Amber: 0, Red: >3
+**Combined Score:** Sum of weighted gates. Bands: Exceptional (90-100), Strong (80-89), Acceptable (70-79), Below Standard (60-69), Rewrite (<60). **Minimum to publish: >= 70.**
 
-**Gate 4 — AI Humanization Score (20 points, deduction-based):**
-- Base score: 20. Deduct for violations found in final article.
-- Tier 1 violations: -2 per word (max -10)
-- Tier 2 cluster violations: -1 per paragraph with 2+ Tier 2 words (max -5)
-- Tier 3 density violations: -1 per word exceeding 3% density (max -3)
-- AI pattern violations: -0.5 per category detected (max -2)
-- Final score: max(0, 20 - total_deductions)
-
-**Gate 5 — GEO Score (5 metrics, traffic light):**
-1. Answer-First H2s — Green: all H2s comply, Amber: 50%+, Red: <50%
-2. Passage Citability — Green: all key sections extractable, Amber: most, Red: few
-3. FAQ Presence — Green: 2+ pairs, Amber: 1 pair, Red: none
-4. Entity Clarity — Green: all claims specific, Amber: most, Red: vague
-5. Freshness Signals — Green: 3+ current-year refs, Amber: 1-2, Red: none
-
-**Combined Score (100-point weighted):**
-- Content Quality: [Quality Gate] x3 = max 30 pts
-- Virality: [Virality Score] x4 = max 20 pts
-- SEO: [SEO Score] x2.5 = max 15 pts
-- AI Humanization: [Humanization Score] x1 = max 20 pts
-- GEO/AEO: [GEO Score] x3 = max 15 pts
-- Bands: Exceptional (90-100), Strong (80-89), Acceptable (70-79), Below Standard (60-69), Rewrite (<60)
-- **Minimum to publish: Combined Score >= 70 (Acceptable)**
-
-**If ANY blocking gate fails (Virality <3/5, Quality <7/10, SEO <4/6, or Combined <70):**
+**If ANY blocking gate fails (Virality <3, Quality <7, SEO <4, or Combined <70):**
 - Fix failing items using per-trigger/per-criterion/per-metric strategies from reference files
-- Re-score ONLY the failed gate
-- Repeat until all blocking gates pass and Combined >= 70
+- Re-score ONLY the failed gate, recalculate Combined
+- If still failing after two revision rounds, flag to user with explanation
 
 **Assemble final output** in the standard format (Section 4). Include: metadata header, full article, image prompts, all 5 scores, combined score with band, sources list.
 

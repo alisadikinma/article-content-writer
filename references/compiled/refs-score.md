@@ -432,35 +432,6 @@ Run this checklist on every draft before quality gate scoring:
 
 ---
 
-## 2. Keyword Handling
-
-### Auto-Derive Flow
-1. During topic research (article-gen Step 1), analyze the topic for keyword opportunities
-2. Consider: search intent, specificity, natural fit in title
-3. Present 2–3 keyword suggestions to user:
-   ```
-   KEYWORD OPTIONS:
-   1. [keyword phrase] — [rationale: search volume, specificity, intent match]
-   2. [keyword phrase] — [rationale]
-   3. [keyword phrase] — [rationale]
-   
-   RECOMMENDATION: #[N] — [keyword] because [reason tied to topic + audience]
-   ```
-4. User reviews and confirms, modifies, or inputs custom keyword
-5. Confirmed keyword is used throughout SEO optimization and scoring
-
-### Pipeline Mode
-- If `--keyword` flag provided → use it directly, skip auto-derive
-- If no `--keyword` flag → auto-derive from topic, auto-select top recommendation
-
-### Keyword Quality Criteria
-- **Specific** — "SaaS onboarding email strategy" not "email marketing"
-- **Natural** — must fit naturally in a title and headings without forcing
-- **Intent-matched** — aligns with the article's goal (educate/sell/convert/engage)
-- **Length** — 2–4 words is ideal for long-tail targeting
-
----
-
 ## 3. SEO Optimization Rules
 
 These rules are enforced during article-gen Step 7.5 (SEO Optimization pass):
@@ -491,198 +462,6 @@ These rules are enforced during article-gen Step 7.5 (SEO Optimization pass):
 
 ### Natural Integration Principle
 All keyword placements must read naturally. If adding the keyword makes a sentence awkward, find a different placement. Google's algorithms detect forced keyword insertion — natural language always wins.
-
----
-
-## 4. JS Logic Contract — `computeSeoAnalysis()`
-
-This function defines the **exact scoring logic** that the Portfolio website implements client-side for real-time SEO preview. The plugin implements the same logic during scoring (markdown-side).
-
-```js
-function computeSeoAnalysis(content, title, keyword) {
-  const textContent = stripHtml(content)
-  const words = textContent.split(/\s+/)
-  const totalWords = words.length
-  const keywordLower = keyword.toLowerCase()
-
-  // Keyword density
-  const keywordRegex = new RegExp(keywordLower, 'gi')
-  const bodyMatches = textContent.match(keywordRegex) || []
-  const density = (bodyMatches.length / totalWords) * 100
-
-  // In title
-  const inTitle = title.toLowerCase().includes(keywordLower)
-
-  // In first 100 words
-  const first100 = words.slice(0, 100).join(' ').toLowerCase()
-  const inFirst100 = first100.includes(keywordLower)
-
-  // In headings
-  const headingRegex = /<h[23][^>]*>(.*?)<\/h[23]>/gi
-  let headingMatches = 0
-  let match
-  while ((match = headingRegex.exec(content)) !== null) {
-    if (match[1].toLowerCase().includes(keywordLower)) headingMatches++
-  }
-
-  // Title length
-  const titleLength = title.length
-  const titleWords = title.split(/\s+/).length
-
-  return {
-    density: { value: density.toFixed(1), status: getStatus(density, 0.5, 1.5, 0.3, 2.5) },
-    inTitle: { value: inTitle, status: inTitle ? 'good' : 'bad' },
-    inFirst100: { value: inFirst100, status: inFirst100 ? 'good' : 'bad' },
-    inHeadings: { value: headingMatches, status: getStatus(headingMatches, 1, 2, 0, 3) },
-    titleLength: { value: titleLength, status: getStatus(titleLength, 50, 60, 40, 70) },
-    titleWords: { value: titleWords, status: getStatus(titleWords, 6, 10, 5, 12) },
-    totalWords,
-    keywordCount: bodyMatches.length
-  }
-}
-
-/**
- * getStatus — traffic light classifier
- * @param {number} value — the metric value
- * @param {number} greenMin — lower bound of green zone (inclusive)
- * @param {number} greenMax — upper bound of green zone (inclusive)
- * @param {number} amberMin — lower bound of amber zone (inclusive)
- * @param {number} amberMax — upper bound of amber zone (inclusive)
- * @returns {'good' | 'warning' | 'bad'}
- *
- * Logic:
- *   greenMin <= value <= greenMax → 'good'    (Green, 1 point)
- *   amberMin <= value < greenMin → 'warning'  (Amber, 0.5 points)
- *   greenMax < value <= amberMax → 'warning'  (Amber, 0.5 points)
- *   value < amberMin or value > amberMax → 'bad' (Red, 0 points)
- */
-function getStatus(value, greenMin, greenMax, amberMin, amberMax) {
-  if (value >= greenMin && value <= greenMax) return 'good'
-  if ((value >= amberMin && value < greenMin) || (value > greenMax && value <= amberMax)) return 'warning'
-  return 'bad'
-}
-
-/**
- * stripHtml — removes HTML tags from content
- * @param {string} html — raw HTML content
- * @returns {string} — plain text
- */
-function stripHtml(html) {
-  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-}
-```
-
-### Return Object Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `density.value` | string | Body keyword density as percentage (e.g., "1.2") |
-| `density.status` | string | `good` / `warning` / `bad` |
-| `inTitle.value` | boolean | Whether keyword is present in title |
-| `inTitle.status` | string | `good` / `bad` (binary — no warning state) |
-| `inFirst100.value` | boolean | Whether keyword is in first 100 words |
-| `inFirst100.status` | string | `good` / `bad` (binary — no warning state) |
-| `inHeadings.value` | number | Count of H2/H3 headings containing keyword |
-| `inHeadings.status` | string | `good` / `warning` / `bad` |
-| `titleLength.value` | number | Character count of title |
-| `titleLength.status` | string | `good` / `warning` / `bad` |
-| `titleWords.value` | number | Word count of title |
-| `titleWords.status` | string | `good` / `warning` / `bad` |
-| `totalWords` | number | Total word count of body content |
-| `keywordCount` | number | Raw count of keyword occurrences in body |
-
-### Status-to-Score Mapping (for Portfolio UI)
-
-| Status | Points | Color | UI Display |
-|--------|--------|-------|-----------|
-| `good` | 1 | Green | Optimal |
-| `warning` | 0.5 | Amber | Needs attention |
-| `bad` | 0 | Red | Fix required |
-
----
-
-## 5. Completion Callback JSON Schema
-
-When pipeline mode completes, the full data package is sent to the Portfolio API. This is the complete schema:
-
-```json
-{
-  "article": {
-    "title": "string — article title",
-    "content": "string — full HTML content",
-    "keyword": "string — target SEO keyword",
-    "word_count": "number — total word count",
-    "citation_count": "number — E-E-A-T citations used",
-    "image_count": "number — images generated (3-5)",
-    "framework": "string — copywriting framework used (e.g., PASO)",
-    "hook_type": "string — hook type used (e.g., Curiosity Gap)",
-    "hook_boost": "string — expected engagement boost (e.g., +45%)",
-    "emotional_arc": "string — arc pattern used (e.g., Discovery)"
-  },
-  "seo_analysis": {
-    "score": "number — total SEO score (0-6, supports 0.5 increments)",
-    "max_score": 6,
-    "pass": "boolean — true if score >= 4",
-    "keyword": "string — target keyword used for analysis",
-    "metrics": {
-      "title_length": { "value": "number — char count", "status": "string — good/warning/bad" },
-      "keyword_in_title": { "value": "boolean", "status": "string — good/bad" },
-      "title_word_count": { "value": "number — word count", "status": "string — good/warning/bad" },
-      "body_keyword_density": { "value": "number — percentage", "status": "string — good/warning/bad" },
-      "keyword_in_first_100": { "value": "boolean", "status": "string — good/bad" },
-      "keyword_in_headings": { "value": "number — heading count", "status": "string — good/warning/bad" }
-    }
-  },
-  "virality_score": {
-    "score": "number — total virality score (0-5)",
-    "max_score": 5,
-    "pass": "boolean — true if score >= 3",
-    "triggers": {
-      "social_currency": { "pass": "boolean", "evidence": "string" },
-      "high_arousal_emotion": { "pass": "boolean", "evidence": "string" },
-      "practical_utility": { "pass": "boolean", "evidence": "string" },
-      "identity_signaling": { "pass": "boolean", "evidence": "string" },
-      "cognitive_gap_closure": { "pass": "boolean", "evidence": "string" }
-    }
-  },
-  "quality_gate": {
-    "score": "number — total quality score (0-10)",
-    "max_score": 10,
-    "pass": "boolean — true if score >= 7",
-    "criteria": {
-      "clear": { "pass": "boolean", "evidence": "string" },
-      "concise": { "pass": "boolean", "evidence": "string" },
-      "compelling": { "pass": "boolean", "evidence": "string" },
-      "credible": { "pass": "boolean", "evidence": "string" },
-      "nested_loops": { "pass": "boolean", "evidence": "string" },
-      "bucket_brigades": { "pass": "boolean", "evidence": "string" },
-      "emotional_arc": { "pass": "boolean", "evidence": "string" },
-      "scannability": { "pass": "boolean", "evidence": "string" },
-      "benefit_first": { "pass": "boolean", "evidence": "string" },
-      "dual_cta": { "pass": "boolean", "evidence": "string" }
-    }
-  },
-  "image_prompts": [
-    {
-      "type": "string — cover or inline",
-      "section": "string — section title (null for cover)",
-      "concept": "string — 1-line concept description",
-      "prompt": "string — full 20-80 word prompt",
-      "model": "string — nano-banana-pro / nano-banana-2 / imagen-4",
-      "style": "string — Photorealistic, Portrait Cinematic, etc.",
-      "aspect_ratio": "string — 16:9, 4:3, 1:1",
-      "resolution": "string — 1K, 2K, 4K"
-    }
-  ],
-  "research_data": {
-    "key_data_points": ["string — verified data points used"],
-    "primary_pain_point": "string — reader's core pain point",
-    "sources": [
-      { "name": "string — source publication", "url": "string — source URL" }
-    ]
-  }
-}
-```
 
 ---
 
@@ -837,27 +616,23 @@ Separate scoring for AI citation readiness. Uses the same traffic light system a
 
 ## 1. The Neuroscience of Shareable Content
 
-Highly shareable content activates a "perfect storm" in the brain by simultaneously triggering regions associated with self-processing and social rewards.
+Sharing activates two brain regions simultaneously:
 
-- **Medial Prefrontal Cortex:** Responsible for self-processing. Content that triggers self-reflection or allows users to define their own identity to others is more likely to be shared. This is WHY self-reflection prompts ("How does this apply to YOUR situation?") increase share rates.
-- **Ventral Striatum:** Part of the brain's reward circuitry. Sharing content that receives social validation creates a dopamine-driven reward sensation, encouraging repeat behavior.
-- **Oxytocin:** Known for regulating emotional responses and creating deeper connections. Stories that evoke empathy release oxytocin, making the message easier to remember and the brand more trustworthy.
-- **Cortisol:** Assists in formulating memories during high-stakes or stressful moments in a narrative. This is why "fear" and "urgency" sections are remembered longer.
+- **Medial Prefrontal Cortex (self-processing):** Content triggering self-reflection is more likely shared. This is WHY self-reflection prompts ("How does this apply to YOUR situation?") increase share rates.
+- **Ventral Striatum (reward circuitry):** Social validation from sharing creates dopamine reward, encouraging repeat behavior.
 
 ---
 
 ## 2. Social Currency and Identity Signaling
 
-The "information as social currency" principle: people share content that makes them look good to others.
+People share content that makes them look good. Two mechanisms:
 
-- **Identity Signaling:** Users share content to signal belonging to a specific group or to reinforce their professional and cultural identities.
-- **Information Asymmetry:** Providing exclusive insights or counterintuitive findings allows the sharer to signal "insider knowledge," increasing their perceived status within their network.
+- **Identity Signaling:** Users share to signal belonging to a specific group or reinforce professional/cultural identities.
+- **Information Asymmetry:** Exclusive insights or counterintuitive findings let the sharer signal "insider knowledge," increasing perceived status.
 
 ---
 
 ## 3. Emotional Arousal and Share Rates
-
-Content evoking high-arousal emotions is shared significantly more than low-arousal content.
 
 **High-Arousal (EFFECTIVE — target these):**
 | Emotion | Share Impact | Type |
@@ -880,11 +655,7 @@ Content evoking high-arousal emotions is shared significantly more than low-arou
 
 ## 4. The Completion-to-Share Pipeline
 
-In 2025, completion rate has replaced impressions as the primary metric of success.
-
-- **Strategic Resolution:** For a share to occur, the content must first resolve the narrative tension it created. If a user doesn't finish, the "loop" remains open, and they are less likely to share.
-- **Reward at the End:** A real payoff — key insight or surprising resolution — validates the reader's time investment and triggers the final impulse to share.
-- **Algorithm Shift:** Platforms now prioritize sustained attention and engagement depth (pauses, rewinds, saves) over quick taps.
+Completion rate is the primary metric. Content must resolve its narrative tension — if a user doesn't finish, the loop stays open and they won't share. A real payoff at the end (key insight, surprising resolution) validates the reader's time investment and triggers the share impulse.
 
 ---
 
@@ -922,12 +693,7 @@ Every actionable section in an article MUST use this formula at least once.
 
 ## 8. E-E-A-T Signals for Trust
 
-Search algorithms, specifically Google's Helpful Content System, prioritize content demonstrating quality through four pillars:
-
-- **Experience:** Providing "reporting from the front lines" rather than just polished theories.
-- **Expertise:** Deeply answering customer questions and providing comprehensive guides (typically 1,900–2,400 words).
-- **Authoritativeness:** Establishing the brand as a leader through detailed case studies and unique methodologies.
-- **Trustworthiness:** Building credibility through facts, social proof, and reputable third-party citations — also increases likelihood of being featured in AI Overviews.
+E-E-A-T requirements: see `style-guide.md` Rule 6 for full details. Min 1 citation per 400 words. Prioritize: Experience (first-hand accounts) + Trustworthiness (named, dated, reputable citations).
 
 ---
 
@@ -1161,6 +927,32 @@ When an article scores below 7/10, fix criteria in this order (highest impact fi
 ### Fix Recommendations (Priority Order)
 1. [Criterion]: [Specific, actionable fix]
 ```
+
+---
+
+## CTA Copy Formulas
+
+Use these templates when writing the Dual CTA (criterion #10). Pick one Direct + one Transitional.
+
+**Direct CTA Templates (asks for the sale/action):**
+
+| Pattern | Template | Example |
+|---------|----------|---------|
+| Imperative + Benefit | "Start [action] today — [outcome] in [timeframe]" | "Start tracking today — save 2 hours by Friday" |
+| Social Proof + Action | "Join [number] [role]s who already [outcome]" | "Join 12,000 marketers who already doubled their open rates" |
+| Scarcity + Urgency | "[Resource] is free for now — [action] before [trigger]" | "The template is free for now — grab it before we paywall it" |
+| Challenge + Dare | "Think you can't [outcome]? Try [action] for [timeframe]" | "Think you can't write viral content? Try this system for 7 days" |
+| Question + Action | "Ready to [outcome]? Here's your first step" | "Ready to 3x your traffic? Here's your first step" |
+
+**Transitional CTA Templates (lower commitment alternative):**
+
+| Pattern | Template | Example |
+|---------|----------|---------|
+| Lead Magnet | "Want the full [resource]? Grab the free [format]" | "Want the full checklist? Grab the free PDF" |
+| Next Content | "Liked this? Read [related article] next" | "Liked this? Read our SEO teardown next" |
+| Community | "Share your [result] in the comments / with your team" | "Share your first headline test in the comments" |
+| Bookmark | "Save this for when you [relevant situation]" | "Save this for when you write your next landing page" |
+| Micro-Commitment | "Try just [smallest step] this week — then come back and tell me what happened" | "Try just one bucket brigade this week — then come back and tell me what happened" |
 
 ---
 

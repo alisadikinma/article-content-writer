@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Claude Code plugin for AI-powered long-form article writing with inline image prompt generation. 7 skills + 1 agent + 13 reference documents as RAG knowledge base. Optimized 5-step pipeline generates articles in ~6-8 minutes with five scoring gates (Quality + Virality + SEO + AI Humanization + GEO), combined 100-point scoring, and 20 hard rules enforced on every output. Split pipeline architecture (article-prep → article-write → article-score) with compiled reference injection and model switching (Sonnet/Opus) for optimized backend automation.
+Claude Code plugin for AI-powered long-form article writing with inline image prompt generation. 7 skills + 1 agent + 11 reference documents as RAG knowledge base. Optimized 5-step pipeline generates articles in ~6-8 minutes with five scoring gates (Quality + Virality + SEO + AI Humanization + GEO), combined 100-point scoring, and 20 hard rules enforced on every output. Split pipeline architecture (article-prep → article-write → article-score) with compiled reference injection and model switching (Sonnet/Opus) for optimized backend automation.
 
 ## Architecture
 
@@ -20,7 +20,7 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 | `skills/article-brief/SKILL.md` | Brainstorm + outline with virality pre-assessment |
 | `agents/article-writer.md` | Self-contained subagent for batch article writing (mirrors 5-step pipeline with all 20 rules + 5 gates) |
 | `scripts/compile-references.sh` | Builds 3 per-skill compiled reference files from individual refs |
-| `references/` | 13 reference docs read on-demand by skills/agent |
+| `references/` | 11 reference docs read on-demand by skills/agent |
 | `references/compiled/` | 3 compiled ref bundles for system prompt injection (`refs-prep.md`, `refs-write.md`, `refs-score.md`) |
 | `README.md` | Repo README |
 | `LICENSE` | MIT license |
@@ -33,15 +33,13 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 | `frameworks-library.md` | Step 2 Strategy — 14 copywriting frameworks (3 primary + 11 supporting) with decision matrix |
 | `hook-repository.md` | Step 2 Strategy — 8 hook types with psychology, engagement boost %, templates, combining strategies |
 | `content-templates.md` | Step 2 Strategy — 12 content templates with auto-selection guide, section structures, framework/arc pairings |
-| `retention-engine.md` | Step 3 Outline — 6 retention techniques (slippery slide, Zeigarnik, open loops, bucket brigades, pattern interrupts, nested loops) |
+| `retention-engine.md` | Step 3 Outline — 5 retention techniques (slippery slide, open loops/Zeigarnik, bucket brigades, pattern interrupts, nested loops) |
 | `emotional-arcs.md` | Step 2 Strategy — 4 arcs with neurotransmitter mapping, pacing metrics, completion-to-share resolution |
 | `virality-triggers.md` | Step 5 Scoring — neuroscience of sharing, 5-point virality scoring guide with pass/fail definitions |
 | `image-prompt-guide.md` | Step 3 Outline + Step 4 Write — GeminiGen.AI API docs, model/style guides, section-to-concept mapping, prompt best practices |
 | `seo-rules-engine.md` | Step 4 Write + Step 5 Scoring — 6 SEO metrics + 5 GEO metrics with traffic light thresholds, JS logic contract, completion callback JSON schema |
 | `style-guide.md` | Step 4 Write — 8 technical writing rules: paragraph structure, So What test, 107-word AI replacement system (3 tiers), fluff reduction, readability, E-E-A-T, actionable depth, 36 AI pattern categories |
 | `quality-gate.md` | Step 5 Scoring — 10-point quality checklist, AI Humanization 20-point scoring, combined 100-point scale with bands |
-| `sources-index.md` | Step 1 Research — 22 source documents from NotebookLM research |
-| `writing-framework.md` | Master overview — original 7-section framework (structures, hooks, retention, arcs, virality, style, quality) |
 
 ## 5-Step Optimized Pipeline
 
@@ -78,12 +76,14 @@ Backend → article-prep (Sonnet, refs-prep.md)     → 5%, 15%, 25%, 35%
 | Compiled Ref | Contents | Size |
 |-------------|----------|------|
 | `refs-prep.md` | global-config, frameworks-library, hook-repository, emotional-arcs, content-templates | ~55 KB |
-| `refs-write.md` | global-config, style-guide, retention-engine, image-prompt-guide, seo-rules-engine | ~68 KB |
+| `refs-write.md` | global-config (trimmed), style-guide, retention-engine, seo-rules-engine (trimmed) | ~42 KB |
 | `refs-score.md` | style-guide, seo-rules-engine, virality-triggers, quality-gate | ~58 KB |
+
+**refs-write.md trimming:** The compile script excludes scoring-only content from refs-write to reduce token load during writing (~25% smaller). Removed: JS Logic Contract, Completion Callback JSON, SEO/GEO Score Output Formats, Per-Metric Optimization Strategies, Keyword Handling (done in prep), Image Generation config (images generated post-approval), Content Templates (already in prep_data). Full content remains in refs-score.md.
 
 **Data flow:** article-prep saves prep_data to backend API → article-write fetches prep_data, saves article → article-score fetches article, sends completion callback. Each skill triggers the next via `POST /continue-pipeline`.
 
-**Rebuilding compiled refs:** Run `bash scripts/compile-references.sh` after editing any reference file. Script is idempotent.
+**Rebuilding compiled refs:** Run `bash scripts/compile-references.sh` after editing any reference file. Script is idempotent. The compile script supports section-level filtering via `append_ref_excluding` for per-skill trimming.
 
 ## 20 Hard Rules
 
@@ -127,73 +127,13 @@ All blocking gates must pass AND combined score must reach 70+ before an article
 
 **Scoring bands:** Exceptional (90-100), Strong (80-89), Acceptable (70-79), Below Standard (60-69), Rewrite (<60)
 
-## Key Concepts
-
-- **AI Humanization** — 107-word tiered replacement system (52 Tier 1 always-replace + 43 Tier 2 cluster-flag + 12 Tier 3 density-flag) plus 36 AI pattern detection categories (10 structural + 12 language + 8 tone + 6 advanced). 20-point deduction scoring.
-- **GEO/AEO Optimization** — Generative Engine Optimization for AI citation readiness. 5 rules: Answer-First formatting (40-60 word H2 openers), passage citability (50-150 word chunks), FAQ schema hints (2+ Q&A pairs), entity clarity (named sources), freshness signals (current-year refs). 5-metric traffic light scoring.
-- **Content Templates** — 12 pre-built article structures (How-To, Listicle, Case Study, Comparison, Pillar Page, Product Review, Thought Leadership, Roundup, Tutorial, News Analysis, Data Research, FAQ Knowledge Base). Auto-selected based on topic characteristics with user override.
-- **Combined 100-Point Scoring** — Weighted composite of all 5 gates: Quality x3 (30pts) + Virality x4 (20pts) + SEO x2.5 (15pts) + Humanization x1 (20pts) + GEO x3 (15pts). 5 scoring bands. Minimum 70 to publish.
-- **Copywriting Frameworks** — PASO, StoryBrand, AIDA as primary + 11 supporting frameworks with decision matrix (topic/goal → framework)
-- **Hook Psychology** — 8 hook types with engagement boost % (Story +55%, Before/After +50%, Curiosity +45%, Question +40%, etc.), 1.7-3 second pattern interrupt window, engagement multipliers for combining hooks
-- **Retention Engine** — 6 techniques: slippery slide (short first line), Zeigarnik effect (open loops), bucket brigades (colon transitions), pattern interrupts (every 300-400 words), nested loops (additive tension), "trailer moment" teasers
-- **Emotional Arc Sequencing** — 4 arcs (Discovery, Empowerment, Myth-Busting, Transformation), fast hook/slow build pacing, neurotransmitter targeting (oxytocin/cortisol/dopamine)
-- **Image Prompt Generation** — GeminiGen.AI API with nano-banana-pro (free), 3-5 images per article (1 cover + 2-4 inline), section-to-concept mapping
-- **Actionable Depth** — Numbered sections require What + How + Example + Outcome per point (150-250 words each). "Now What?" test: reader can act within 5 minutes
-- **Pipeline Mode** — Automated article generation via CLI flags (`--idea-id`, `--api-url`, `--api-token`, `--topic`, `--keyword`, `--languages`, `--instructions`) with progress callbacks to Portfolio API at each step
-- **Split Pipeline** — 3-skill architecture for backend automation: `article-prep` (Sonnet, Steps 1-3) → `article-write` (Opus, Step 4) → `article-score` (Sonnet, Step 5). Compiled references injected via `--append-system-prompt-file`, eliminating Read tool calls. Data flows between skills via backend API endpoints.
-- **Compiled References** — `scripts/compile-references.sh` builds 3 per-skill reference bundles in `references/compiled/`. Each skill loads only what it needs (~55-68 KB) instead of all 13 files (~180 KB). Rebuild after editing any reference file.
-- **Completion Callback** — Pipeline mode sends FULL structured JSON to Portfolio API on completion: `article`, `seo_analysis`, `virality_score`, `quality_gate`, `ai_humanization`, `geo_score`, `combined_score`, `image_prompts`, `research_data`. Full JSON schema in `references/seo-rules-engine.md` Section 5
-- **JS Logic Contract** — `computeSeoAnalysis(content, title, keyword)` function in `references/seo-rules-engine.md` Section 4 defines exact SEO scoring logic for Portfolio website client-side re-implementation
-
 ## Capabilities
 
-1. **End-to-end article generation** — 5-step optimized pipeline: research → strategy → outline → write+polish → five gates (~6-8 min)
-2. **Five scoring gates** — Quality (10pt, min 7) + Virality (5pt, min 3) + SEO (6pt, min 4) + AI Humanization (20pt) + GEO (5pt)
-3. **Combined 100-point scoring** — weighted composite with 5 bands (Exceptional/Strong/Acceptable/Below Standard/Rewrite), minimum 70 to publish
-4. **20 hard rules** — non-negotiable quality enforcement on every article including AI humanization and GEO formatting
-5. **107-word AI replacement system** — 3-tier detection (52 always-replace + 43 cluster-flag + 12 density-flag)
-6. **36 AI pattern detection categories** — structural, language, tone, and advanced pattern removal
-7. **12 content templates** — with auto-selection based on topic characteristics (How-To, Listicle, Case Study, etc.)
-8. **GEO/AEO optimization** — answer-first formatting, passage citability, FAQ schema, entity clarity, freshness signals
-9. **14 copywriting frameworks** — with automatic recommendation via decision matrix
-10. **8 hook types** — with engagement boost rankings and combining strategies (PRIMARY + SECONDARY + WILDCARD)
-11. **6 retention techniques** — psychologically-backed reader retention patterns
-12. **4 emotional arcs** — with neurotransmitter targeting and pacing guidance
-13. **Inline image prompts** — GeminiGen.AI compatible (nano-banana-pro/nano-banana-2/imagen-4), 3-5 per article
-14. **Article validation** — score any existing article against all five gates with combined 100-point score and actionable fixes
-15. **SEO + GEO analysis** — standalone keyword density, title optimization, heading analysis, AI citation readiness with traffic light scoring
-16. **Article briefs** — structured outlines with virality pre-assessment and image concept planning
-17. **Batch production** — via article-writer subagent for multiple articles in sequence
-18. **Fact verification** — upfront web-verify all claims (Step 1 only), zero web calls during writing, E-E-A-T citation density enforcement
-19. **Pipeline mode** — fully automated generation via CLI flags with progress callbacks and full JSON completion callback to Portfolio API
-20. **Split pipeline** — 3-skill architecture (article-prep/article-write/article-score) with model switching (Sonnet/Opus) and compiled reference injection for ~50% faster generation
-21. **Compiled references** — `scripts/compile-references.sh` builds per-skill ref bundles, eliminating Read tool calls in pipeline mode
+See Architecture table above for full skill/agent inventory. Key: end-to-end article generation (5-step pipeline), five scoring gates with combined 100-point scoring, 20 hard rules, 11 reference documents as RAG knowledge base, split pipeline for backend automation with compiled reference injection.
 
 ## Technical Defaults
 
-> All configurable values are in `references/global-config.md`. This table shows setting NAMES — see global-config.md for current VALUES.
-
-| Setting | Source |
-|---------|--------|
-| Primary language | Per global-config.md Language section |
-| Default framework | Per global-config.md Content Defaults (`default_framework`) |
-| Article length | Per global-config.md Content Defaults (`article_length`) |
-| Readability target | Per global-config.md Content Defaults (`readability_target`) |
-| Citation density | Per global-config.md E-E-A-T Density section |
-| Forbidden vocabulary | Per global-config.md Forbidden Vocabulary section |
-| Quality minimum | Per global-config.md Quality Gate section |
-| Virality minimum | Per global-config.md Virality Score section |
-| Image model | Per global-config.md Image Generation (`default_model`) |
-| Image count | Per global-config.md Image Generation (`image_count` + allocation table) |
-| Hook word limit | Per global-config.md Hook Defaults section |
-| SEO minimum | Per global-config.md SEO Rules Engine (`seo_minimum`) |
-| SEO keyword handling | Per global-config.md SEO Rules Engine (`keyword_handling`) |
-| AI Humanization tiers | Per global-config.md AI Humanization (Section 13) |
-| GEO metrics | Per global-config.md GEO/AEO Readiness (Section 14) |
-| Combined score minimum | Per global-config.md Combined Scoring (Section 15) — 70 to publish |
-| Content templates | Per global-config.md Content Templates (Section 16) — 12 templates, auto-select |
-| Research web searches | Per global-config.md Research Efficiency (`max_web_searches`: 2-3) |
-| Writing web calls | Per global-config.md Research Efficiency (`writing_web_calls`: 0) |
+All configurable values (language, readability, frameworks, image model, scoring thresholds, etc.) are in `references/global-config.md` — single source of truth. Edit that file to change any setting.
 
 ## Conventions for Contributors
 
@@ -275,10 +215,11 @@ After editing any file in `references/`:
 | Split skills out of sync | article-prep, article-write, article-score must match article-gen's workflow — mirror changes to all |
 | SEO callback not sending | Check pipeline mode flags and completion callback JSON schema (now includes ai_humanization, geo_score, combined_score) |
 | Compiled refs outdated | Run `bash scripts/compile-references.sh` after editing any reference file |
+| refs-write too large | Check `append_ref_excluding` patterns in compile script — verify scoring-only sections are excluded |
 | Split pipeline data flow broken | Check backend API endpoints: GET /{id}, PUT /save-prep, PUT /save-article, POST /continue-pipeline |
 | Wrong model used | article-prep + article-score use Sonnet, article-write uses Opus — check backend config |
 
 ---
 
-**Version:** 2.1.0
+**Version:** 2.3.0
 **Last Updated:** April 2026

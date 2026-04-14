@@ -8,7 +8,7 @@
 
 | Setting | Value |
 |---------|-------|
-| `primary_language` | English |
+| `primary_language` | Indonesian |
 | `bilingual_support` | Yes — headline in primary language, subtitle as translation (configurable) |
 | `prompt_language` | Always English (AI model instruction language) |
 | `indonesian_mode` | Available — bilingual ID/EN with Gen-Z Bahasa for hooks |

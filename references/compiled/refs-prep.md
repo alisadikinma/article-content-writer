@@ -18,7 +18,7 @@ These references are injected via --append-system-prompt-file. Do NOT read them 
 
 | Setting | Value |
 |---------|-------|
-| `primary_language` | English |
+| `primary_language` | Indonesian |
 | `bilingual_support` | Yes — headline in primary language, subtitle as translation (configurable) |
 | `prompt_language` | Always English (AI model instruction language) |
 | `indonesian_mode` | Available — bilingual ID/EN with Gen-Z Bahasa for hooks |
@@ -625,6 +625,27 @@ For maximum impact, combine two hook types into a single opening:
 | 6 | Trend / FOMO | +35% | Timely + actionable |
 | 7 | Numbered List | +30% | Reliable + shareable |
 | 8 | Social Proof | +25% | Credibility |
+
+---
+
+## The Reading Contract (Hook-to-Body Bridge)
+
+The 50-100 word bridge between hook and body is where readers decide to stay or leave. Use this 4-element formula:
+
+| Element | Purpose | Length |
+|---------|---------|--------|
+| **Pain** | Name the specific problem the reader has | 1-2 sentences |
+| **Promise** | What this article will deliver | 1 sentence |
+| **Preview** | Brief roadmap of what's coming | 1 sentence |
+| **Proof** | One data point or credibility signal | 1 sentence |
+
+**Example (EN):**
+> *Hook:* "We fired our top salesperson. Revenue went up 40%."
+> *Bridge:* Most sales teams reward the wrong behavior — volume over value. That one decision taught us three counterintuitive hiring rules that rebuilt our pipeline in 90 days. In this article, you'll get the exact framework we used, the metrics we tracked, and the one interview question that predicted success. HubSpot's 2025 Sales Report found that 68% of top-performing teams use a similar model.
+
+**Example (ID):**
+> *Hook:* "Gue dipecat. 6 bulan kemudian, penghasilan gue 3x lipat."
+> *Bridge:* Kebanyakan orang panik waktu kehilangan kerjaan — gue juga. Tapi keputusan yang gue ambil di minggu pertama ternyata jadi titik balik karir gue. Lo bakal dapet 5 langkah konkret yang bisa lo mulai hari ini, plus kesalahan fatal yang hampir bikin gue bangkrut. Riset LinkedIn 2025 nunjukin 72% career changers yang sukses pakai pendekatan serupa.
 
 
 ---

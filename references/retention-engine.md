@@ -1,4 +1,4 @@
-# Retention Engine: 6 Psychological Techniques for Reader Retention
+# Retention Engine: 5 Psychological Techniques for Reader Retention
 
 Overview: These techniques form the "psychological cement" that keeps readers scrolling. Every sentence has one purpose: to compel the reader to read the NEXT sentence. If a sentence does not move the reader forward, it is "dead weight" and must be deleted.
 
@@ -20,45 +20,31 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 
 ---
 
-## 2. The Zeigarnik Effect (Open Loops)
+## 2. Open Loops (Zeigarnik Effect)
 
-**What it is:** The tendency of the human brain to remember incomplete or interrupted tasks better than completed ones.
+**What it is:** The Zeigarnik Effect — the brain remembers incomplete tasks better than completed ones. Open loops are the rhetorical application: introduce a compelling story, question, or "secret" and intentionally delay the conclusion.
 
-**Psychological Principle:** Incomplete tasks create cognitive tension — a "mental itch" that persists in working memory and demands resolution. The brain remains in a state of discomfort until the loop is settled, making the reader compelled to finish.
-
-**Implementation Rules for Blog Articles:**
-- **Avoid summarization:** Do not give the "answer" in the headline; summary-style headlines satisfy the brain and kill the urge to click
-- **The "Closure Test":** Ensure your lead creates an information gap between what the reader knows and what they need to know
-- **Always deliver:** You must eventually close the loop to maintain trust; "clickbait" without resolution devalues future content
-- **Mandate:** FORBID summary-style headers (e.g., "Our results were good"). MANDATE "Information Gaps" in headers (e.g., "The one metric that predicted our failure")
-- **Instruction:** End every section with a cliffhanger that only the subsequent section resolves
-
-**Concrete Examples:**
-1. BuzzFeed-style headlines: "Only 1% of people know this basic fact about [Topic]..."
-2. Netflix-style cliffhangers: Ending a section on a gripping question (e.g., "But then, the data showed something we didn't expect...")
-3. Abandoned transaction triggers: Reminding a user they "left something behind" to trigger the need for closure
-
----
-
-## 3. Open Loops
-
-**What it is:** A rhetorical device where a writer introduces a compelling story or "secret" but intentionally delays the conclusion.
-
-**Psychological Principle:** Open loops function as the active application of the Zeigarnik Effect. Because the brain has a deep intolerance for loose ends, the reader feels "unsettled" until they reach the payoff, effectively "hooking" their attention.
+**Psychological Principle:** Incomplete tasks create cognitive tension — a "mental itch" that persists in working memory and demands resolution. The brain has a deep intolerance for loose ends, making the reader compelled to keep reading until the payoff.
 
 **Implementation Rules for Blog Articles:**
 - **Open early, close late:** Introduce a narrative or problem in the intro but don't reveal the fix until the end
 - **Sprinkle multiple loops:** Introduce secondary questions throughout the middle to prevent "mid-point bounce"
+- **Avoid summarization:** Do not give the "answer" in the headline; summary-style headlines satisfy the brain and kill the urge to click
+- **The "Closure Test":** Ensure your lead creates an information gap between what the reader knows and what they need to know
+- **Always deliver:** Close every loop to maintain trust; "clickbait" without resolution devalues future content
 - **MANDATE:** 3+ open loops in the first 500 words of any article
+- **MANDATE:** FORBID summary-style headers (e.g., "Our results were good"). USE "Information Gaps" (e.g., "The one metric that predicted our failure")
+- **End every section** with a cliffhanger that only the subsequent section resolves
 
 **Concrete Examples:**
 1. The "Mistake" Hook: "I made a mistake that nearly ruined my career—and I'm glad I did."
-2. Headline teases: "The secret trick I used to land a $5,000 client"
+2. Netflix-style cliffhangers: "But then, the data showed something we didn't expect..."
 3. Mid-story interruption: "But before I tell you what happened in that room, let's look at why most pitches fail."
+4. Headline teases: "The secret trick I used to land a $5,000 client"
 
 ---
 
-## 4. Bucket Brigades (Joanna Wiebe's Transitions)
+## 3. Bucket Brigades (Joanna Wiebe's Transitions)
 
 **What it is:** Short, conversational transition phrases used to pull readers deeper into the copy by bridging the gap between paragraphs.
 
@@ -87,7 +73,7 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 
 ---
 
-## 5. Pattern Interrupts
+## 4. Pattern Interrupts
 
 **What it is:** A deliberate disruption of an expected rhythm that forces the brain out of "autopilot" to refocus on the content.
 
@@ -111,7 +97,7 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 
 ---
 
-## 6. Nested Loops (Serial Dependency)
+## 5. Nested Loops (Serial Dependency)
 
 **What it is:** A sophisticated storytelling technique where the writer opens a new curiosity loop before closing the previous one.
 
@@ -134,9 +120,25 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 | Article Position | Primary Technique | Why |
 |-----------------|-------------------|-----|
 | First line | Slippery Slide (short sentence) | Lower barrier to entry |
-| First 500 words | 3+ Open Loops | Create cognitive tension early |
+| First 500 words | 3+ Open Loops (Zeigarnik) | Create cognitive tension early |
 | Every major transition | Bucket Brigade | Maintain momentum between sections |
 | Every 300-400 words | Pattern Interrupt | Re-engage wandering attention |
 | Throughout body | Nested Loops | Additive tension prevents exits |
-| End of every section | Zeigarnik cliffhanger | Drive to next section |
+| End of every section | Open Loop cliffhanger | Drive to next section |
 | Final section | Close major loops | Satisfy reader for share trigger |
+
+---
+
+## Section Transition Patterns
+
+Beyond bucket brigades, use these 5 patterns to maintain narrative thread between sections:
+
+| Pattern | When to Use | Template |
+|---------|------------|----------|
+| **Callback** | Reference something from 2+ sections ago | "Remember the [thing] we mentioned earlier? Here's where it pays off:" |
+| **Foreshadow** | Tease the next section's key insight | "This works even better when combined with [next section topic] — which we'll get to in a moment." |
+| **Contrast** | Flip perspective between sections | "We've seen what TO do. Now let's look at what destroys all of this." |
+| **Escalation** | Raise the stakes progressively | "That was the easy part. The next technique is where most people fail:" |
+| **Synthesis** | Connect dots between prior sections | "If [Section A concept] gives you the foundation, [this section concept] gives you the speed." |
+
+**Usage rule:** Use at least 2 different transition patterns per article (in addition to bucket brigades). Vary the patterns — don't repeat the same one consecutively.

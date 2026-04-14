@@ -1,7 +1,7 @@
 # Article Generation Reference — Write (Step 4)
 
 System prompt reference for the `/article-write` skill.
-Contains: global-config, style-guide, retention-engine, seo-rules-engine.
+Contains: global-config (trimmed), style-guide, retention-engine, seo-rules-engine (trimmed).
 These references are injected via --append-system-prompt-file. Do NOT read them with the Read tool.
 Note: image-prompt-guide is NOT included — image prompts are generated separately after article approval.
 
@@ -19,7 +19,7 @@ Note: image-prompt-guide is NOT included — image prompts are generated separat
 
 | Setting | Value |
 |---------|-------|
-| `primary_language` | English |
+| `primary_language` | Indonesian |
 | `bilingual_support` | Yes — headline in primary language, subtitle as translation (configurable) |
 | `prompt_language` | Always English (AI model instruction language) |
 | `indonesian_mode` | Available — bilingual ID/EN with Gen-Z Bahasa for hooks |
@@ -153,35 +153,6 @@ Note: image-prompt-guide is NOT included — image prompts are generated separat
 
 ---
 
-## 11. Image Generation
-
-| Setting | Value |
-|---------|-------|
-| `api_endpoint` | `https://api.geminigen.ai/uapi/v1/generate_image` |
-| `api_key_env` | `GEMINIGEN_API_KEY` |
-| `default_model` | `nano-banana-pro` (Gemini 3 Pro Image Preview — free tier) |
-| `available_models` | `nano-banana-pro`, `nano-banana-2`, `imagen-4` |
-| `default_style` | `Photorealistic` |
-| `default_aspect_ratio` | `16:9` (widescreen for blog articles) |
-| `default_resolution` | `1K` |
-| `default_output_format` | `jpeg` |
-| `image_count` | 3–5 per article (scales with length) |
-| `image_allocation` | 1 feature/cover image (MANDATORY) + 2–4 inline section images |
-| `prompt_length` | 20–80 words (descriptive, specific) |
-| `rate_limit_nano_banana_pro` | 5 req/min, 100 req/hour, 1,000 req/day (free tier) |
-| `text_in_image` | NO — text belongs in the article, not the image |
-| `reference` | See image-prompt-guide.md for full API docs + prompt best practices |
-
-### Image Count by Article Length
-
-| Article Length | Cover | Inline | Total |
-|---------------|-------|--------|-------|
-| Short (1,900 words) | 1 | 2 | 3 |
-| Standard (2,000–2,200 words) | 1 | 3 | 4 |
-| Long (2,200–2,400+ words) | 1 | 4 | 5 |
-
----
-
 ## 12. SEO Rules Engine
 
 | Setting | Value |
@@ -242,14 +213,6 @@ Note: image-prompt-guide is NOT included — image prompts are generated separat
 
 ---
 
-## 16. Content Templates
-
-| Setting | Value |
-|---------|-------|
-| `template_count` | 12 |
-| `template_auto_select` | Yes — based on topic characteristics |
-| `template_override` | User can override auto-selection |
-| `reference` | See content-templates.md |
 
 
 ---
@@ -651,7 +614,7 @@ Run this checklist on every draft before quality gate scoring:
 
 ## Reference: retention-engine
 
-# Retention Engine: 6 Psychological Techniques for Reader Retention
+# Retention Engine: 5 Psychological Techniques for Reader Retention
 
 Overview: These techniques form the "psychological cement" that keeps readers scrolling. Every sentence has one purpose: to compel the reader to read the NEXT sentence. If a sentence does not move the reader forward, it is "dead weight" and must be deleted.
 
@@ -673,45 +636,31 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 
 ---
 
-## 2. The Zeigarnik Effect (Open Loops)
+## 2. Open Loops (Zeigarnik Effect)
 
-**What it is:** The tendency of the human brain to remember incomplete or interrupted tasks better than completed ones.
+**What it is:** The Zeigarnik Effect — the brain remembers incomplete tasks better than completed ones. Open loops are the rhetorical application: introduce a compelling story, question, or "secret" and intentionally delay the conclusion.
 
-**Psychological Principle:** Incomplete tasks create cognitive tension — a "mental itch" that persists in working memory and demands resolution. The brain remains in a state of discomfort until the loop is settled, making the reader compelled to finish.
-
-**Implementation Rules for Blog Articles:**
-- **Avoid summarization:** Do not give the "answer" in the headline; summary-style headlines satisfy the brain and kill the urge to click
-- **The "Closure Test":** Ensure your lead creates an information gap between what the reader knows and what they need to know
-- **Always deliver:** You must eventually close the loop to maintain trust; "clickbait" without resolution devalues future content
-- **Mandate:** FORBID summary-style headers (e.g., "Our results were good"). MANDATE "Information Gaps" in headers (e.g., "The one metric that predicted our failure")
-- **Instruction:** End every section with a cliffhanger that only the subsequent section resolves
-
-**Concrete Examples:**
-1. BuzzFeed-style headlines: "Only 1% of people know this basic fact about [Topic]..."
-2. Netflix-style cliffhangers: Ending a section on a gripping question (e.g., "But then, the data showed something we didn't expect...")
-3. Abandoned transaction triggers: Reminding a user they "left something behind" to trigger the need for closure
-
----
-
-## 3. Open Loops
-
-**What it is:** A rhetorical device where a writer introduces a compelling story or "secret" but intentionally delays the conclusion.
-
-**Psychological Principle:** Open loops function as the active application of the Zeigarnik Effect. Because the brain has a deep intolerance for loose ends, the reader feels "unsettled" until they reach the payoff, effectively "hooking" their attention.
+**Psychological Principle:** Incomplete tasks create cognitive tension — a "mental itch" that persists in working memory and demands resolution. The brain has a deep intolerance for loose ends, making the reader compelled to keep reading until the payoff.
 
 **Implementation Rules for Blog Articles:**
 - **Open early, close late:** Introduce a narrative or problem in the intro but don't reveal the fix until the end
 - **Sprinkle multiple loops:** Introduce secondary questions throughout the middle to prevent "mid-point bounce"
+- **Avoid summarization:** Do not give the "answer" in the headline; summary-style headlines satisfy the brain and kill the urge to click
+- **The "Closure Test":** Ensure your lead creates an information gap between what the reader knows and what they need to know
+- **Always deliver:** Close every loop to maintain trust; "clickbait" without resolution devalues future content
 - **MANDATE:** 3+ open loops in the first 500 words of any article
+- **MANDATE:** FORBID summary-style headers (e.g., "Our results were good"). USE "Information Gaps" (e.g., "The one metric that predicted our failure")
+- **End every section** with a cliffhanger that only the subsequent section resolves
 
 **Concrete Examples:**
 1. The "Mistake" Hook: "I made a mistake that nearly ruined my career—and I'm glad I did."
-2. Headline teases: "The secret trick I used to land a $5,000 client"
+2. Netflix-style cliffhangers: "But then, the data showed something we didn't expect..."
 3. Mid-story interruption: "But before I tell you what happened in that room, let's look at why most pitches fail."
+4. Headline teases: "The secret trick I used to land a $5,000 client"
 
 ---
 
-## 4. Bucket Brigades (Joanna Wiebe's Transitions)
+## 3. Bucket Brigades (Joanna Wiebe's Transitions)
 
 **What it is:** Short, conversational transition phrases used to pull readers deeper into the copy by bridging the gap between paragraphs.
 
@@ -740,7 +689,7 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 
 ---
 
-## 5. Pattern Interrupts
+## 4. Pattern Interrupts
 
 **What it is:** A deliberate disruption of an expected rhythm that forces the brain out of "autopilot" to refocus on the content.
 
@@ -764,7 +713,7 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 
 ---
 
-## 6. Nested Loops (Serial Dependency)
+## 5. Nested Loops (Serial Dependency)
 
 **What it is:** A sophisticated storytelling technique where the writer opens a new curiosity loop before closing the previous one.
 
@@ -787,12 +736,28 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 | Article Position | Primary Technique | Why |
 |-----------------|-------------------|-----|
 | First line | Slippery Slide (short sentence) | Lower barrier to entry |
-| First 500 words | 3+ Open Loops | Create cognitive tension early |
+| First 500 words | 3+ Open Loops (Zeigarnik) | Create cognitive tension early |
 | Every major transition | Bucket Brigade | Maintain momentum between sections |
 | Every 300-400 words | Pattern Interrupt | Re-engage wandering attention |
 | Throughout body | Nested Loops | Additive tension prevents exits |
-| End of every section | Zeigarnik cliffhanger | Drive to next section |
+| End of every section | Open Loop cliffhanger | Drive to next section |
 | Final section | Close major loops | Satisfy reader for share trigger |
+
+---
+
+## Section Transition Patterns
+
+Beyond bucket brigades, use these 5 patterns to maintain narrative thread between sections:
+
+| Pattern | When to Use | Template |
+|---------|------------|----------|
+| **Callback** | Reference something from 2+ sections ago | "Remember the [thing] we mentioned earlier? Here's where it pays off:" |
+| **Foreshadow** | Tease the next section's key insight | "This works even better when combined with [next section topic] — which we'll get to in a moment." |
+| **Contrast** | Flip perspective between sections | "We've seen what TO do. Now let's look at what destroys all of this." |
+| **Escalation** | Raise the stakes progressively | "That was the easy part. The next technique is where most people fail:" |
+| **Synthesis** | Connect dots between prior sections | "If [Section A concept] gives you the foundation, [this section concept] gives you the speed." |
+
+**Usage rule:** Use at least 2 different transition patterns per article (in addition to bucket brigades). Vary the patterns — don't repeat the same one consecutively.
 
 
 ---
@@ -828,35 +793,6 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 
 ---
 
-## 2. Keyword Handling
-
-### Auto-Derive Flow
-1. During topic research (article-gen Step 1), analyze the topic for keyword opportunities
-2. Consider: search intent, specificity, natural fit in title
-3. Present 2–3 keyword suggestions to user:
-   ```
-   KEYWORD OPTIONS:
-   1. [keyword phrase] — [rationale: search volume, specificity, intent match]
-   2. [keyword phrase] — [rationale]
-   3. [keyword phrase] — [rationale]
-   
-   RECOMMENDATION: #[N] — [keyword] because [reason tied to topic + audience]
-   ```
-4. User reviews and confirms, modifies, or inputs custom keyword
-5. Confirmed keyword is used throughout SEO optimization and scoring
-
-### Pipeline Mode
-- If `--keyword` flag provided → use it directly, skip auto-derive
-- If no `--keyword` flag → auto-derive from topic, auto-select top recommendation
-
-### Keyword Quality Criteria
-- **Specific** — "SaaS onboarding email strategy" not "email marketing"
-- **Natural** — must fit naturally in a title and headings without forcing
-- **Intent-matched** — aligns with the article's goal (educate/sell/convert/engage)
-- **Length** — 2–4 words is ideal for long-tail targeting
-
----
-
 ## 3. SEO Optimization Rules
 
 These rules are enforced during article-gen Step 7.5 (SEO Optimization pass):
@@ -887,262 +823,6 @@ These rules are enforced during article-gen Step 7.5 (SEO Optimization pass):
 
 ### Natural Integration Principle
 All keyword placements must read naturally. If adding the keyword makes a sentence awkward, find a different placement. Google's algorithms detect forced keyword insertion — natural language always wins.
-
----
-
-## 4. JS Logic Contract — `computeSeoAnalysis()`
-
-This function defines the **exact scoring logic** that the Portfolio website implements client-side for real-time SEO preview. The plugin implements the same logic during scoring (markdown-side).
-
-```js
-function computeSeoAnalysis(content, title, keyword) {
-  const textContent = stripHtml(content)
-  const words = textContent.split(/\s+/)
-  const totalWords = words.length
-  const keywordLower = keyword.toLowerCase()
-
-  // Keyword density
-  const keywordRegex = new RegExp(keywordLower, 'gi')
-  const bodyMatches = textContent.match(keywordRegex) || []
-  const density = (bodyMatches.length / totalWords) * 100
-
-  // In title
-  const inTitle = title.toLowerCase().includes(keywordLower)
-
-  // In first 100 words
-  const first100 = words.slice(0, 100).join(' ').toLowerCase()
-  const inFirst100 = first100.includes(keywordLower)
-
-  // In headings
-  const headingRegex = /<h[23][^>]*>(.*?)<\/h[23]>/gi
-  let headingMatches = 0
-  let match
-  while ((match = headingRegex.exec(content)) !== null) {
-    if (match[1].toLowerCase().includes(keywordLower)) headingMatches++
-  }
-
-  // Title length
-  const titleLength = title.length
-  const titleWords = title.split(/\s+/).length
-
-  return {
-    density: { value: density.toFixed(1), status: getStatus(density, 0.5, 1.5, 0.3, 2.5) },
-    inTitle: { value: inTitle, status: inTitle ? 'good' : 'bad' },
-    inFirst100: { value: inFirst100, status: inFirst100 ? 'good' : 'bad' },
-    inHeadings: { value: headingMatches, status: getStatus(headingMatches, 1, 2, 0, 3) },
-    titleLength: { value: titleLength, status: getStatus(titleLength, 50, 60, 40, 70) },
-    titleWords: { value: titleWords, status: getStatus(titleWords, 6, 10, 5, 12) },
-    totalWords,
-    keywordCount: bodyMatches.length
-  }
-}
-
-/**
- * getStatus — traffic light classifier
- * @param {number} value — the metric value
- * @param {number} greenMin — lower bound of green zone (inclusive)
- * @param {number} greenMax — upper bound of green zone (inclusive)
- * @param {number} amberMin — lower bound of amber zone (inclusive)
- * @param {number} amberMax — upper bound of amber zone (inclusive)
- * @returns {'good' | 'warning' | 'bad'}
- *
- * Logic:
- *   greenMin <= value <= greenMax → 'good'    (Green, 1 point)
- *   amberMin <= value < greenMin → 'warning'  (Amber, 0.5 points)
- *   greenMax < value <= amberMax → 'warning'  (Amber, 0.5 points)
- *   value < amberMin or value > amberMax → 'bad' (Red, 0 points)
- */
-function getStatus(value, greenMin, greenMax, amberMin, amberMax) {
-  if (value >= greenMin && value <= greenMax) return 'good'
-  if ((value >= amberMin && value < greenMin) || (value > greenMax && value <= amberMax)) return 'warning'
-  return 'bad'
-}
-
-/**
- * stripHtml — removes HTML tags from content
- * @param {string} html — raw HTML content
- * @returns {string} — plain text
- */
-function stripHtml(html) {
-  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-}
-```
-
-### Return Object Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `density.value` | string | Body keyword density as percentage (e.g., "1.2") |
-| `density.status` | string | `good` / `warning` / `bad` |
-| `inTitle.value` | boolean | Whether keyword is present in title |
-| `inTitle.status` | string | `good` / `bad` (binary — no warning state) |
-| `inFirst100.value` | boolean | Whether keyword is in first 100 words |
-| `inFirst100.status` | string | `good` / `bad` (binary — no warning state) |
-| `inHeadings.value` | number | Count of H2/H3 headings containing keyword |
-| `inHeadings.status` | string | `good` / `warning` / `bad` |
-| `titleLength.value` | number | Character count of title |
-| `titleLength.status` | string | `good` / `warning` / `bad` |
-| `titleWords.value` | number | Word count of title |
-| `titleWords.status` | string | `good` / `warning` / `bad` |
-| `totalWords` | number | Total word count of body content |
-| `keywordCount` | number | Raw count of keyword occurrences in body |
-
-### Status-to-Score Mapping (for Portfolio UI)
-
-| Status | Points | Color | UI Display |
-|--------|--------|-------|-----------|
-| `good` | 1 | Green | Optimal |
-| `warning` | 0.5 | Amber | Needs attention |
-| `bad` | 0 | Red | Fix required |
-
----
-
-## 5. Completion Callback JSON Schema
-
-When pipeline mode completes, the full data package is sent to the Portfolio API. This is the complete schema:
-
-```json
-{
-  "article": {
-    "title": "string — article title",
-    "content": "string — full HTML content",
-    "keyword": "string — target SEO keyword",
-    "word_count": "number — total word count",
-    "citation_count": "number — E-E-A-T citations used",
-    "image_count": "number — images generated (3-5)",
-    "framework": "string — copywriting framework used (e.g., PASO)",
-    "hook_type": "string — hook type used (e.g., Curiosity Gap)",
-    "hook_boost": "string — expected engagement boost (e.g., +45%)",
-    "emotional_arc": "string — arc pattern used (e.g., Discovery)"
-  },
-  "seo_analysis": {
-    "score": "number — total SEO score (0-6, supports 0.5 increments)",
-    "max_score": 6,
-    "pass": "boolean — true if score >= 4",
-    "keyword": "string — target keyword used for analysis",
-    "metrics": {
-      "title_length": { "value": "number — char count", "status": "string — good/warning/bad" },
-      "keyword_in_title": { "value": "boolean", "status": "string — good/bad" },
-      "title_word_count": { "value": "number — word count", "status": "string — good/warning/bad" },
-      "body_keyword_density": { "value": "number — percentage", "status": "string — good/warning/bad" },
-      "keyword_in_first_100": { "value": "boolean", "status": "string — good/bad" },
-      "keyword_in_headings": { "value": "number — heading count", "status": "string — good/warning/bad" }
-    }
-  },
-  "virality_score": {
-    "score": "number — total virality score (0-5)",
-    "max_score": 5,
-    "pass": "boolean — true if score >= 3",
-    "triggers": {
-      "social_currency": { "pass": "boolean", "evidence": "string" },
-      "high_arousal_emotion": { "pass": "boolean", "evidence": "string" },
-      "practical_utility": { "pass": "boolean", "evidence": "string" },
-      "identity_signaling": { "pass": "boolean", "evidence": "string" },
-      "cognitive_gap_closure": { "pass": "boolean", "evidence": "string" }
-    }
-  },
-  "quality_gate": {
-    "score": "number — total quality score (0-10)",
-    "max_score": 10,
-    "pass": "boolean — true if score >= 7",
-    "criteria": {
-      "clear": { "pass": "boolean", "evidence": "string" },
-      "concise": { "pass": "boolean", "evidence": "string" },
-      "compelling": { "pass": "boolean", "evidence": "string" },
-      "credible": { "pass": "boolean", "evidence": "string" },
-      "nested_loops": { "pass": "boolean", "evidence": "string" },
-      "bucket_brigades": { "pass": "boolean", "evidence": "string" },
-      "emotional_arc": { "pass": "boolean", "evidence": "string" },
-      "scannability": { "pass": "boolean", "evidence": "string" },
-      "benefit_first": { "pass": "boolean", "evidence": "string" },
-      "dual_cta": { "pass": "boolean", "evidence": "string" }
-    }
-  },
-  "image_prompts": [
-    {
-      "type": "string — cover or inline",
-      "section": "string — section title (null for cover)",
-      "concept": "string — 1-line concept description",
-      "prompt": "string — full 20-80 word prompt",
-      "model": "string — nano-banana-pro / nano-banana-2 / imagen-4",
-      "style": "string — Photorealistic, Portrait Cinematic, etc.",
-      "aspect_ratio": "string — 16:9, 4:3, 1:1",
-      "resolution": "string — 1K, 2K, 4K"
-    }
-  ],
-  "research_data": {
-    "key_data_points": ["string — verified data points used"],
-    "primary_pain_point": "string — reader's core pain point",
-    "sources": [
-      { "name": "string — source publication", "url": "string — source URL" }
-    ]
-  }
-}
-```
-
----
-
-## 6. SEO Score Output Format
-
-```
-## SEO Score: [N]/6 — [PASS (>=4) / NEEDS OPTIMIZATION (<4)]
-
-| # | Metric | Value | Status |
-|---|--------|-------|--------|
-| 1 | Title Length | [N] chars | [GREEN/AMBER/RED] |
-| 2 | Keyword in Title | [Yes/No] | [GREEN/RED] |
-| 3 | Title Words | [N] words | [GREEN/AMBER/RED] |
-| 4 | Body Keyword Density | [N]% ([count] occurrences / [total] words) | [GREEN/AMBER/RED] |
-| 5 | Keyword in First 100 Words | [Yes/No] | [GREEN/RED] |
-| 6 | Keyword in Headings | [N] times | [GREEN/AMBER/RED] |
-
-**Target Keyword:** [keyword]
-
-## GEO Score: [N]/5 — [status]
-
-| # | Metric | Value | Status |
-|---|--------|-------|--------|
-| 1 | Answer-First H2s | [X/Y comply] | [GREEN/AMBER/RED] |
-| 2 | Passage Citability | [assessment] | [GREEN/AMBER/RED] |
-| 3 | FAQ Presence | [count] pairs | [GREEN/AMBER/RED] |
-| 4 | Entity Clarity | [assessment] | [GREEN/AMBER/RED] |
-| 5 | Freshness Signals | [count] current-year refs | [GREEN/AMBER/RED] |
-```
-
----
-
-## 7. Per-Metric Optimization Strategies
-
-When a metric scores Amber or Red, apply these fixes:
-
-### Title Length (Red: <40 or >70 chars)
-- **Too short:** Add a qualifying phrase or specific detail. "SEO Tips" → "7 SEO Tips That Actually Work for Small Business Blogs"
-- **Too long:** Cut filler words. "The Complete and Comprehensive Guide to Understanding SEO" → "The Complete Guide to SEO in 2026"
-
-### Keyword Missing from Title (Red)
-- Rewrite the title to naturally include the keyword
-- Keep the information gap style — keyword must serve the hook, not replace it
-- Example: keyword "onboarding emails" → "Why Most Onboarding Emails Fail (And 3 That Convert)"
-
-### Title Word Count (Red: <5 or >12)
-- **Too few:** Add specificity. "SEO Guide" → "The Practical SEO Guide for Content Marketers"
-- **Too many:** Merge or remove weak words. Remove "that," "which," "in order to"
-
-### Body Keyword Density (Red: <0.3% or >3%)
-- **Too low:** Add keyword in topic sentences of 2–3 key sections. Use it in explanatory passages where it fits naturally.
-- **Too high:** Replace some instances with synonyms, related terms ("SEO" → "search optimization," "ranking strategy"), or pronouns. Vary the phrasing.
-- **Critical:** Never add keywords to satisfy a metric if it breaks readability. Natural language always wins.
-
-### Keyword Missing from First 100 Words (Red)
-- Weave the keyword into the opening hook, problem statement, or first bucket brigade
-- It should appear within the natural topic introduction — not as an inserted afterthought
-- Example: If keyword is "content marketing strategy" and the hook discusses the topic → include it in the problem framing
-
-### Keyword in Headings (Red: >3 = stuffing)
-- Replace keyword in 1–2 headings with synonyms or related phrases
-- Keep keyword in the most important H2 (usually the main solution/value section)
-- Vary heading language: "Email Automation Strategy" → "How to Set Up Automated Sequences"
-- If 0 headings have the keyword: add it to 1–2 headings where it fits the information gap naturally
 
 ---
 
@@ -1212,15 +892,5 @@ Separate scoring for AI citation readiness. Uses the same traffic light system a
 
 ### GEO Score Output Format
 
-```
-## GEO Score: [N]/5 — [status]
-
-| # | Metric | Value | Status |
-|---|--------|-------|--------|
-| 1 | Answer-First H2s | [X/Y comply] | [GREEN/AMBER/RED] |
-| 2 | Passage Citability | [assessment] | [GREEN/AMBER/RED] |
-| 3 | FAQ Presence | [count] pairs | [GREEN/AMBER/RED] |
-| 4 | Entity Clarity | [assessment] | [GREEN/AMBER/RED] |
-| 5 | Freshness Signals | [count] current-year refs | [GREEN/AMBER/RED] |
 ```
 

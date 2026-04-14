@@ -2,27 +2,23 @@
 
 ## 1. The Neuroscience of Shareable Content
 
-Highly shareable content activates a "perfect storm" in the brain by simultaneously triggering regions associated with self-processing and social rewards.
+Sharing activates two brain regions simultaneously:
 
-- **Medial Prefrontal Cortex:** Responsible for self-processing. Content that triggers self-reflection or allows users to define their own identity to others is more likely to be shared. This is WHY self-reflection prompts ("How does this apply to YOUR situation?") increase share rates.
-- **Ventral Striatum:** Part of the brain's reward circuitry. Sharing content that receives social validation creates a dopamine-driven reward sensation, encouraging repeat behavior.
-- **Oxytocin:** Known for regulating emotional responses and creating deeper connections. Stories that evoke empathy release oxytocin, making the message easier to remember and the brand more trustworthy.
-- **Cortisol:** Assists in formulating memories during high-stakes or stressful moments in a narrative. This is why "fear" and "urgency" sections are remembered longer.
+- **Medial Prefrontal Cortex (self-processing):** Content triggering self-reflection is more likely shared. This is WHY self-reflection prompts ("How does this apply to YOUR situation?") increase share rates.
+- **Ventral Striatum (reward circuitry):** Social validation from sharing creates dopamine reward, encouraging repeat behavior.
 
 ---
 
 ## 2. Social Currency and Identity Signaling
 
-The "information as social currency" principle: people share content that makes them look good to others.
+People share content that makes them look good. Two mechanisms:
 
-- **Identity Signaling:** Users share content to signal belonging to a specific group or to reinforce their professional and cultural identities.
-- **Information Asymmetry:** Providing exclusive insights or counterintuitive findings allows the sharer to signal "insider knowledge," increasing their perceived status within their network.
+- **Identity Signaling:** Users share to signal belonging to a specific group or reinforce professional/cultural identities.
+- **Information Asymmetry:** Exclusive insights or counterintuitive findings let the sharer signal "insider knowledge," increasing perceived status.
 
 ---
 
 ## 3. Emotional Arousal and Share Rates
-
-Content evoking high-arousal emotions is shared significantly more than low-arousal content.
 
 **High-Arousal (EFFECTIVE — target these):**
 | Emotion | Share Impact | Type |
@@ -45,11 +41,7 @@ Content evoking high-arousal emotions is shared significantly more than low-arou
 
 ## 4. The Completion-to-Share Pipeline
 
-In 2025, completion rate has replaced impressions as the primary metric of success.
-
-- **Strategic Resolution:** For a share to occur, the content must first resolve the narrative tension it created. If a user doesn't finish, the "loop" remains open, and they are less likely to share.
-- **Reward at the End:** A real payoff — key insight or surprising resolution — validates the reader's time investment and triggers the final impulse to share.
-- **Algorithm Shift:** Platforms now prioritize sustained attention and engagement depth (pauses, rewinds, saves) over quick taps.
+Completion rate is the primary metric. Content must resolve its narrative tension — if a user doesn't finish, the loop stays open and they won't share. A real payoff at the end (key insight, surprising resolution) validates the reader's time investment and triggers the share impulse.
 
 ---
 
@@ -87,12 +79,7 @@ Every actionable section in an article MUST use this formula at least once.
 
 ## 8. E-E-A-T Signals for Trust
 
-Search algorithms, specifically Google's Helpful Content System, prioritize content demonstrating quality through four pillars:
-
-- **Experience:** Providing "reporting from the front lines" rather than just polished theories.
-- **Expertise:** Deeply answering customer questions and providing comprehensive guides (typically 1,900–2,400 words).
-- **Authoritativeness:** Establishing the brand as a leader through detailed case studies and unique methodologies.
-- **Trustworthiness:** Building credibility through facts, social proof, and reputable third-party citations — also increases likelihood of being featured in AI Overviews.
+E-E-A-T requirements: see `style-guide.md` Rule 6 for full details. Min 1 citation per 400 words. Prioritize: Experience (first-hand accounts) + Trustworthiness (named, dated, reputable citations).
 
 ---
 

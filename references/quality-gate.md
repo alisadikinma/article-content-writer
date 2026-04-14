@@ -169,6 +169,32 @@ When an article scores below 7/10, fix criteria in this order (highest impact fi
 
 ---
 
+## CTA Copy Formulas
+
+Use these templates when writing the Dual CTA (criterion #10). Pick one Direct + one Transitional.
+
+**Direct CTA Templates (asks for the sale/action):**
+
+| Pattern | Template | Example |
+|---------|----------|---------|
+| Imperative + Benefit | "Start [action] today — [outcome] in [timeframe]" | "Start tracking today — save 2 hours by Friday" |
+| Social Proof + Action | "Join [number] [role]s who already [outcome]" | "Join 12,000 marketers who already doubled their open rates" |
+| Scarcity + Urgency | "[Resource] is free for now — [action] before [trigger]" | "The template is free for now — grab it before we paywall it" |
+| Challenge + Dare | "Think you can't [outcome]? Try [action] for [timeframe]" | "Think you can't write viral content? Try this system for 7 days" |
+| Question + Action | "Ready to [outcome]? Here's your first step" | "Ready to 3x your traffic? Here's your first step" |
+
+**Transitional CTA Templates (lower commitment alternative):**
+
+| Pattern | Template | Example |
+|---------|----------|---------|
+| Lead Magnet | "Want the full [resource]? Grab the free [format]" | "Want the full checklist? Grab the free PDF" |
+| Next Content | "Liked this? Read [related article] next" | "Liked this? Read our SEO teardown next" |
+| Community | "Share your [result] in the comments / with your team" | "Share your first headline test in the comments" |
+| Bookmark | "Save this for when you [relevant situation]" | "Save this for when you write your next landing page" |
+| Micro-Commitment | "Try just [smallest step] this week — then come back and tell me what happened" | "Try just one bucket brigade this week — then come back and tell me what happened" |
+
+---
+
 ## AI Humanization Scoring (20 Points)
 
 Measures how human-sounding the article is. Scored by deductions from a 20-point base. Uses the 3-tier word system and 36 AI pattern categories from `style-guide.md` Rules 3 + 8.
