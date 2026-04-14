@@ -33,8 +33,7 @@ append_ref() {
 # Helper: append a reference file but SKIP specific ## sections
 # Usage: append_ref_excluding OUTFILE REFFILE "pattern1" "pattern2" ...
 # Patterns match against ## heading lines (substring match)
-# NOTE: awk does not distinguish headings inside code fences (```).
-# Avoid exclusion patterns that match headings in code blocks.
+# Headings inside ``` code fences are ignored (not treated as section boundaries).
 append_ref_excluding() {
   local outfile="$1"
   local reffile="$2"
@@ -60,8 +59,9 @@ append_ref_excluding() {
   done
 
   awk -v patterns="$pat_str" '
-  BEGIN { skip=0; split(patterns, pats, "|") }
-  /^## / {
+  BEGIN { skip=0; fence=0; split(patterns, pats, "|") }
+  /^```/ { fence = !fence }
+  /^## / && !fence {
     skip=0
     for (i in pats) {
       if (index($0, pats[i]) > 0) { skip=1; break }
@@ -118,8 +118,6 @@ append_ref_excluding "$WRITE" "$REFS_DIR/seo-rules-engine.md" \
   "## 4. JS Logic Contract" \
   "## 5. Completion Callback JSON" \
   "## 6. SEO Score Output Format" \
-  "## GEO Score:" \
-  "## SEO Score:" \
   "## 7. Per-Metric Optimization"
 
 # --- refs-score.md (Step 5: Five Gates + Combined Score) ---
