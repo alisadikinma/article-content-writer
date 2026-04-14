@@ -358,7 +358,7 @@ Every completed article MUST be delivered in this exact format:
 ### Image 1: FEATURE/COVER IMAGE
 **Concept:** [1-line hero concept]
 **Prompt:** [20-80 words]
-**Model:** [nano-banana-pro / nano-banana-2 / imagen-4]
+**Model:** [nano-banana-2 / nano-banana-pro / imagen-4]
 **Style:** [style]
 **Aspect Ratio:** [16:9]
 **Resolution:** [1K / 2K / 4K]

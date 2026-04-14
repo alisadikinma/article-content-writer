@@ -549,7 +549,7 @@ Every article output MUST follow this exact structure:
 ### Image 1: FEATURE/COVER IMAGE
 **Concept:** [1-line hero concept]
 **Prompt:** [20-80 words]
-**Model:** [nano-banana-pro / nano-banana-2 / imagen-4]
+**Model:** [nano-banana-2 / nano-banana-pro / imagen-4]
 **Style:** [style]
 **Aspect Ratio:** [16:9]
 **Resolution:** [1K / 2K / 4K]
@@ -662,7 +662,7 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
   -H "Content-Type: multipart/form-data" \
   -H "x-api-key: ${GEMINIGEN_API_KEY}" \
   --form "prompt=[image prompt text]" \
-  --form "model=nano-banana-pro" \
+  --form "model=nano-banana-2" \
   --form "aspect_ratio=16:9" \
   --form "style=Photorealistic" \
   --form "output_format=jpeg" \
@@ -671,7 +671,7 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
 
 **Parameters:**
 - `prompt` (required): The image prompt text from Step 4. Must be 20-80 words.
-- `model` (required): One of `nano-banana-pro` (default, best general purpose), `nano-banana-2` (stylized/artistic), or `imagen-4` (maximum photorealism fidelity).
+- `model` (required): One of `nano-banana-2` (default, fast + high quality), `nano-banana-pro` (complex instructions, text rendering), or `imagen-4` (fine textures, nature).
 - `aspect_ratio` (required): Default `16:9`. Options: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`.
 - `style` (required): Matches the style field from the image prompt (e.g., Photorealistic, Portrait Cinematic, Cinematic, Minimalist, etc.).
 - `output_format` (required): Default `jpeg`. Options: `jpeg`, `png`, `webp`.
