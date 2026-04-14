@@ -1,10 +1,10 @@
 #!/bin/bash
 # compile-references.sh — Build per-skill compiled reference files
-# Combines individual reference .md files into 3 skill-specific bundles
+# Combines individual reference .md files into 4 skill-specific bundles
 # for use with --append-system-prompt-file (zero Read tool calls)
 #
 # Usage: bash scripts/compile-references.sh
-# Output: references/compiled/refs-{prep,write,score}.md
+# Output: references/compiled/refs-{prep,write,score,images}.md
 
 set -euo pipefail
 
@@ -141,9 +141,28 @@ append_ref_excluding "$SCORE" "$REFS_DIR/seo-rules-engine.md" \
 append_ref "$SCORE" "$REFS_DIR/virality-triggers.md"
 append_ref "$SCORE" "$REFS_DIR/quality-gate.md"
 
+# --- refs-images.md (Gate 2: Image Prompt Authoring) ---
+IMAGES="$OUT_DIR/refs-images.md"
+cat > "$IMAGES" << 'HEADER'
+# Article Generation Reference — Images (Gate 2)
+
+System prompt reference for the `/article-images` skill.
+Contains: global-config (Image Generation + Content Templates only), image-prompt-guide, cinematography-lut.
+These references are injected via --append-system-prompt-file. Do NOT read them with the Read tool.
+HEADER
+
+# global-config: keep §11 Image Generation + §16 Content Templates only, skip rest
+append_ref_excluding "$IMAGES" "$REFS_DIR/global-config.md" \
+  "## 1. " "## 2. " "## 3. " "## 4. " "## 5. " \
+  "## 6. " "## 7. " "## 8. " "## 9. " "## 10. " \
+  "## 12. " "## 13. " "## 14. " "## 15. " "## 17. "
+
+append_ref "$IMAGES" "$REFS_DIR/image-prompt-guide.md"
+append_ref "$IMAGES" "$REFS_DIR/cinematography-lut.md"
+
 # Report sizes
 echo "Compiled reference files:"
-for f in "$PREP" "$WRITE" "$SCORE"; do
+for f in "$PREP" "$WRITE" "$SCORE" "$IMAGES"; do
   size=$(wc -c < "$f")
   echo "  $(basename "$f"): $size bytes"
 done
