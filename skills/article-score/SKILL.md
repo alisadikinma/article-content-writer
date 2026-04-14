@@ -114,8 +114,8 @@ Score each metric with traffic light (GREEN/AMBER/RED):
 
 Base score: 20. Deduct for violations:
 
-- **Tier 1 violations:** -2 per word found (max -10). The 52 always-replace words per style-guide in system prompt.
-- **Tier 2 cluster violations:** -1 per paragraph with 2+ Tier 2 words (max -5). The 43 cluster-flag words.
+- **Tier 1 violations:** -2 per word found (max -10). The 53 always-replace words per style-guide in system prompt.
+- **Tier 2 cluster violations:** -1 per paragraph with 2+ Tier 2 words (max -5). The 42 cluster-flag words.
 - **Tier 3 density violations:** -1 per word exceeding 3% density (max -3). The 12 density-flag words.
 - **AI pattern violations:** -0.5 per category detected (max -2). The 36 pattern categories (10 structural + 12 language + 8 tone + 6 advanced).
 

@@ -95,7 +95,7 @@ Every article must pass all 20 rules. No exceptions.
 
 | # | Rule | Key Constraint |
 |---|------|---------------|
-| 1 | Forbidden vocabulary | Tier 1 of 107-word system — 52 always-replace words |
+| 1 | Forbidden vocabulary | Tier 1 of 107-word system — 53 always-replace words |
 | 2 | Grade 5 readability | Flesch-Kincaid age 9-11 |
 | 3 | E-E-A-T citations | Min 1 data point per 400 words |
 | 4 | Zeigarnik open loops | 3+ in first 500 words |

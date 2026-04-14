@@ -58,7 +58,7 @@
 
 ## 3. SEO Optimization Rules
 
-These rules are enforced during article-gen Step 7.5 (SEO Optimization pass):
+These rules are applied inline during article writing (Step 4) and scored in Step 5:
 
 ### Title Optimization
 - Adjust title to **50–60 characters** (optimal for search display)
@@ -356,6 +356,16 @@ Every H2 section must open with a **40-60 word stat-rich paragraph** that direct
 - Lead with the fact or answer, then explain
 - Bad: "In recent years, there has been a growing trend toward AI-powered onboarding systems that many companies are beginning to adopt across various industries."
 - Good: "Companies using AI-powered onboarding see 34% higher retention within 90 days, according to a 2025 Gartner report. Here's how that works."
+
+**Before/After — Answer-First H2:**
+
+Before (FAIL — vague opening, no data, not extractable):
+> ## How AI Is Changing Onboarding
+> In recent years, there has been a growing trend toward using artificial intelligence in employee onboarding processes. Many companies are now exploring various ways to incorporate AI tools.
+
+After (PASS — 45-word stat-rich paragraph, self-contained, instantly quotable):
+> ## How AI Is Changing Onboarding
+> Companies using AI-powered onboarding see 34% higher new-hire retention within 90 days, according to Gartner's 2025 HR Technology report. Average time-to-productivity drops from 12 weeks to 7. Here's how the best onboarding programs are structured — and what most companies get wrong.
 
 ### 8.2 Passage Citability
 

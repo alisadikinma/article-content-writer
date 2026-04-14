@@ -91,7 +91,7 @@ Every article must pass all 20 rules. These are enforced in `skills/article-gen/
 
 | # | Rule | Key Constraint |
 |---|------|---------------|
-| 1 | Forbidden vocabulary | Tier 1 of 107-word system — 52 always-replace words (includes the original 7) |
+| 1 | Forbidden vocabulary | Tier 1 of 107-word system — 53 always-replace words (includes the original 7 + empower) |
 | 2 | Grade 5 readability | Flesch-Kincaid age 9-11, short sentences, active voice |
 | 3 | E-E-A-T citation density | Min 1 data point per 400 words |
 | 4 | Zeigarnik open loops | 3+ in first 500 words |
@@ -191,13 +191,13 @@ After editing any file in `references/`:
 | Article too long/short | Check global-config.md `article_length` (1,900-2,400 words) |
 | Forbidden words in output | Verify Step 4 AI Humanization rules — check style-guide.md Rule 3 (107 words, 3 tiers) |
 | AI-sounding text | Check style-guide.md Rule 8 (36 AI pattern categories) — look for structural, language, tone patterns |
-| Tier 1 word violations | style-guide.md Rule 3 Tier 1 — 52 words that must be replaced on sight |
+| Tier 1 word violations | style-guide.md Rule 3 Tier 1 — 53 words that must be replaced on sight |
 | Tier 2 clusters detected | style-guide.md Rule 3 Tier 2 — max 1 per paragraph, replace extras |
 | Low AI Humanization score | Check deduction breakdown — fix Tier 1 violations first (-2 each), then clusters, then patterns |
 | Low quality score | Read quality-gate.md revision priority guide — fix Compelling first |
 | Low virality score | Read virality-triggers.md per-trigger boost strategies |
 | Low combined score | Check quality-gate.md Combined Score section — fix lowest-scoring gate first (highest weighted impact) |
-| Wrong framework selected | Check frameworks-library.md Decision Matrix — match goal to framework |
+| Wrong framework selected | Check frameworks-library.md Goal-Based Framework Selection table first, then Topic-Based Decision Matrix — match goal to framework |
 | Wrong template selected | Check content-templates.md Auto-Selection Guide — match topic to template |
 | Flat emotional arc | Check emotional-arcs.md — ensure arc phases map to sections in Step 2 |
 | No image prompts | Check image-prompt-guide.md — verify model/style/aspect_ratio in global-config |
@@ -221,5 +221,5 @@ After editing any file in `references/`:
 
 ---
 
-**Version:** 2.3.0
+**Version:** 2.4.0
 **Last Updated:** April 2026

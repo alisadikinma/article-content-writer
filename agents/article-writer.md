@@ -30,7 +30,7 @@ These 20 rules apply to EVERY article you produce. Violation of any single rule 
 
 | # | Rule | Key Constraint |
 |---|------|---------------|
-| 1 | Forbidden vocabulary | NEVER use: Unlock, Unleash, Supercharge, Empower, Enhance, Exceed, Maximize. Replace immediately with concrete language. Full 52-word Tier 1 list in `style-guide.md` Rule 3. |
+| 1 | Forbidden vocabulary | NEVER use: Unlock, Unleash, Supercharge, Empower, Enhance, Exceed, Maximize. Replace immediately with concrete language. Full 53-word Tier 1 list in `style-guide.md` Rule 3. |
 | 2 | Grade 5 readability | Flesch-Kincaid age 9-11. Short words, short sentences, active voice. If a 10-year-old can't understand it, rewrite. |
 | 3 | Citation density | Min 1 data point/citation per 400 words. Every claim backed by verifiable source. E-E-A-T compliance. |
 | 4 | Open loops | 3+ in first 500 words (Zeigarnik Effect). Start stories/questions you don't immediately resolve. |
@@ -123,7 +123,10 @@ Wait for user confirmation before proceeding.
 
 **2A — Framework Selection**
 
-Select framework using the Decision Matrix in `frameworks-library.md`. Match article goal (educate/sell/convert/engage) to primary framework (PASO/AIDA/StoryBrand). The matrix provides full matching criteria.
+Select framework using two tables in `frameworks-library.md`:
+1. **Goal-Based Framework Selection:** Match article goal (educate/sell/convert/engage) to primary framework.
+2. **Topic-Based Decision Matrix:** Cross-reference topic pattern for refinement.
+If both agree, use that framework. If they differ, prefer the Goal-Based table. The user can override.
 
 **2B — Emotional Arc Selection**
 
@@ -259,8 +262,8 @@ Plan across the full article using techniques from `retention-engine.md`:
 - Actionable Depth for numbered sections: What+How+Example+Outcome, 150-250 words per point
 
 **Style + AI Humanization (applied inline, not separate pass):**
-- Zero Tier 1 words (52 words — scan and replace on sight per `style-guide.md` Rule 3)
-- No Tier 2 clusters (max 1 per paragraph — 43 words)
+- Zero Tier 1 words (53 words — scan and replace on sight per `style-guide.md` Rule 3)
+- No Tier 2 clusters (max 1 per paragraph — 42 words)
 - Tier 3 under 3% density (12 words)
 - No AI patterns from 36 categories (`style-guide.md` Rule 8)
 - Max 3-4 line paragraphs, Grade 5 readability, 90%+ active voice

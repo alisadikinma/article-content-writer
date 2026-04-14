@@ -31,7 +31,7 @@ Note: image-prompt-guide is NOT included — image prompts are generated separat
 | Setting | Value | Source |
 |---------|-------|--------|
 | `default_framework` | PASO (Problem, Agitate, Solve, Outcome) | Most versatile for long-form — see frameworks-library.md |
-| `article_length` | 1,900–2,400 words | SEO optimal per research: comprehensive guides rank higher [1] |
+| `article_length` | 1,900–2,400 words (default — template-specific ranges override this, e.g., Pillar Page 3,000-4,000, News Analysis 800-1,200) | SEO optimal per research: comprehensive guides rank higher [1] |
 | `citation_density` | 1 data point or reputable citation per 400 words minimum | E-E-A-T signal density for search algorithms and AI Overviews [2] |
 | `paragraph_max` | 3–4 lines | Scannability rule — more periods, fewer commas |
 | `fluff_reduction` | 20% second-pass cut | Mandatory "rub out" pass after first draft |
@@ -43,7 +43,7 @@ Note: image-prompt-guide is NOT included — image prompts are generated separat
 
 | Setting | Value | Source |
 |---------|-------|--------|
-| `hook_word_limit` | 15 words max | 2-second read time — pattern interrupt window |
+| `hook_word_limit` | 15 words target, 25 max | 2-second read time — pattern interrupt window |
 | `hook_char_limit` | 25 characters | Mobile scannability constraint [3] |
 | `pattern_interrupt_window` | 1.7–3 seconds | 71% of viewers decide within first 3 seconds, average at 1.7s [4] |
 | `hook_types_available` | 8 | See hook-repository.md |
@@ -174,8 +174,8 @@ Note: image-prompt-guide is NOT included — image prompts are generated separat
 | Setting | Value |
 |---------|-------|
 | `ai_word_tiers` | 3 (Tier 1: always replace, Tier 2: cluster flag, Tier 3: density flag) |
-| `tier1_word_count` | 52 (always replace on sight) |
-| `tier2_word_count` | 43 (flag when 2+ in same paragraph) |
+| `tier1_word_count` | 53 (always replace on sight) |
+| `tier2_word_count` | 42 (flag when 2+ in same paragraph) |
 | `tier3_word_count` | 12 (flag when >3% density) |
 | `ai_pattern_categories` | 36 (4 groups: Structural 10, Language 12, Tone 8, Advanced 6) |
 | `ai_humanization_max_score` | 20 points (deduction-based) |
@@ -263,7 +263,7 @@ Every sentence must answer the reader's unconscious question: "So what? Why shou
 
 **Three-tier system for detecting and replacing AI-sounding vocabulary.** Words are classified by how strongly they signal machine-generated text.
 
-### Tier 1 — Always Replace (52 words)
+### Tier 1 — Always Replace (53 words)
 
 These appear 5-20x more frequently in AI text than human text. Replace on sight. Zero tolerance.
 
@@ -320,11 +320,12 @@ These appear 5-20x more frequently in AI text than human text. Replace on sight.
 | unlock | find, discover, access |
 | unleash | release, enable, put to work |
 | supercharge | speed up, boost |
+| empower | enable, let, give the tools |
 | enhance | improve, sharpen, strengthen |
 | exceed | beat, outperform |
 | maximize | get the most from |
 
-### Tier 2 — Flag in Clusters (43 words)
+### Tier 2 — Flag in Clusters (42 words)
 
 Individually fine. **2+ in the same paragraph = AI signal.** Replace extras to break the cluster.
 
@@ -335,7 +336,6 @@ Individually fine. **2+ in the same paragraph = AI signal.** Replace extras to b
 | foster | encourage, support, build |
 | elevate | improve, raise |
 | streamline | simplify, speed up |
-| empower | enable, let, allow |
 | bolster | support, strengthen |
 | spearhead | lead, drive |
 | resonate / resonates with | connect with, matter to |
@@ -397,9 +397,9 @@ Only flag when **>3% of total words.** These are normal words that become AI sig
 
 ## Rule 4: 20% Fluff Reduction
 
-**Execute a "second pass" to rub out 20% of the draft's fluff.**
+**Cut 20% of the draft's fluff — whether inline during writing or as a dedicated pass.**
 
-After the first draft is complete, do a dedicated editing pass with one goal: cut 20% of the word count without losing any information or impact.
+In the 5-step pipeline, this is applied as a tight-writing mindset during Step 4 (write lean from the start, not as a separate cut pass). In standalone editing or validation, apply it as a dedicated second pass. Either way, the goal is the same: remove 20% of filler without losing information or impact.
 
 **What to cut:**
 - Redundant phrases ("in order to" → "to", "at this point in time" → "now")
@@ -592,13 +592,52 @@ The "Now What?" test extends the "So What?" test. "So What?" ensures benefit. "N
 
 ---
 
+## Voice Exemplar — What the Target Voice Sounds Like
+
+The rules above define what to AVOID. This section shows what the ideal output SOUNDS like. Use these samples as a tonal north star.
+
+**English exemplar (Empowerment arc, PASO framework, productivity topic):**
+
+> Your mornings are a mess. Not because you're lazy — because nobody taught you how to protect the first two hours of your day.
+>
+> Here's the thing:
+>
+> Cal Newport tracked 50 knowledge workers for six months. The ones who blocked their first 90 minutes for deep work shipped 3.2x more projects than those who started with email. Same hours. Same talent. Different sequence.
+>
+> So what does that look like in practice? Open your calendar right now. Block 8:00-9:30 tomorrow. Label it "Deep Work — No Meetings." Then pick ONE task — the one you've been avoiding because it requires actual thinking. That's your morning anchor.
+>
+> Don't check Slack first. Don't "just quickly" reply to that thread. The data is clear: every context switch costs you 23 minutes of recovery time. One "quick check" at 8:15 means you don't hit full focus until 8:38.
+
+**Indonesian exemplar (Gen-Z Bahasa, Discovery arc, AI topic):**
+
+> Gue kira AI cuma buat programmer. Ternyata salah besar.
+>
+> Tapi dengerin dulu:
+>
+> Riset McKinsey 2025 nunjukin 67% pekerjaan yang paling terbantu AI justru di bidang kreatif — copywriting, desain, strategi marketing. Bukan coding. Bukan data science. Marketing.
+>
+> Kok bisa? Karena AI paling jago di satu hal: mengolah pola dari jutaan data dan kasih output yang "cukup bagus" dalam hitungan detik. Dan di dunia kreatif, "cukup bagus" itu bukan pengganti lo — itu draft pertama yang bisa lo edit jadi luar biasa.
+>
+> Coba sekarang: buka ChatGPT, ketik "buatkan 5 angle berbeda untuk artikel tentang [topik lo]." Dalam 30 detik, lo punya 5 starting point yang biasanya butuh 2 jam brainstorm. Nah, dari situ lo pilih yang paling nyambung sama audience lo.
+
+**What makes these samples right:**
+- Short sentences (10-15 words average) — Grade 5 readability
+- "You"/"lo" address — speaking to one person, not an audience
+- Bucket brigades on own lines with colons
+- Data with named sources woven naturally, not dumped
+- Concrete actions the reader can do in 5 minutes
+- Zero Tier 1 words, no AI patterns
+- Conversational but credible — like a sharp friend explaining something over coffee
+
+---
+
 ## Style Pass Checklist
 
 Run this checklist on every draft before quality gate scoring:
 
 - [ ] No paragraph exceeds 4 lines
 - [ ] Every section passes the "So What?" test (benefit, not feature)
-- [ ] Tier 1 words: zero present (scan all 52)
+- [ ] Tier 1 words: zero present (scan all 53)
 - [ ] Tier 2 words: no clusters (max 1 per paragraph)
 - [ ] Tier 3 words: density under 3%
 - [ ] AI patterns: none of the 36 categories detected
@@ -658,6 +697,22 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 3. Mid-story interruption: "But before I tell you what happened in that room, let's look at why most pitches fail."
 4. Headline teases: "The secret trick I used to land a $5,000 client"
 
+**Full Before/After — Open Loops in First 500 Words:**
+
+Before (FAIL — self-contained opening, no cognitive tension):
+> Email marketing is important for businesses. It has a high ROI. According to a 2025 Litmus report, email returns $36 for every $1 spent. Companies should focus on building their email lists and writing good subject lines. In this article, we'll cover how to improve your email marketing.
+
+After (PASS — 3 open loops in first 200 words):
+> We deleted 40,000 email subscribers last Tuesday. [LOOP 1: Why would anyone delete subscribers?]
+>
+> Our open rate jumped from 12% to 41% overnight. Revenue went UP, not down. I'll show you the exact metric that told us which subscribers to cut — but first, you need to understand why everything you've been told about "growing your list" is backwards. [LOOP 2: What's wrong with list growth?]
+>
+> Here's the thing:
+>
+> Litmus's 2025 report says email returns $36 for every $1 spent. But they buried a stat that changes everything. The top 10% of email marketers? They see $72 per dollar. The bottom 50%? Under $5. Same channel. Same "best practices." Wildly different results. [LOOP 3: What separates the top 10%?]
+>
+> The difference isn't subject lines or send times. It's something most marketers never measure — and by the end of this article, you'll have the exact formula to calculate it for your list.
+
 ---
 
 ## 3. Bucket Brigades (Joanna Wiebe's Transitions)
@@ -686,6 +741,22 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 1. Setting a scene: "Picture this:" followed by the story on the next line
 2. Highlighting a transition: "But it doesn't end there..."
 3. Aligning with the reader: "I know the feeling." or "We've all been there."
+
+**Full Before/After — Bucket Brigades in Context:**
+
+Before (FAIL — no bucket brigades, paragraphs blur together):
+> Remote teams struggle with communication. Many companies have tried various tools to solve this problem. Slack, Teams, and Zoom all offer different features. The key issue is that tools alone don't fix bad communication habits. Companies need to build communication protocols first.
+
+After (PASS — bucket brigades carry the reader across transitions):
+> Remote teams struggle with communication. Most companies throw tools at the problem — Slack, Teams, Zoom — and hope something sticks.
+>
+> But here's what they miss:
+>
+> Tools don't fix bad habits. A team that can't communicate in person won't magically communicate better on Slack. The tool just gives their dysfunction a new address.
+>
+> So what actually works?
+>
+> Communication protocols. Specific, written rules about when to use which channel, how fast to respond, and what warrants a meeting vs. a message.
 
 ---
 
@@ -795,7 +866,7 @@ Beyond bucket brigades, use these 5 patterns to maintain narrative thread betwee
 
 ## 3. SEO Optimization Rules
 
-These rules are enforced during article-gen Step 7.5 (SEO Optimization pass):
+These rules are applied inline during article writing (Step 4) and scored in Step 5:
 
 ### Title Optimization
 - Adjust title to **50–60 characters** (optimal for search display)
@@ -837,6 +908,16 @@ Every H2 section must open with a **40-60 word stat-rich paragraph** that direct
 - Lead with the fact or answer, then explain
 - Bad: "In recent years, there has been a growing trend toward AI-powered onboarding systems that many companies are beginning to adopt across various industries."
 - Good: "Companies using AI-powered onboarding see 34% higher retention within 90 days, according to a 2025 Gartner report. Here's how that works."
+
+**Before/After — Answer-First H2:**
+
+Before (FAIL — vague opening, no data, not extractable):
+> ## How AI Is Changing Onboarding
+> In recent years, there has been a growing trend toward using artificial intelligence in employee onboarding processes. Many companies are now exploring various ways to incorporate AI tools.
+
+After (PASS — 45-word stat-rich paragraph, self-contained, instantly quotable):
+> ## How AI Is Changing Onboarding
+> Companies using AI-powered onboarding see 34% higher new-hire retention within 90 days, according to Gartner's 2025 HR Technology report. Average time-to-productivity drops from 12 weeks to 7. Here's how the best onboarding programs are structured — and what most companies get wrong.
 
 ### 8.2 Passage Citability
 

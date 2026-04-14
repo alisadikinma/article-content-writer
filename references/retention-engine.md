@@ -42,6 +42,22 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 3. Mid-story interruption: "But before I tell you what happened in that room, let's look at why most pitches fail."
 4. Headline teases: "The secret trick I used to land a $5,000 client"
 
+**Full Before/After — Open Loops in First 500 Words:**
+
+Before (FAIL — self-contained opening, no cognitive tension):
+> Email marketing is important for businesses. It has a high ROI. According to a 2025 Litmus report, email returns $36 for every $1 spent. Companies should focus on building their email lists and writing good subject lines. In this article, we'll cover how to improve your email marketing.
+
+After (PASS — 3 open loops in first 200 words):
+> We deleted 40,000 email subscribers last Tuesday. [LOOP 1: Why would anyone delete subscribers?]
+>
+> Our open rate jumped from 12% to 41% overnight. Revenue went UP, not down. I'll show you the exact metric that told us which subscribers to cut — but first, you need to understand why everything you've been told about "growing your list" is backwards. [LOOP 2: What's wrong with list growth?]
+>
+> Here's the thing:
+>
+> Litmus's 2025 report says email returns $36 for every $1 spent. But they buried a stat that changes everything. The top 10% of email marketers? They see $72 per dollar. The bottom 50%? Under $5. Same channel. Same "best practices." Wildly different results. [LOOP 3: What separates the top 10%?]
+>
+> The difference isn't subject lines or send times. It's something most marketers never measure — and by the end of this article, you'll have the exact formula to calculate it for your list.
+
 ---
 
 ## 3. Bucket Brigades (Joanna Wiebe's Transitions)
@@ -70,6 +86,22 @@ Overview: These techniques form the "psychological cement" that keeps readers sc
 1. Setting a scene: "Picture this:" followed by the story on the next line
 2. Highlighting a transition: "But it doesn't end there..."
 3. Aligning with the reader: "I know the feeling." or "We've all been there."
+
+**Full Before/After — Bucket Brigades in Context:**
+
+Before (FAIL — no bucket brigades, paragraphs blur together):
+> Remote teams struggle with communication. Many companies have tried various tools to solve this problem. Slack, Teams, and Zoom all offer different features. The key issue is that tools alone don't fix bad communication habits. Companies need to build communication protocols first.
+
+After (PASS — bucket brigades carry the reader across transitions):
+> Remote teams struggle with communication. Most companies throw tools at the problem — Slack, Teams, Zoom — and hope something sticks.
+>
+> But here's what they miss:
+>
+> Tools don't fix bad habits. A team that can't communicate in person won't magically communicate better on Slack. The tool just gives their dysfunction a new address.
+>
+> So what actually works?
+>
+> Communication protocols. Specific, written rules about when to use which channel, how fast to respond, and what warrants a meeting vs. a message.
 
 ---
 

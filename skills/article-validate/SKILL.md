@@ -58,7 +58,7 @@ Read `references/style-guide.md` Rules 3 + 8 before scoring this section.
 
 Score by deductions from a 20-point base:
 
-1. **Tier 1 scan** — Check for ALL 52 Tier 1 words. Each found = -2 points (max -10). List every violation.
+1. **Tier 1 scan** — Check for ALL 53 Tier 1 words. Each found = -2 points (max -10). List every violation.
 2. **Tier 2 cluster scan** — Check each paragraph for 2+ Tier 2 words. Each violating paragraph = -1 point (max -5). Quote the cluster.
 3. **Tier 3 density scan** — Check each of the 12 Tier 3 words. If any exceeds 3% density = -1 point per word (max -3). Report the density.
 4. **AI pattern scan** — Check for all 36 AI pattern categories. Each detected = -0.5 points (max -2). Name the pattern category and quote the offending passage.

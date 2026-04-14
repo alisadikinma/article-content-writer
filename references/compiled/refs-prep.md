@@ -30,7 +30,7 @@ These references are injected via --append-system-prompt-file. Do NOT read them 
 | Setting | Value | Source |
 |---------|-------|--------|
 | `default_framework` | PASO (Problem, Agitate, Solve, Outcome) | Most versatile for long-form — see frameworks-library.md |
-| `article_length` | 1,900–2,400 words | SEO optimal per research: comprehensive guides rank higher [1] |
+| `article_length` | 1,900–2,400 words (default — template-specific ranges override this, e.g., Pillar Page 3,000-4,000, News Analysis 800-1,200) | SEO optimal per research: comprehensive guides rank higher [1] |
 | `citation_density` | 1 data point or reputable citation per 400 words minimum | E-E-A-T signal density for search algorithms and AI Overviews [2] |
 | `paragraph_max` | 3–4 lines | Scannability rule — more periods, fewer commas |
 | `fluff_reduction` | 20% second-pass cut | Mandatory "rub out" pass after first draft |
@@ -42,7 +42,7 @@ These references are injected via --append-system-prompt-file. Do NOT read them 
 
 | Setting | Value | Source |
 |---------|-------|--------|
-| `hook_word_limit` | 15 words max | 2-second read time — pattern interrupt window |
+| `hook_word_limit` | 15 words target, 25 max | 2-second read time — pattern interrupt window |
 | `hook_char_limit` | 25 characters | Mobile scannability constraint [3] |
 | `pattern_interrupt_window` | 1.7–3 seconds | 71% of viewers decide within first 3 seconds, average at 1.7s [4] |
 | `hook_types_available` | 8 | See hook-repository.md |
@@ -202,8 +202,8 @@ These references are injected via --append-system-prompt-file. Do NOT read them 
 | Setting | Value |
 |---------|-------|
 | `ai_word_tiers` | 3 (Tier 1: always replace, Tier 2: cluster flag, Tier 3: density flag) |
-| `tier1_word_count` | 52 (always replace on sight) |
-| `tier2_word_count` | 43 (flag when 2+ in same paragraph) |
+| `tier1_word_count` | 53 (always replace on sight) |
+| `tier2_word_count` | 42 (flag when 2+ in same paragraph) |
 | `tier3_word_count` | 12 (flag when >3% density) |
 | `ai_pattern_categories` | 36 (4 groups: Structural 10, Language 12, Tone 8, Advanced 6) |
 | `ai_humanization_max_score` | 20 points (deduction-based) |
@@ -425,7 +425,22 @@ Each framework below is summarized with its structure, best use, strengths, weak
 
 ---
 
-## Decision Matrix
+## Goal-Based Framework Selection
+
+Use this table when the article goal (educate/sell/convert/engage) is your primary selection criterion. Match the goal first, then refine by topic pattern using the Decision Matrix below.
+
+| Article Goal | Primary Framework | Secondary Framework | Rationale |
+|-------------|-------------------|---------------------|-----------|
+| **Educate** | PASO | Question Ladder | Problem-first empathy builds trust, then solution teaches. Question Ladder for pure Q&A/tutorial formats. |
+| **Sell** | AIDA | 5 Ps / Persuasion Equation | Attention→Desire→Action is the classic sales arc. 5 Ps for aspirational products, Persuasion Equation for skeptical buyers. |
+| **Convert** | FAB / AIDA | PASO | Feature-benefit-action for product pages. PASO when the conversion requires pain-point awareness first. |
+| **Engage** | StoryBrand | PASO | Hero's journey drives emotional connection and brand affinity. PASO for engagement through problem-solving depth. |
+
+**Override rule:** If the Goal-Based table and the Topic-Based Decision Matrix below recommend different frameworks, prefer the Goal-Based table. The user can always override both.
+
+---
+
+## Topic-Based Decision Matrix
 
 | If Your Topic/Goal Is...                        | Use This Framework        |
 |-------------------------------------------------|---------------------------|
@@ -788,6 +803,24 @@ The final section of every article must serve as the **share trigger**. Research
 3. **Connect back to the hook** — show how far the reader has traveled
 4. **End with a forward-looking statement** — the reader's future is now different
 5. **Include the self-reflection trigger** — "Now that you know this, what will YOU do differently?"
+
+### Before/After — Completion-to-Share Section
+
+Before (FAIL — generic ending, no loop closure, no reward):
+> In conclusion, AI is changing how we work. By following the tips in this article, you can stay ahead of the curve. The future is exciting and full of possibilities. Start implementing these strategies today and see the results for yourself.
+
+After (PASS — loops closed, callback to hook, standout insight, self-reflection trigger):
+> Remember those 340 "autopilot decisions" from the Deloitte team? [CALLBACK to open loop from intro] Here's what happened six months later: they didn't just save time. They discovered that 23% of those decisions were wrong — consistently wrong, for years — but nobody noticed because humans made them too fast to question.
+>
+> That's the insight most people miss about AI. It's not about speed. It's about catching the errors you've been making on autopilot.
+>
+> Think about your own week. How many decisions did you make without thinking? How many of those would you change if someone handed you the data?
+>
+> That's your starting point. One spreadsheet. One week of tracking. The patterns will surprise you — they surprised the Deloitte team, and they've been in the business for decades.
+>
+> **Start tracking your autopilot decisions this week** — use the free Notion template linked below.
+>
+> Not ready to dive in? **Save this article and revisit it before your next team planning session** — it'll change how you think about what to automate first.
 
 
 ---

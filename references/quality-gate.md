@@ -203,8 +203,8 @@ Measures how human-sounding the article is. Scored by deductions from a 20-point
 
 | Violation Type | Deduction | Max Deduction | Source |
 |---------------|-----------|---------------|--------|
-| Tier 1 word found | -2 points per word | -10 | style-guide.md Rule 3, Tier 1 (52 words) |
-| Tier 2 cluster (2+ in same paragraph) | -1 point per violating paragraph | -5 | style-guide.md Rule 3, Tier 2 (43 words) |
+| Tier 1 word found | -2 points per word | -10 | style-guide.md Rule 3, Tier 1 (53 words) |
+| Tier 2 cluster (2+ in same paragraph) | -1 point per violating paragraph | -5 | style-guide.md Rule 3, Tier 2 (42 words) |
 | Tier 3 density exceeded (>3%) | -1 point per word exceeding threshold | -3 | style-guide.md Rule 3, Tier 3 (12 words) |
 | AI pattern detected | -0.5 points per category found | -2 | style-guide.md Rule 8 (36 categories) |
 

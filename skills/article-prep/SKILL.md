@@ -77,9 +77,10 @@ Parse inputs from CLI flags:
 Using references already in system prompt (frameworks-library, emotional-arcs, hook-repository, content-templates):
 
 **Framework selection:**
-1. Use Decision Matrix from frameworks-library: match article goal to framework candidates
-2. Evaluate topic fit for each candidate
-3. Select best framework with rationale
+1. Use Goal-Based Framework Selection table: match article goal (educate/sell/convert/engage) to primary framework
+2. Cross-reference with Topic-Based Decision Matrix for topic-specific refinement
+3. If both tables agree, use that framework. If they differ, prefer the Goal-Based table.
+4. Select best framework with rationale
 
 **Emotional arc selection:**
 1. Match topic to arc type using Arc Selection Guide from emotional-arcs

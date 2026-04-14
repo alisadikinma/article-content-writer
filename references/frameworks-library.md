@@ -168,7 +168,22 @@ Each framework below is summarized with its structure, best use, strengths, weak
 
 ---
 
-## Decision Matrix
+## Goal-Based Framework Selection
+
+Use this table when the article goal (educate/sell/convert/engage) is your primary selection criterion. Match the goal first, then refine by topic pattern using the Decision Matrix below.
+
+| Article Goal | Primary Framework | Secondary Framework | Rationale |
+|-------------|-------------------|---------------------|-----------|
+| **Educate** | PASO | Question Ladder | Problem-first empathy builds trust, then solution teaches. Question Ladder for pure Q&A/tutorial formats. |
+| **Sell** | AIDA | 5 Ps / Persuasion Equation | Attention→Desire→Action is the classic sales arc. 5 Ps for aspirational products, Persuasion Equation for skeptical buyers. |
+| **Convert** | FAB / AIDA | PASO | Feature-benefit-action for product pages. PASO when the conversion requires pain-point awareness first. |
+| **Engage** | StoryBrand | PASO | Hero's journey drives emotional connection and brand affinity. PASO for engagement through problem-solving depth. |
+
+**Override rule:** If the Goal-Based table and the Topic-Based Decision Matrix below recommend different frameworks, prefer the Goal-Based table. The user can always override both.
+
+---
+
+## Topic-Based Decision Matrix
 
 | If Your Topic/Goal Is...                        | Use This Framework        |
 |-------------------------------------------------|---------------------------|

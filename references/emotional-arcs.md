@@ -134,3 +134,21 @@ The final section of every article must serve as the **share trigger**. Research
 3. **Connect back to the hook** — show how far the reader has traveled
 4. **End with a forward-looking statement** — the reader's future is now different
 5. **Include the self-reflection trigger** — "Now that you know this, what will YOU do differently?"
+
+### Before/After — Completion-to-Share Section
+
+Before (FAIL — generic ending, no loop closure, no reward):
+> In conclusion, AI is changing how we work. By following the tips in this article, you can stay ahead of the curve. The future is exciting and full of possibilities. Start implementing these strategies today and see the results for yourself.
+
+After (PASS — loops closed, callback to hook, standout insight, self-reflection trigger):
+> Remember those 340 "autopilot decisions" from the Deloitte team? [CALLBACK to open loop from intro] Here's what happened six months later: they didn't just save time. They discovered that 23% of those decisions were wrong — consistently wrong, for years — but nobody noticed because humans made them too fast to question.
+>
+> That's the insight most people miss about AI. It's not about speed. It's about catching the errors you've been making on autopilot.
+>
+> Think about your own week. How many decisions did you make without thinking? How many of those would you change if someone handed you the data?
+>
+> That's your starting point. One spreadsheet. One week of tracking. The patterns will surprise you — they surprised the Deloitte team, and they've been in the business for decades.
+>
+> **Start tracking your autopilot decisions this week** — use the free Notion template linked below.
+>
+> Not ready to dive in? **Save this article and revisit it before your next team planning session** — it'll change how you think about what to automate first.

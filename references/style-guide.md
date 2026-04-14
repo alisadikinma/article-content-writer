@@ -42,7 +42,7 @@ Every sentence must answer the reader's unconscious question: "So what? Why shou
 
 **Three-tier system for detecting and replacing AI-sounding vocabulary.** Words are classified by how strongly they signal machine-generated text.
 
-### Tier 1 — Always Replace (52 words)
+### Tier 1 — Always Replace (53 words)
 
 These appear 5-20x more frequently in AI text than human text. Replace on sight. Zero tolerance.
 
@@ -99,11 +99,12 @@ These appear 5-20x more frequently in AI text than human text. Replace on sight.
 | unlock | find, discover, access |
 | unleash | release, enable, put to work |
 | supercharge | speed up, boost |
+| empower | enable, let, give the tools |
 | enhance | improve, sharpen, strengthen |
 | exceed | beat, outperform |
 | maximize | get the most from |
 
-### Tier 2 — Flag in Clusters (43 words)
+### Tier 2 — Flag in Clusters (42 words)
 
 Individually fine. **2+ in the same paragraph = AI signal.** Replace extras to break the cluster.
 
@@ -114,7 +115,6 @@ Individually fine. **2+ in the same paragraph = AI signal.** Replace extras to b
 | foster | encourage, support, build |
 | elevate | improve, raise |
 | streamline | simplify, speed up |
-| empower | enable, let, allow |
 | bolster | support, strengthen |
 | spearhead | lead, drive |
 | resonate / resonates with | connect with, matter to |
@@ -176,9 +176,9 @@ Only flag when **>3% of total words.** These are normal words that become AI sig
 
 ## Rule 4: 20% Fluff Reduction
 
-**Execute a "second pass" to rub out 20% of the draft's fluff.**
+**Cut 20% of the draft's fluff — whether inline during writing or as a dedicated pass.**
 
-After the first draft is complete, do a dedicated editing pass with one goal: cut 20% of the word count without losing any information or impact.
+In the 5-step pipeline, this is applied as a tight-writing mindset during Step 4 (write lean from the start, not as a separate cut pass). In standalone editing or validation, apply it as a dedicated second pass. Either way, the goal is the same: remove 20% of filler without losing information or impact.
 
 **What to cut:**
 - Redundant phrases ("in order to" → "to", "at this point in time" → "now")
@@ -371,13 +371,52 @@ The "Now What?" test extends the "So What?" test. "So What?" ensures benefit. "N
 
 ---
 
+## Voice Exemplar — What the Target Voice Sounds Like
+
+The rules above define what to AVOID. This section shows what the ideal output SOUNDS like. Use these samples as a tonal north star.
+
+**English exemplar (Empowerment arc, PASO framework, productivity topic):**
+
+> Your mornings are a mess. Not because you're lazy — because nobody taught you how to protect the first two hours of your day.
+>
+> Here's the thing:
+>
+> Cal Newport tracked 50 knowledge workers for six months. The ones who blocked their first 90 minutes for deep work shipped 3.2x more projects than those who started with email. Same hours. Same talent. Different sequence.
+>
+> So what does that look like in practice? Open your calendar right now. Block 8:00-9:30 tomorrow. Label it "Deep Work — No Meetings." Then pick ONE task — the one you've been avoiding because it requires actual thinking. That's your morning anchor.
+>
+> Don't check Slack first. Don't "just quickly" reply to that thread. The data is clear: every context switch costs you 23 minutes of recovery time. One "quick check" at 8:15 means you don't hit full focus until 8:38.
+
+**Indonesian exemplar (Gen-Z Bahasa, Discovery arc, AI topic):**
+
+> Gue kira AI cuma buat programmer. Ternyata salah besar.
+>
+> Tapi dengerin dulu:
+>
+> Riset McKinsey 2025 nunjukin 67% pekerjaan yang paling terbantu AI justru di bidang kreatif — copywriting, desain, strategi marketing. Bukan coding. Bukan data science. Marketing.
+>
+> Kok bisa? Karena AI paling jago di satu hal: mengolah pola dari jutaan data dan kasih output yang "cukup bagus" dalam hitungan detik. Dan di dunia kreatif, "cukup bagus" itu bukan pengganti lo — itu draft pertama yang bisa lo edit jadi luar biasa.
+>
+> Coba sekarang: buka ChatGPT, ketik "buatkan 5 angle berbeda untuk artikel tentang [topik lo]." Dalam 30 detik, lo punya 5 starting point yang biasanya butuh 2 jam brainstorm. Nah, dari situ lo pilih yang paling nyambung sama audience lo.
+
+**What makes these samples right:**
+- Short sentences (10-15 words average) — Grade 5 readability
+- "You"/"lo" address — speaking to one person, not an audience
+- Bucket brigades on own lines with colons
+- Data with named sources woven naturally, not dumped
+- Concrete actions the reader can do in 5 minutes
+- Zero Tier 1 words, no AI patterns
+- Conversational but credible — like a sharp friend explaining something over coffee
+
+---
+
 ## Style Pass Checklist
 
 Run this checklist on every draft before quality gate scoring:
 
 - [ ] No paragraph exceeds 4 lines
 - [ ] Every section passes the "So What?" test (benefit, not feature)
-- [ ] Tier 1 words: zero present (scan all 52)
+- [ ] Tier 1 words: zero present (scan all 53)
 - [ ] Tier 2 words: no clusters (max 1 per paragraph)
 - [ ] Tier 3 words: density under 3%
 - [ ] AI patterns: none of the 36 categories detected

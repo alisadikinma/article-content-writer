@@ -73,7 +73,7 @@ These 20 rules apply to EVERY article generated. Violation of any rule requires 
 
 18. **ALWAYS enforce Actionable Depth in numbered sections.** When an article includes numbered lists ("7 ways," "5 steps," etc.), each point MUST have: What (the action, 1-2 sentences), How (implementation steps, 2-4 sentences), Example (real company/tool/person + numbers, 2-3 sentences), Outcome (measurable result, 1-2 sentences). Minimum 150-250 words per point. A one-liner with a dash explanation is a table of contents, not an article. Apply the "Now What?" test: can the reader start doing this within 5 minutes?
 
-19. **ALWAYS apply AI Humanization rules during writing.** Zero Tier 1 words allowed (52 words — always replace on sight). Maximum 1 Tier 2 word per paragraph (43 words — flag clusters of 2+). Tier 3 words must stay under 3% density (12 words). None of the 36 AI patterns (structural, language, tone, advanced) should be detectable in the output. See style-guide.md Rules 3 + 8.
+19. **ALWAYS apply AI Humanization rules during writing.** Zero Tier 1 words allowed (53 words — always replace on sight). Maximum 1 Tier 2 word per paragraph (42 words — flag clusters of 2+). Tier 3 words must stay under 3% density (12 words). None of the 36 AI patterns (structural, language, tone, advanced) should be detectable in the output. See style-guide.md Rules 3 + 8.
 
 20. **ALWAYS apply GEO/AEO formatting.** Every H2 must open with a 40-60 word stat-rich paragraph that directly answers the heading (Answer-First). Structure content in 50-150 word self-contained extractable chunks (Passage Citability). Include 2+ FAQ Q&A pairs with 40-60 word answers. Name specific entities for all claims (Entity Clarity). Include 3+ current-year references (Freshness Signals). See seo-rules-engine.md Sections 8 + 9.
 
@@ -301,9 +301,10 @@ RECOMMENDATION: #[N] — [keyword] because [reason]
 Select framework, emotional arc, hook, and content template in a single strategy pass:
 
 **Framework selection:**
-1. Use Decision Matrix: match article goal to framework candidates
-2. Evaluate topic fit for each candidate
-3. Select best framework with rationale
+1. Use Goal-Based Framework Selection table: match article goal (educate/sell/convert/engage) to primary framework
+2. Cross-reference with Topic-Based Decision Matrix for topic-specific refinement
+3. If both tables agree, use that framework. If they differ, prefer the Goal-Based table.
+4. Select best framework with rationale
 
 **Emotional arc selection:**
 1. Match topic to arc type using Arc Selection Guide
@@ -449,8 +450,8 @@ If YES → generate image prompt FROM this section's content:
 - Image must SUPPORT this section's narrative, not generic decoration
 
 **Style + AI Humanization (applied during writing, not as separate pass):**
-- Zero Tier 1 words (52 words — scan and replace on sight per style-guide.md Rule 3)
-- No Tier 2 clusters (max 1 Tier 2 word per paragraph — 43 words)
+- Zero Tier 1 words (53 words — scan and replace on sight per style-guide.md Rule 3)
+- No Tier 2 clusters (max 1 Tier 2 word per paragraph — 42 words)
 - Tier 3 words under 3% density (12 words)
 - No AI patterns from 36 categories (structural, language, tone, advanced — style-guide.md Rule 8)
 - Paragraphs max 3-4 lines
@@ -482,7 +483,7 @@ If YES → generate image prompt FROM this section's content:
 
 **Single-language output:** Write the article in the PRIMARY language specified by `--languages` (first language in the list). If `--languages id` or `--languages id,en`, write in Indonesian using Gen-Z Bahasa (casual, conversational, localized idioms). If `--languages en`, write in English. Output ONE article only — translation to other languages is handled separately after approval (via Haiku, not in this step).
 
-**NOTE:** Image prompts are NOT generated in this step. They are generated separately after article approval (Gate 1) using the admin panel's image pipeline.
+**NOTE:** Image **files** (actual images via GeminiGen.AI API) are NOT generated in this step. Image **prompts** (text descriptions) are generated above as part of section-bound image analysis. Actual image generation happens separately after article approval using the admin panel's image pipeline.
 
 **Pipeline mode:** Report progress: `step=writing, percentage=85`.
 

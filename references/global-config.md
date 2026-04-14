@@ -20,7 +20,7 @@
 | Setting | Value | Source |
 |---------|-------|--------|
 | `default_framework` | PASO (Problem, Agitate, Solve, Outcome) | Most versatile for long-form — see frameworks-library.md |
-| `article_length` | 1,900–2,400 words | SEO optimal per research: comprehensive guides rank higher [1] |
+| `article_length` | 1,900–2,400 words (default — template-specific ranges override this, e.g., Pillar Page 3,000-4,000, News Analysis 800-1,200) | SEO optimal per research: comprehensive guides rank higher [1] |
 | `citation_density` | 1 data point or reputable citation per 400 words minimum | E-E-A-T signal density for search algorithms and AI Overviews [2] |
 | `paragraph_max` | 3–4 lines | Scannability rule — more periods, fewer commas |
 | `fluff_reduction` | 20% second-pass cut | Mandatory "rub out" pass after first draft |
@@ -32,7 +32,7 @@
 
 | Setting | Value | Source |
 |---------|-------|--------|
-| `hook_word_limit` | 15 words max | 2-second read time — pattern interrupt window |
+| `hook_word_limit` | 15 words target, 25 max | 2-second read time — pattern interrupt window |
 | `hook_char_limit` | 25 characters | Mobile scannability constraint [3] |
 | `pattern_interrupt_window` | 1.7–3 seconds | 71% of viewers decide within first 3 seconds, average at 1.7s [4] |
 | `hook_types_available` | 8 | See hook-repository.md |
@@ -192,8 +192,8 @@
 | Setting | Value |
 |---------|-------|
 | `ai_word_tiers` | 3 (Tier 1: always replace, Tier 2: cluster flag, Tier 3: density flag) |
-| `tier1_word_count` | 52 (always replace on sight) |
-| `tier2_word_count` | 43 (flag when 2+ in same paragraph) |
+| `tier1_word_count` | 53 (always replace on sight) |
+| `tier2_word_count` | 42 (flag when 2+ in same paragraph) |
 | `tier3_word_count` | 12 (flag when >3% density) |
 | `ai_pattern_categories` | 36 (4 groups: Structural 10, Language 12, Tone 8, Advanced 6) |
 | `ai_humanization_max_score` | 20 points (deduction-based) |

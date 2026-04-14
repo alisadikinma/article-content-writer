@@ -41,11 +41,13 @@ Plan an article before writing: topic exploration, audience definition, framewor
 ### Step 4 — HOOK GENERATION
 
 - Read hook-repository.md
-- Generate 5 hook options using at least 3 different hook types
+- Generate 3 hooks with specific roles (same structure as article-gen):
+  1. **PRIMARY:** Safest, highest-probability hook for this context
+  2. **SECONDARY:** Alternative angle — different hook type, different psychological driver
+  3. **WILDCARD:** Engagement Multiplier — combines two hook types (e.g., Curiosity+Numbers, HotTake+Story)
 - Each hook includes: type, psychological driver, engagement boost %, actual text
-- Include at least 1 combined hook (Engagement Multiplier — e.g., Curiosity+Numbers, HotTake+Story)
-- Score each on: word count (max 15), read time (max 2s), mobile chars (max 25)
-- User picks top 1-2
+- Score each on: word count (15 target, 25 max), read time (max 2s), mobile chars (max 25)
+- User selects one
 
 ### Step 5 — ARC + RETENTION PLAN
 

@@ -108,7 +108,7 @@ These 20 rules apply during writing. All reference details are in your system pr
 
 18. **ALWAYS Actionable Depth in numbered sections.** What+How+Example+Outcome, 150-250 words per point.
 
-19. **ALWAYS apply AI Humanization during writing.** Zero Tier 1 words (52 words). Max 1 Tier 2 per paragraph (43 words). Tier 3 under 3% density (12 words). Zero detectable AI patterns from 36 categories. See style-guide in system prompt.
+19. **ALWAYS apply AI Humanization during writing.** Zero Tier 1 words (53 words). Max 1 Tier 2 per paragraph (42 words). Tier 3 under 3% density (12 words). Zero detectable AI patterns from 36 categories. See style-guide in system prompt.
 
 20. **ALWAYS apply GEO/AEO formatting.** Answer-First H2s (40-60 word openers), Passage Citability (50-150 word chunks), 2+ FAQ pairs, Entity Clarity, 3+ Freshness Signals. See seo-rules-engine in system prompt.
 
