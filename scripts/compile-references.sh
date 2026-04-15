@@ -1,10 +1,10 @@
 #!/bin/bash
 # compile-references.sh — Build per-skill compiled reference files
-# Combines individual reference .md files into 4 skill-specific bundles
+# Combines individual reference .md files into 5 skill-specific bundles
 # for use with --append-system-prompt-file (zero Read tool calls)
 #
 # Usage: bash scripts/compile-references.sh
-# Output: references/compiled/refs-{prep,write,score,images}.md
+# Output: references/compiled/refs-{prep,write,score,images,translate}.md
 
 set -euo pipefail
 
@@ -160,9 +160,21 @@ append_ref_excluding "$IMAGES" "$REFS_DIR/global-config.md" \
 append_ref "$IMAGES" "$REFS_DIR/image-prompt-guide.md"
 append_ref "$IMAGES" "$REFS_DIR/cinematography-lut.md"
 
+# --- refs-translate.md (Finalize: Indonesian → English translation) ---
+TRANSLATE="$OUT_DIR/refs-translate.md"
+cat > "$TRANSLATE" << 'HEADER'
+# Article Generation Reference — Translate (Finalize)
+
+System prompt reference for the `/article-translate` skill.
+Contains: translation-guidelines (HTML preservation, tone matching, SEO meta rules).
+These references are injected via --append-system-prompt-file. Do NOT read them with the Read tool.
+HEADER
+
+append_ref "$TRANSLATE" "$REFS_DIR/translation-guidelines.md"
+
 # Report sizes
 echo "Compiled reference files:"
-for f in "$PREP" "$WRITE" "$SCORE" "$IMAGES"; do
+for f in "$PREP" "$WRITE" "$SCORE" "$IMAGES" "$TRANSLATE"; do
   size=$(wc -c < "$f")
   echo "  $(basename "$f"): $size bytes"
 done
