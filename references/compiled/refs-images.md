@@ -33,17 +33,29 @@ These references are injected via --append-system-prompt-file. Do NOT read them 
 | `api_endpoint` | `https://api.geminigen.ai/uapi/v1/generate_image` |
 | `api_key_env` | `GEMINIGEN_API_KEY` |
 | `default_model` | `nano-banana-2` (Gemini 3.1 Flash Image Preview — fast + high quality) |
+| `cover_model` | `nano-banana-pro` (Gemini 3 Pro — text rendering + advanced reasoning for cover thumbnails) |
 | `available_models` | `nano-banana-2`, `nano-banana-pro`, `imagen-4` |
 | `default_style` | `Photorealistic` |
 | `default_aspect_ratio` | `16:9` (widescreen for blog articles) |
 | `default_resolution` | `1K` |
 | `default_output_format` | `jpeg` |
 | `image_count` | 3–5 per article (scales with length) |
-| `image_allocation` | 1 feature/cover image (MANDATORY) + 2–4 inline section images |
-| `prompt_length` | 20–80 words (descriptive, specific) |
+| `image_allocation` | 1 cover thumbnail (MANDATORY) + 2–4 inline section images |
+| `prompt_length` | 300–500 words per prompt (cinematic standard) |
 | `rate_limit_nano_banana_pro` | 5 req/min, 100 req/hour, 1,000 req/day (free tier) |
-| `text_in_image` | NO — text belongs in the article, not the image |
-| `reference` | See image-prompt-guide.md for full API docs + prompt best practices |
+| `text_in_image` | COVER ONLY — title + subtitle rendered in-image by `nano-banana-pro`; inline images remain text-free |
+| `context_extraction` | MANDATORY — read full article + extract brands/products/tools before writing any prompt |
+| `reference` | See image-prompt-guide.md for full API docs, prompt best practices, Physical Reality Constraints, Context Extraction Gate, and Reference Image Manifest |
+
+### Cover Thumbnail Settings
+
+| Setting | Value |
+|---------|-------|
+| `cover_model` | `nano-banana-pro` (overrides `default_model` for cover only — text rendering required) |
+| `cover_title` | Yes — article title rendered in-image, rule-of-thirds positioning, high contrast, bold sans-serif |
+| `cover_subtitle` | Yes — max 8 words from article hook, below title, smaller font, contrasting background strip |
+| `cover_composition` | YouTube thumbnail principles — max 3 focal points, readable at 320px width, high contrast |
+| `cover_brand_logo` | From `reference_images.brand[]` via `file_urls` if available; skip entirely if no reference uploaded |
 
 ### Image Count by Article Length
 
@@ -52,6 +64,20 @@ These references are injected via --append-system-prompt-file. Do NOT read them 
 | Short (1,900 words) | 1 | 2 | 3 |
 | Standard (2,000–2,200 words) | 1 | 3 | 4 |
 | Long (2,200–2,400+ words) | 1 | 4 | 5 |
+
+### Reference Images
+
+The `reference_images` object in the pipeline data contains uploaded assets for accurate rendering:
+
+| Array | Purpose | Usage |
+|-------|---------|-------|
+| `face[]` | Face reference URLs for identity preservation | Pass via `file_urls` when generating images with specific people |
+| `style[]` | Mood/style reference URLs | Pass via `file_urls` to guide overall aesthetic direction |
+| `brand[]` | Brand logos and product visuals (**new**) | Pass via `file_urls` when image features a specific brand/product/tool. Identified by Context Extraction Gate in image-prompt-guide.md. Never hallucinate logos — if `brand[]` is empty, skip brand visuals entirely. |
+
+### Physical Reality
+
+All image prompts must comply with Physical Reality Constraints in `image-prompt-guide.md`. Key rules: screens face the user not the camera, objects obey gravity, reflections match scene geometry, human anatomy is correct. See the full constraint section for detailed rules and common AI failure patterns.
 
 ---
 
@@ -226,13 +252,29 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
 | Standard (2,000–2,200 words) | 1 (mandatory) | 3 | 4 |
 | Long (2,200–2,400+ words) | 1 (mandatory) | 4 | 5 |
 
-### Image 1: Feature / Cover Image (MANDATORY)
-- Hero image representing the entire article's core theme
-- Must be visually striking, high-contrast, scroll-stopping
-- Should encapsulate the article's hook promise or transformation
-- Works as both article header AND social media share thumbnail
-- Recommended styles: Portrait Cinematic or Photorealistic (highest engagement)
-- Aspect ratio: 16:9 (widescreen — optimal for blog headers and social shares)
+### Image 1: Cover Image — YouTube Thumbnail Style (MANDATORY)
+
+The cover image functions like a **YouTube thumbnail** — it must tell the story of the article at a glance. A viewer scrolling past should instantly understand what the article is about.
+
+**Model:** `nano-banana-pro` (OVERRIDE default — text rendering required for title)
+
+**5 Required Elements:**
+
+1. **Title Text** — The article title rendered directly in the image. Position using rule-of-thirds (upper or lower third). High contrast against the background. Specify in prompt: bold, clean, sans-serif typeface. Must be legible at 320px width (mobile thumbnail size).
+
+2. **Subtitle / Tagline** — Max 8 words, derived from the article's hook or core promise. Positioned below the title. Smaller font size than title. Use contrasting color or semi-transparent background strip for readability.
+
+3. **Key Visual** — 1 dominant visual element that is SPECIFIC to the article's topic. This is NOT a generic stock photo scene — it must represent the actual subject matter. If the article is about Claude Code, show a terminal/IDE with Claude Code. If about cooking, show the specific dish. Occupies the center or remaining composition space.
+
+4. **Brand Logo** — If `brand[]` reference images are provided via `reference_images`, incorporate the brand logo using `file_urls` parameter. Position naturally: corner placement, on a screen in the scene, or as a watermark. If NO `brand[]` references exist, **skip logo entirely** — never hallucinate or approximate a brand logo.
+
+5. **Composition** — YouTube thumbnail principles:
+   - Maximum 3 focal points (title text, key visual, optional logo)
+   - High contrast between text and background
+   - Readable at 320px width (mobile thumbnail preview)
+   - Visual hierarchy: key visual (largest) > title text > subtitle > logo (smallest)
+   - Recommended styles: Portrait Cinematic or Photorealistic (highest engagement)
+   - Aspect ratio: 16:9 (widescreen — optimal for blog headers and social shares)
 
 ### Images 2-5: Inline Section Images (Section-Bound)
 
@@ -289,10 +331,31 @@ Write prompts in this order:
 - Specify color temperature and palette to maintain consistency
 
 ### Don'ts
-- NO text-in-image — text belongs in the article itself, not rendered in the image
-- NO generic descriptions ("a beautiful landscape") — always be specific
+- NO text in INLINE images — text belongs in the article, not rendered in inline section images
+- **COVER images MUST include title + subtitle text** — this is the one exception to the no-text rule (see Cover Image section above)
+- NO generic descriptions ("a beautiful landscape") — always be specific to the article topic
 - NO conflicting instructions ("dark and bright simultaneously")
-- NO brand logos or specific trademarked visuals unless using reference images
+- NO brand logos or trademarked visuals UNLESS using `file_urls` with uploaded reference images from `reference_images.brand[]` — never hallucinate logos from text descriptions alone
+
+### Brand Reference Images (`file_urls`)
+
+When a brand, product, or tool is discussed in the article, its logo or visual identity can be included in image prompts — but ONLY through uploaded reference images passed via the GeminiGen API `file_urls` parameter.
+
+**How it works:**
+1. Context Extraction identifies brands/products/tools mentioned in the article (see Context Extraction Gate section)
+2. Reference Image Manifest tells the user which brand assets to upload with specific filenames
+3. Uploaded images are stored in `reference_images.brand[]` array
+4. When writing a prompt for a section that mentions the brand, include the `file_urls` URLs in the API call
+5. In the prompt body, reference the brand: "incorporate the brand identity from the provided reference image, positioned at [specific location in composition]"
+
+**Applies to ALL images (cover + inline):**
+- **Cover:** Brand logo as a small corner element or natural placement in scene
+- **Inline:** Brand/product visual integrated into the section's scene (e.g., product on desk, logo on screen, tool UI visible on monitor)
+
+**When `brand[]` is empty:**
+- Skip logo/brand visual entirely
+- Focus on visual metaphor + topic representation
+- NEVER attempt to describe or approximate a brand logo from memory — AI image models will hallucinate inaccurate logos
 
 ### Example Prompts by Section Type
 
@@ -313,38 +376,259 @@ Write prompts in this order:
 
 ---
 
+## Physical Reality Constraints (MANDATORY)
+
+Before writing ANY image prompt, mentally simulate the camera position and verify all objects, screens, and reflections are physically consistent from that viewpoint. These constraints prevent the AI image model from generating physically impossible scenes.
+
+### Screen/Display Logic
+
+- **Laptop screens face the person using them, not the camera.** If the camera is behind or beside a laptop user, only the back of the laptop lid is visible — never the screen content.
+- **Monitor content is only visible from the front.** A camera positioned behind a monitor shows cables and the back panel, not the display.
+- **Phone screens face the holder.** A person looking at their phone has the screen facing them. The camera only sees the screen if positioned in front of or over the shoulder of the holder.
+- **Tablet screens follow the same rules.** The display faces whoever is using it. Camera angle determines visibility.
+
+**Common AI Failures:**
+- Laptop screen content rendered on the lid/cover side (physically impossible — the lid is opaque)
+- Monitor displaying content when camera is behind the screen
+- Multiple screens showing content from angles where they would not be visible
+- Screen reflections appearing on surfaces that are not in the reflection path
+
+### Object Physics
+
+- **Objects obey gravity.** Items rest on surfaces, liquids flow downward, papers lie flat unless held or pinned.
+- **Hands grip objects at physically possible angles.** Fingers wrap around objects naturally — no impossible thumb positions or floating grips.
+- **Reflections match scene geometry.** Mirror reflections show what is actually opposite the mirror from the camera's perspective. Window reflections match the exterior or interior accordingly.
+- **Shadows are consistent with the light source.** A single key light produces shadows in one direction. Multiple lights produce multiple shadows. No shadows without a light source.
+
+**Common AI Failures:**
+- Objects floating above surfaces with no support
+- Cups or bottles at impossible tilt angles without spilling
+- Reflections showing content that is not in the scene
+- Shadows pointing in contradictory directions
+
+### Spatial Perspective
+
+- **Camera angle determines what is visible.** A low-angle shot looking up at a desk shows the underside of the desk surface, not the items on top. A high-angle shot looking down shows the top of objects, not their fronts.
+- **Consistent vanishing points.** All parallel lines in the scene must converge to the same vanishing point(s). Mixed perspective creates visual dissonance.
+- **Depth is proportional.** Objects further from the camera appear smaller. People in the background are smaller than people in the foreground.
+- **No impossible viewing angles.** The camera cannot simultaneously be above and below an object, or in front of and behind a person.
+
+**Common AI Failures:**
+- Mixed perspective where some objects follow one vanishing point and others follow a different one
+- Interior of a container visible from outside without the container being open or transparent
+- Objects in the background appearing the same size as foreground objects
+
+### Human Anatomy
+
+- **Five fingers per hand.** Count before finalizing — AI models frequently add or remove fingers.
+- **Natural joint bending angles.** Elbows bend inward, knees bend backward, wrists have limited rotation range. No hyper-extension.
+- **Proportional limbs.** Arms reach roughly to mid-thigh. Hands are approximately face-length. Heads are roughly 1/7 to 1/8 of total body height.
+- **Symmetric facial features.** Ears are at the same height. Eyes are level. Nose is centered. Teeth are roughly uniform in size.
+
+**Common AI Failures:**
+- Six fingers, four fingers, or merged fingers on one or both hands
+- Arms bending at impossible angles or with extra joints
+- One hand significantly larger or smaller than the other
+- Facial features misaligned (one ear higher, asymmetric jawline)
+
+### Authoring Instruction
+
+When writing ANY image prompt, apply this mental checklist:
+1. Where is the camera positioned?
+2. From this position, what surfaces/screens/objects are visible vs. hidden?
+3. Are all reflections and shadows consistent with the light source and camera angle?
+4. If people are in the scene, are their hands, limbs, and posture anatomically correct?
+5. Do all objects obey gravity and rest naturally on surfaces?
+
+If any element fails this checklist, revise the prompt to specify the correct physical arrangement before submitting.
+
+---
+
+## Context Extraction Gate (MANDATORY)
+
+Before writing ANY image prompt (cover or inline), perform a mandatory context extraction step. This ensures every image is contextually accurate and specific to the article's actual content — not generic stock photography.
+
+### Step 1: Full Article Analysis
+
+Read the complete article content and extract:
+
+- **Brands/Products/Tools** — every brand name, product, software tool, service, or company mentioned in the article. Record each with the section(s) it appears in.
+- **Key Actions/Transformations** — what the reader will learn to DO (e.g., "set up Claude Code in VS Code", "cook rendang from scratch", "analyze data with Python pandas")
+- **Target Persona** — who is the reader? What do they look like in a visual scene? (e.g., "developer at a desk", "home cook in a kitchen", "startup founder in a meeting")
+
+### Step 2: Per-Section Analysis (for inline images)
+
+For each H2 section that will have an image, identify:
+
+| Extract | Purpose |
+|---------|---------|
+| Primary brand/product/tool in this section | Determines if brand reference images are needed |
+| Visual representation of the topic | What physical scene or object represents this section's content? |
+| Emotional tone | Drives lighting, color palette, and mood |
+| "At a glance" test | If a reader only sees this image, can they guess what the section is about? |
+
+### Step 3: Cover Analysis (for cover image)
+
+For the cover thumbnail, identify the OVERALL article's:
+
+| Extract | Purpose |
+|---------|---------|
+| Primary brand/product | For logo placement via `file_urls` |
+| Core action/transformation | For key visual — what does the article teach/reveal? |
+| Target persona visual | Who is the "character" in the thumbnail? |
+| Emotional summary | Drives overall mood/lighting of the cover |
+| Title text | Exact article title for in-image text rendering |
+| Hook promise | For subtitle/tagline (max 8 words) |
+
+### Context Extraction drives everything downstream
+
+The extraction output directly feeds into:
+- **Reference Image Manifest** — which brand assets the user needs to upload
+- **Cover prompt** — title, subtitle, key visual, brand logo, composition
+- **Inline prompts** — section-specific visuals with brand/product integration where relevant
+- **Model selection** — if a section needs text or complex instruction following, use `nano-banana-pro`
+
+---
+
+## Reference Image Manifest
+
+After Context Extraction, generate a **single unified manifest** listing ALL reference images needed across ALL image prompts (cover + inline). This manifest tells the user exactly what to upload, with what filename, and for which images.
+
+### Manifest Format
+
+```
+Reference Image Manifest
+
+| # | Filename | Description | Used In | Required |
+|---|----------|-------------|---------|----------|
+| 1 | [kebab-case-name.png] | [What the image contains + where to find it] | [Cover, Sec N] | [Wajib/Opsional] |
+| 2 | ... | ... | ... | ... |
+```
+
+### Manifest Rules
+
+1. **Every brand/product identified in Context Extraction that appears in an image section MUST have a manifest entry.** If the article discusses Claude Code and an image will show Claude Code, the manifest must request a Claude Code logo/screenshot.
+
+2. **Required classification:**
+   - **Wajib** (Required) — brand logos, product identity visuals. Without these, the prompt cannot accurately render the brand. The AI will hallucinate inaccurate logos.
+   - **Opsional** (Optional) — UI screenshots, mood references, environment references. These improve accuracy but the AI can approximate without them.
+
+3. **Filename conventions:**
+   - Lowercase, kebab-case, ending with `.png`
+   - Descriptive: `claude-code-logo.png`, `vscode-sidebar-screenshot.png`, `rendang-reference-photo.png`
+   - Unique across the manifest — no duplicate filenames
+   - These filenames are referenced in the `file_urls` parameter when calling GeminiGen API
+
+4. **Description must include "where to find it"** — guide the user:
+   - Logo: "download from [brand] press kit or official website"
+   - Screenshot: "capture from your own setup showing [specific feature]"
+   - Product photo: "photograph of [specific item] or download from [source]"
+
+5. **"Used In" column** — tag which images will reference this file:
+   - `Cover` — used in the cover thumbnail
+   - `Sec N` — used in the inline image for section N
+   - A single reference image can be used in multiple images (e.g., a brand logo in both cover and an inline section)
+
+6. **One manifest for all images** — generated ONCE after Context Extraction, not per-image.
+
+### Example Manifest
+
+**Article:** "5 Tips Vibe Coding dengan Claude Code yang Bikin 3x Lebih Produktif"
+
+```
+Reference Image Manifest
+
+| # | Filename                  | Description                                                     | Used In       | Required |
+|---|---------------------------|-----------------------------------------------------------------|---------------|----------|
+| 1 | claude-code-logo.png      | Logo Claude Code (purple terminal icon) — from Anthropic        | Cover, Sec 3  | Wajib    |
+|   |                           | press kit or official branding page                             |               |          |
+| 2 | claude-code-vscode.png    | Screenshot of Claude Code sidebar active in VS Code —           | Section 2     | Opsional |
+|   |                           | capture from your own setup showing chat panel                  |               |          |
+| 3 | mcp-server-diagram.png    | Architecture diagram showing MCP Server connections —           | Section 4     | Opsional |
+|   |                           | from official Claude Code documentation                         |               |          |
+| 4 | cursor-vs-claude.png      | Side-by-side screenshot comparing Cursor AI and Claude Code —   | Section 5     | Opsional |
+|   |                           | capture both UIs on your screen                                 |               |          |
+
+Wajib: #1 (brand logo — used in 2 images)
+Opsional: #2, #3, #4 (meningkatkan akurasi visual section-specific)
+```
+
+### Pipeline Integration
+
+In the `article-images` skill pipeline:
+- If `reference_images.brand[]` is **empty**: generate the manifest, report to backend via progress callback (`step=manifest_needed`), and STOP. Wait for user to upload before proceeding to prompt authoring.
+- If `reference_images.brand[]` is **populated**: map brand URLs to sections based on Context Extraction, then proceed directly to prompt authoring.
+
+In interactive mode (`article-gen` skill):
+- Present the manifest to the user inline and ask them to provide the reference images before generating image prompts.
+
+---
+
 ## Image Prompt Output Format
 
 ```
-### Image [N]: [COVER / Section Title]
-**Concept:** [1-line image concept tied to content]
-**Prompt:** [full descriptive prompt, 20-80 words]
+### Image 1: COVER — [Article Title Short]
+**Concept:** [1-line thumbnail concept — what story does this tell at a glance?]
+**Prompt:** [300-500 word cinematic prompt with title text + subtitle + key visual + brand ref]
+**Model:** nano-banana-pro
+**Style:** [Photorealistic / Portrait Cinematic]
+**Aspect Ratio:** 16:9
+**Resolution:** 1K
+**Placement:** Article header / social share thumbnail
+**Title Text:** [exact article title to render in image]
+**Subtitle:** [max 8 words tagline]
+**file_urls:** [brand reference image URLs from reference_images.brand[], or "none"]
+
+### Image [N]: Section [N] — [Title]
+**Concept:** [1-line concept tied to THIS section's content]
+**Prompt:** [300-500 word cinematic prompt — context-specific, not generic]
 **Model:** [nano-banana-2 / nano-banana-pro / imagen-4]
 **Style:** [selected style]
 **Aspect Ratio:** [16:9 / 4:3 / 1:1]
 **Resolution:** [1K / 2K / 4K]
-**Placement:** [Article header / After "[Exact H2 heading text]" — reason]
+**Placement:** After "[Exact H2 heading text]" — [reason]
+**file_urls:** [brand reference URLs if this section uses brand visuals, or "none"]
 ```
 
 ### JSON Output Format (for API callbacks)
 
 When outputting image_prompts in JSON (e.g., for save-article or completion callbacks), use this structure:
 
+**Cover image:**
+```json
+{
+  "type": "cover",
+  "section": "Header",
+  "insert_after_heading": null,
+  "concept": "thumbnail concept — what story at a glance",
+  "prompt": "300-500 word cinematic prompt with title/subtitle/key visual/brand",
+  "model": "nano-banana-pro",
+  "style": "Photorealistic",
+  "aspect_ratio": "16:9",
+  "resolution": "1K",
+  "title_text": "exact article title",
+  "subtitle_text": "max 8 word tagline",
+  "file_urls": ["https://...brand-logo.png"]
+}
+```
+
+**Inline image:**
 ```json
 {
   "type": "inline",
   "section": "Section Title",
   "insert_after_heading": "The exact H2 heading text this image appears below",
-  "concept": "1-line concept",
-  "prompt": "20-80 word descriptive prompt",
+  "concept": "1-line concept from context extraction",
+  "prompt": "300-500 word cinematic prompt — section-specific",
   "model": "nano-banana-2",
   "style": "Photorealistic",
   "aspect_ratio": "16:9",
-  "resolution": "1K"
+  "resolution": "1K",
+  "file_urls": ["https://...brand-reference.png"]
 }
 ```
 
-**Critical:** `insert_after_heading` must be the **exact text** of an H2 heading in the article. The frontend uses this to position images correctly. For cover images, set `insert_after_heading` to `null`.
+**Critical:** `insert_after_heading` must be the **exact text** of an H2 heading in the article. The frontend uses this to position images correctly. For cover images, set `insert_after_heading` to `null`. `file_urls` is an array of reference image URLs from `reference_images.brand[]` — include only for images that need brand/product visuals. Set to empty array `[]` when no references are needed.
 
 ---
 
@@ -392,9 +676,12 @@ Film stock (e.g., Kodak Portra 400). Color grade (e.g., warm golden amber).
 Atmosphere elements (volumetric, particles, haze). Material textures (skin,
 fabric, metal). Cinematography inspired by [DP name].
 
-**Paragraph 5 — Aspect Ratio + Negative Constraints**
-Aspect ratio. Negative constraints: "no text visible", "no logos",
-"no competitor branding".
+**Paragraph 5 — Aspect Ratio + Negative Constraints + Text (Cover Only)**
+Aspect ratio. Negative constraints: "no competitor branding",
+"no unrelated text". For INLINE images: add "no text visible", "no logos".
+For COVER images: specify title text placement, subtitle text, font style
+(bold sans-serif), and contrast requirement. Include brand logo placement
+instruction if `file_urls` reference images are provided.
 
 ### Formatting Rules
 
@@ -415,41 +702,53 @@ the system prompt.
 
 ## Cinematic Prompt Example Library
 
-### Example 1: Cover Image (Hero Shot)
+### Example 1: Cover Image — YouTube Thumbnail Style
+
+**Article:** "5 Tips Vibe Coding dengan Claude Code yang Bikin Kamu 3x Lebih Produktif"
+**Brand references uploaded:** `claude-code-logo.png` (via `file_urls`)
 
 ```
 A photorealistic cinematic wide shot of an Indonesian-appearing
-professional developer in his mid-30s working intently at a minimalist
-desk, face illuminated by the warm glow of a laptop screen, eyes focused
-with quiet determination, slight smile suggesting discovery, wearing a
-charcoal crew-neck sweater with subtle texture visible, hands poised
-above a mechanical keyboard mid-thought.
+professional developer in his mid-30s leaning back in an ergonomic
+chair with a relaxed confident posture, one hand resting on a mechanical
+keyboard, the other gesturing casually at a large ultra-wide monitor
+displaying a VS Code interface with a chat sidebar active — the monitor
+screen faces the developer from the camera's perspective, showing the
+interface at a natural three-quarter angle. expression: wide genuine
+smile, eyes bright with excitement, eyebrows slightly raised in a
+"can you believe this?" look suggesting effortless productivity.
+wearing a fitted dark navy henley with rolled sleeves.
 
-foreground: out-of-focus edge of a notebook with handwritten notes
-catching warm amber light, coffee mug with steam rising in soft bokeh.
-midground: the developer centered in frame, laptop screen reflecting
-subtle cool light on his face from below while warm desk lamp provides
-key light from upper-right. background: large floor-to-ceiling window
-showing Jakarta city skyline at golden hour, warm amber buildings and
-sky bokeh creating depth, subtle silhouette of potted plants framing
-the scene.
+foreground: soft bokeh of a small desk plant and a coffee mug catching
+warm light, adding casual atmosphere. midground: the developer centered
+in the left two-thirds of the frame, monitor visible in the right third
+showing the active coding interface — the UPPER THIRD of the image is
+reserved for title text overlay with a clean dark gradient strip for
+contrast. background: modern home office with warm ambient shelf
+lighting, books and tech gadgets softly out of focus, creating a
+lived-in creative space.
 
-lens: 50mm f/1.8, eye-level slight high angle, shallow depth of field
-with developer's face in sharp focus. Rembrandt key light at 3:1 ratio
-from upper-right desk lamp at 3200K warm tungsten, cool 5600K fill from
-the laptop screen creating subtle warm-cool tension, soft rim light from
-window catching hair edges.
+lens: 35mm f/2.0, eye-level, medium depth of field keeping developer
+and monitor both in acceptable focus. butterfly key light at 3:1 ratio
+from above-center at 4000K neutral daylight, warm 3200K accent from
+the monitor glow on his face, cool 5600K rim light from a window
+camera-left providing edge separation.
 
-Kodak Portra 400, warm golden amber grade. subtle atmospheric haze from
-warm evening air, dust particles visible in the desk lamp beam, natural
-bokeh from window lights. natural skin texture with visible pores and
-faint beard stubble, sweater fiber weave with soft warmth, mechanical
-keyboard key caps showing subtle wear and finger oils. cinematography
-inspired by Bradford Young.
+Kodak Portra 400, warm golden amber grade with lifted shadows. clean
+atmosphere with minimal haze, soft natural bokeh from shelf lights.
+natural skin texture with visible pores, henley fabric showing soft
+cotton weave, keyboard keycaps with subtle shine from use, monitor
+bezel catching rim light. cinematography inspired by Bradford Young.
 
-16:9 aspect ratio. no text visible. no logos on laptop or screen.
+16:9 aspect ratio. bold clean sans-serif title text "5 Tips Vibe Coding
+dengan Claude Code" positioned in the upper third with dark
+semi-transparent gradient backdrop for legibility. subtitle text
+"3x Lebih Produktif dengan AI" in smaller font below the title.
+incorporate the Claude Code brand identity from the provided reference
+image as a small logo placed in the lower-right corner. no competitor
+branding. no unrelated text.
 ```
-**WOW Score: 8/8** — all elements present.
+**WOW Score: 8/8** — all elements present. **Thumbnail Score: 5/5** — title, subtitle, key visual, brand logo, readable at 320px.
 
 ### Example 2: Inline Scene (People Interaction)
 

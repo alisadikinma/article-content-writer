@@ -149,17 +149,29 @@
 | `api_endpoint` | `https://api.geminigen.ai/uapi/v1/generate_image` |
 | `api_key_env` | `GEMINIGEN_API_KEY` |
 | `default_model` | `nano-banana-2` (Gemini 3.1 Flash Image Preview — fast + high quality) |
+| `cover_model` | `nano-banana-pro` (Gemini 3 Pro — text rendering + advanced reasoning for cover thumbnails) |
 | `available_models` | `nano-banana-2`, `nano-banana-pro`, `imagen-4` |
 | `default_style` | `Photorealistic` |
 | `default_aspect_ratio` | `16:9` (widescreen for blog articles) |
 | `default_resolution` | `1K` |
 | `default_output_format` | `jpeg` |
 | `image_count` | 3–5 per article (scales with length) |
-| `image_allocation` | 1 feature/cover image (MANDATORY) + 2–4 inline section images |
-| `prompt_length` | 20–80 words (descriptive, specific) |
+| `image_allocation` | 1 cover thumbnail (MANDATORY) + 2–4 inline section images |
+| `prompt_length` | 300–500 words per prompt (cinematic standard) |
 | `rate_limit_nano_banana_pro` | 5 req/min, 100 req/hour, 1,000 req/day (free tier) |
-| `text_in_image` | NO — text belongs in the article, not the image |
-| `reference` | See image-prompt-guide.md for full API docs + prompt best practices |
+| `text_in_image` | COVER ONLY — title + subtitle rendered in-image by `nano-banana-pro`; inline images remain text-free |
+| `context_extraction` | MANDATORY — read full article + extract brands/products/tools before writing any prompt |
+| `reference` | See image-prompt-guide.md for full API docs, prompt best practices, Physical Reality Constraints, Context Extraction Gate, and Reference Image Manifest |
+
+### Cover Thumbnail Settings
+
+| Setting | Value |
+|---------|-------|
+| `cover_model` | `nano-banana-pro` (overrides `default_model` for cover only — text rendering required) |
+| `cover_title` | Yes — article title rendered in-image, rule-of-thirds positioning, high contrast, bold sans-serif |
+| `cover_subtitle` | Yes — max 8 words from article hook, below title, smaller font, contrasting background strip |
+| `cover_composition` | YouTube thumbnail principles — max 3 focal points, readable at 320px width, high contrast |
+| `cover_brand_logo` | From `reference_images.brand[]` via `file_urls` if available; skip entirely if no reference uploaded |
 
 ### Image Count by Article Length
 
@@ -168,6 +180,20 @@
 | Short (1,900 words) | 1 | 2 | 3 |
 | Standard (2,000–2,200 words) | 1 | 3 | 4 |
 | Long (2,200–2,400+ words) | 1 | 4 | 5 |
+
+### Reference Images
+
+The `reference_images` object in the pipeline data contains uploaded assets for accurate rendering:
+
+| Array | Purpose | Usage |
+|-------|---------|-------|
+| `face[]` | Face reference URLs for identity preservation | Pass via `file_urls` when generating images with specific people |
+| `style[]` | Mood/style reference URLs | Pass via `file_urls` to guide overall aesthetic direction |
+| `brand[]` | Brand logos and product visuals (**new**) | Pass via `file_urls` when image features a specific brand/product/tool. Identified by Context Extraction Gate in image-prompt-guide.md. Never hallucinate logos — if `brand[]` is empty, skip brand visuals entirely. |
+
+### Physical Reality
+
+All image prompts must comply with Physical Reality Constraints in `image-prompt-guide.md`. Key rules: screens face the user not the camera, objects obey gravity, reflections match scene geometry, human anatomy is correct. See the full constraint section for detailed rules and common AI failure patterns.
 
 ---
 

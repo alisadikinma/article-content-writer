@@ -281,25 +281,45 @@ Plan across the full article using techniques from `retention-engine.md`:
 - Self-reflection trigger
 - Dual CTA: Direct + Transitional (use CTA Copy Formulas from `quality-gate.md`)
 
-**4B — Generate Section-Bound Image Prompts**
+**4B — Context Extraction + Image Prompts**
+
+Before writing any image prompt, perform Context Extraction per `references/image-prompt-guide.md`:
+- Read the full article and extract brands/products/tools mentioned per section
+- Identify visual elements that represent each section's topic
+- For the cover: identify primary brand, core transformation, target persona, emotional summary
+
+**Physical Reality Constraints (MANDATORY for ALL prompts):**
+- Laptop/monitor screens face the person using them, not the camera — if camera is behind user, only back of device visible
+- Objects obey gravity, reflections match scene geometry, shadows consistent with light source
+- Camera angle determines visibility — no impossible viewing angles
+- Human anatomy: 5 fingers, natural joint angles, proportional limbs, symmetric features
 
 Generate image prompts using `references/image-prompt-guide.md` and `references/global-config.md`. Each image is BORN from a specific section — not assigned generically after writing.
 
-**Image allocation:** 1 cover (hero from article theme) + 2-4 inline (based on article length per global-config table).
+**Image allocation:** 1 cover thumbnail + 2-4 inline (based on article length per global-config table).
 
-**Per H2 section, decide:** Does this section need an image?
+**Cover image (YouTube Thumbnail Style):**
+- Model: `nano-banana-pro` (text rendering required — overrides default)
+- Article title rendered in-image (rule-of-thirds positioning, bold sans-serif, high contrast, legible at 320px)
+- Subtitle/tagline: max 8 words from hook, below title, smaller font, contrasting background strip
+- Key visual specific to article topic (from Context Extraction — NOT generic)
+- Brand logo from `reference_images.brand[]` via `file_urls` if available; skip entirely if no reference uploaded — never hallucinate logos
+- Composition: max 3 focal points (key visual > title > subtitle > logo), readable at mobile thumbnail size
+
+**Inline images — Per H2 section, decide:** Does this section need an image?
 1. Minimum 1 text-only section since last image (no clustering)
 2. Section is at an emotional turning point (Problem→Solution, Data reveal, Story beat, CTA)
 3. Under max inline count (3 for ≤2200 words, 4 for >2200 words)
 
 **If YES → generate image prompt FROM this section's content:**
-- `concept` = visual metaphor of what THIS section communicates (not generic)
+- `concept` = visual metaphor of what THIS section communicates — specific to the topic, not generic
 - `insert_after_heading` = exact H2 heading text of THIS section (MANDATORY)
-- `prompt` = 20-80 words describing a scene that SUPPORTS this section's message
+- `prompt` = 300-500 words cinematic prompt that SUPPORTS this section's message
 - `style` matches section's emotional arc phase (see section-to-style mapping in image-prompt-guide)
-- NO text in images. Consistent color palette across all images.
+- If section discusses a brand/product and `reference_images.brand[]` exists, include URLs via `file_urls`
+- NO text in inline images. Consistent color palette across all images.
 
-**Goal:** Reader glances at the image and instantly understands the section's topic. Images serve as visual anchors spread from top to bottom of the article, keeping readers engaged throughout.
+**Goal:** Reader glances at the image and instantly understands the section's topic. Cover thumbnail tells the full article story at a glance. Inline images serve as visual anchors spread from top to bottom.
 
 ---
 
@@ -355,24 +375,28 @@ Every completed article MUST be delivered in this exact format:
 
 ## Image Prompts ([N] images)
 
-### Image 1: FEATURE/COVER IMAGE
-**Concept:** [1-line hero concept]
-**Prompt:** [20-80 words]
-**Model:** [nano-banana-2 / nano-banana-pro / imagen-4]
-**Style:** [style]
-**Aspect Ratio:** [16:9]
-**Resolution:** [1K / 2K / 4K]
+### Image 1: COVER THUMBNAIL
+**Concept:** [thumbnail concept — what story at a glance]
+**Prompt:** [300-500 word cinematic prompt with title/subtitle/key visual/brand]
+**Model:** nano-banana-pro
+**Style:** [Photorealistic / Portrait Cinematic]
+**Aspect Ratio:** 16:9
+**Resolution:** 1K
 **Placement:** Article header / social share thumbnail
+**Title Text:** [exact article title]
+**Subtitle:** [max 8 words tagline from hook]
+**file_urls:** [brand reference URLs, or "none"]
 
 ### Image [N]: Section [N] — [Title]
-**Concept:** [concept]
-**Prompt:** [20-80 words]
-**Model:** [model]
+**Concept:** [context-specific concept — what THIS section is about]
+**Prompt:** [300-500 word cinematic prompt — section-specific]
+**Model:** [nano-banana-2 / nano-banana-pro / imagen-4]
 **Style:** [style]
 **Aspect Ratio:** [ratio]
 **Resolution:** [resolution]
 **Placement:** After "[Exact H2 heading text]" — [reason]
 **insert_after_heading:** [exact H2 heading text from article]
+**file_urls:** [brand reference URLs if section uses brand visuals, or "none"]
 
 ---
 

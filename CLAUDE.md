@@ -36,7 +36,7 @@ Claude Code plugin for AI-powered long-form article writing with inline image pr
 | `retention-engine.md` | Step 3 Outline — 5 retention techniques (slippery slide, open loops/Zeigarnik, bucket brigades, pattern interrupts, nested loops) |
 | `emotional-arcs.md` | Step 2 Strategy — 4 arcs with neurotransmitter mapping, pacing metrics, completion-to-share resolution |
 | `virality-triggers.md` | Step 5 Scoring — neuroscience of sharing, 5-point virality scoring guide with pass/fail definitions |
-| `image-prompt-guide.md` | Step 3 Outline + Step 4 Write — GeminiGen.AI API docs, model/style guides, section-to-concept mapping, prompt best practices |
+| `image-prompt-guide.md` | Step 3 Outline + Step 4 Write — GeminiGen.AI API docs, model/style guides, section-to-concept mapping, prompt best practices, Physical Reality Constraints, Context Extraction Gate, Reference Image Manifest |
 | `seo-rules-engine.md` | Step 4 Write + Step 5 Scoring — 6 SEO metrics + 5 GEO metrics with traffic light thresholds, JS logic contract, completion callback JSON schema |
 | `style-guide.md` | Step 4 Write — 8 technical writing rules: paragraph structure, So What test, 107-word AI replacement system (3 tiers), fluff reduction, readability, E-E-A-T, actionable depth, 36 AI pattern categories |
 | `quality-gate.md` | Step 5 Scoring — 10-point quality checklist, AI Humanization 20-point scoring, combined 100-point scale with bands |
@@ -201,6 +201,11 @@ After editing any file in `references/`:
 | Wrong template selected | Check content-templates.md Auto-Selection Guide — match topic to template |
 | Flat emotional arc | Check emotional-arcs.md — ensure arc phases map to sections in Step 2 |
 | No image prompts | Check image-prompt-guide.md — verify model/style/aspect_ratio in global-config |
+| Physically impossible images | Check image-prompt-guide.md Physical Reality Constraints — verify prompt specifies correct camera position relative to screens/objects. Common: laptop screen content on wrong side |
+| Logo/brand not accurate in image | Logos require uploaded reference images via `reference_images.brand[]` + `file_urls`. AI cannot render accurate logos from text alone — check if brand refs were uploaded |
+| No reference manifest generated | Check article-images SKILL.md Sections 3.5-3.6 — Context Extraction must run before prompt authoring. Manifest only generated when `brand[]` is empty |
+| Cover missing title/subtitle | Cover must use `nano-banana-pro` model with title + subtitle text instructions per image-prompt-guide.md Cover Image section |
+| Pipeline stuck at 20% (manifest) | article-images skill stopped at `manifest_needed` — user needs to upload brand reference images via admin panel before pipeline can resume |
 | Readability too high | Target Grade 5 — short sentences, common words, active voice per style-guide.md |
 | Missing citations | E-E-A-T requires 1 per 400 words — verify data points collected in Step 1 |
 | Numbered points too shallow | Each point needs What+How+Example+Outcome (150-250 words) — check Hard Rule 18 |
@@ -219,7 +224,55 @@ After editing any file in `references/`:
 | Split pipeline data flow broken | Check backend API endpoints: GET /{id}, PUT /save-prep, PUT /save-article, POST /continue-pipeline |
 | Wrong model used | article-prep + article-score use Sonnet, article-write uses Opus — check backend config |
 
+## Frontend Integration: Brand Reference Image Upload
+
+The article-images skill generates a **Reference Image Manifest** listing brand/product images needed for accurate rendering. The frontend must support this upload flow:
+
+### Data Flow
+
+```
+article-images skill (Section 3.5-3.6)
+  ↓ Context Extraction → identifies brands/products per section
+  ↓ Generates manifest: [{filename, description, used_in, required}]
+  ↓ POST /progress { step: "manifest_needed", manifest: [...] }
+Backend API
+  ↓ Stores manifest, sets idea status = "awaiting_brand_images"
+Frontend Admin Panel
+  ↓ Displays manifest checklist (filename, description, which images use it, wajib/opsional)
+  ↓ User uploads images matching manifest entries
+  ↓ Images stored in reference_images.brand[] array
+Backend resumes pipeline
+  ↓ POST /continue-pipeline { phase: "images_resume" }
+article-images skill resumes at 20% → continues to prompt authoring
+```
+
+### Backend Requirements
+
+| Requirement | Detail |
+|------------|--------|
+| `reference_images.brand[]` field | Add to content idea schema alongside existing `face[]` and `style[]` |
+| Manifest storage | Store manifest array from progress callback for frontend display |
+| Status tracking | New status `awaiting_brand_images` between `article_approved` and `images_generating` |
+| Resume endpoint | `POST /continue-pipeline` must support `phase: "images_resume"` to re-invoke article-images skill |
+
+### Frontend Requirements
+
+| Requirement | Detail |
+|------------|--------|
+| Manifest display | Render manifest table: filename, description, used-in (which images), required (Wajib/Opsional badge) |
+| Upload interface | Per-manifest-entry file upload. Validate filename matches manifest entry. Accept PNG/JPG. |
+| Upload-to-brand mapping | Uploaded files stored as URLs in `reference_images.brand[]` array |
+| Resume trigger | "Upload Complete" button triggers `POST /continue-pipeline` after all Wajib items uploaded |
+| Skip option | Allow proceeding without Opsional items (only Wajib items block) |
+
+### Image Prompt Output: `file_urls` Field
+
+Each image prompt in the `image_prompts[]` array now includes a `file_urls` field:
+- **Cover:** `file_urls` contains brand logo URLs from `reference_images.brand[]`
+- **Inline:** `file_urls` contains section-relevant brand/product URLs, or empty array
+- **GeminiGen API:** Pass `file_urls` array as the `file_urls` form parameter in the generate_image call
+
 ---
 
-**Version:** 2.4.0
+**Version:** 2.5.0
 **Last Updated:** April 2026

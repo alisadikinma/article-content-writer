@@ -439,15 +439,32 @@ Write the article in a single comprehensive pass, applying all rules simultaneou
 - Every sentence earns the next (Slippery Slide)
 - Actionable Depth for numbered sections: What + How + Example + Outcome, 150-250 words per point, "Now What?" test
 
+**Context Extraction (before image analysis):**
+Before writing any image prompt, perform Context Extraction per `image-prompt-guide.md`:
+- Read the full article and extract brands/products/tools mentioned per section
+- Identify visual elements that represent each section's topic
+- For the cover: identify primary brand, core transformation, target persona, emotional summary
+- Apply Physical Reality Constraints from `image-prompt-guide.md` to every prompt — verify screen orientations, object physics, spatial perspective, human anatomy
+
 **Section-bound image analysis (per H2 section):**
 After writing each H2 section, decide if it needs an image:
 1. Is there minimum 1 text-only section since last image? (no clustering)
 2. Is this section at an emotional turning point? (Problem→Solution, Data reveal, Story beat, CTA)
 3. Under max inline count? (3 for ≤2200 words, 4 for >2200 words)
 If YES → generate image prompt FROM this section's content:
-- `concept` = visual metaphor of what THIS section communicates
+- `concept` = visual metaphor of what THIS section communicates — specific to the topic, not generic
 - `insert_after_heading` = exact H2 heading text (MANDATORY)
-- Image must SUPPORT this section's narrative, not generic decoration
+- Image must SUPPORT this section's narrative — if section discusses a brand/product, image must visually represent THAT brand/product
+- If `reference_images.brand[]` exists for a brand in this section, include URLs via `file_urls` in the prompt
+- NO text in inline images. Consistent color palette across all images.
+
+**Cover image (YouTube Thumbnail Style):**
+- Model: `nano-banana-pro` (text rendering required)
+- Include article title text in-image (rule-of-thirds, bold sans-serif, high contrast)
+- Include subtitle/tagline (max 8 words from hook, below title)
+- Key visual specific to article topic (from Context Extraction)
+- Brand logo from `reference_images.brand[]` via `file_urls` if available; skip if no reference
+- Max 3 focal points, readable at 320px width
 
 **Style + AI Humanization (applied during writing, not as separate pass):**
 - Zero Tier 1 words (53 words — scan and replace on sight per style-guide.md Rule 3)
@@ -546,50 +563,57 @@ Every article output MUST follow this exact structure:
 
 ## Image Prompts ([N] images)
 
-### Image 1: FEATURE/COVER IMAGE
-**Concept:** [1-line hero concept]
-**Prompt:** [20-80 words]
-**Model:** [nano-banana-2 / nano-banana-pro / imagen-4]
-**Style:** [style]
-**Aspect Ratio:** [16:9]
-**Resolution:** [1K / 2K / 4K]
+### Image 1: COVER THUMBNAIL
+**Concept:** [thumbnail concept — what story at a glance]
+**Prompt:** [300-500 word cinematic prompt with title/subtitle/key visual/brand]
+**Model:** nano-banana-pro
+**Style:** [Photorealistic / Portrait Cinematic]
+**Aspect Ratio:** 16:9
+**Resolution:** 1K
 **Placement:** Article header / social share thumbnail
+**Title Text:** [exact article title]
+**Subtitle:** [max 8 words tagline from hook]
+**file_urls:** [brand reference URLs, or "none"]
 
 ### Image 2: Section [N] — [Title]
-**Concept:** [1-line concept]
-**Prompt:** [20-80 words]
-**Model:** [model]
+**Concept:** [context-specific concept — what THIS section is about]
+**Prompt:** [300-500 word cinematic prompt — section-specific]
+**Model:** [nano-banana-2 / nano-banana-pro / imagen-4]
 **Style:** [style]
 **Aspect Ratio:** [ratio]
 **Resolution:** [resolution]
-**Placement:** After "[Exact H2 heading text]" — [emotional turning point reason]
+**Placement:** After "[Exact H2 heading text]" — [reason]
+**file_urls:** [brand reference URLs if section uses brand visuals, or "none"]
 
 ### Image 3: Section [N] — [Title]
-**Concept:** [1-line concept]
-**Prompt:** [20-80 words]
+**Concept:** [context-specific concept]
+**Prompt:** [300-500 word cinematic prompt]
 **Model:** [model]
 **Style:** [style]
 **Aspect Ratio:** [ratio]
 **Resolution:** [resolution]
-**Placement:** After [section] — [emotional turning point reason]
+**Placement:** After [section] — [reason]
+**file_urls:** [brand reference URLs or "none"]
 
 ### Image 4: Section [N] — [Title]
-**Concept:** [1-line concept]
-**Prompt:** [20-80 words]
+**Concept:** [context-specific concept]
+**Prompt:** [300-500 word cinematic prompt]
 **Model:** [model]
 **Style:** [style]
 **Aspect Ratio:** [ratio]
 **Resolution:** [resolution]
-**Placement:** After [section] — [emotional turning point reason]
+**Placement:** After [section] — [reason]
+**file_urls:** [brand reference URLs or "none"]
 
 ### Image 5: Section [N] — [Title]
-**Concept:** [1-line concept]
-**Prompt:** [20-80 words]
+**Concept:** [context-specific concept]
+**Prompt:** [300-500 word cinematic prompt]
 **Model:** [model]
 **Style:** [style]
 **Aspect Ratio:** [ratio]
 **Resolution:** [resolution]
-**Placement:** After [section] — [emotional turning point reason]
+**Placement:** After [section] — [reason]
+**file_urls:** [brand reference URLs or "none"]
 
 ---
 
