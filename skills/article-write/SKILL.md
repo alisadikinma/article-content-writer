@@ -276,7 +276,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
       "insert_after_heading": null,
       "concept": "hero concept description",
       "prompt": "20-80 word image prompt",
-      "model": "nano-banana-2",
+      "model": "nano-banana-pro",
       "style": "Photorealistic",
       "aspect_ratio": "16:9",
       "resolution": "1K"
@@ -287,7 +287,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
       "insert_after_heading": "The exact H2 heading text this image appears below",
       "concept": "concept description",
       "prompt": "20-80 word image prompt",
-      "model": "nano-banana-2",
+      "model": "nano-banana-pro",
       "style": "Cinematic",
       "aspect_ratio": "16:9",
       "resolution": "1K"

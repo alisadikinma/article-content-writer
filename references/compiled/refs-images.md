@@ -32,9 +32,9 @@ These references are injected via --append-system-prompt-file. Do NOT read them 
 |---------|-------|
 | `api_endpoint` | `https://api.geminigen.ai/uapi/v1/generate_image` |
 | `api_key_env` | `GEMINIGEN_API_KEY` |
-| `default_model` | `nano-banana-2` (Gemini 3.1 Flash Image Preview — fast + high quality) |
-| `cover_model` | `nano-banana-pro` (Gemini 3 Pro — text rendering + advanced reasoning for cover thumbnails) |
-| `available_models` | `nano-banana-2`, `nano-banana-pro`, `imagen-4` |
+| `default_model` | `nano-banana-pro` (Gemini 3 Pro — complex instructions + text rendering, default for all images) |
+| `cover_model` | `nano-banana-pro` (same default — text rendering + advanced reasoning for cover thumbnails) |
+| `available_models` | `nano-banana-pro`, `nano-banana-2`, `imagen-4` |
 | `default_style` | `Photorealistic` |
 | `default_aspect_ratio` | `16:9` (widescreen for blog articles) |
 | `default_resolution` | `1K` |
@@ -129,7 +129,7 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
   -H "Content-Type: multipart/form-data" \
   -H "x-api-key: ${GEMINIGEN_API_KEY}" \
   --form "prompt=A professional blogger working at a minimalist desk with warm golden hour lighting streaming through floor-to-ceiling windows, shallow depth of field, editorial photography style" \
-  --form "model=nano-banana-2" \
+  --form "model=nano-banana-pro" \
   --form "aspect_ratio=16:9" \
   --form "style=Photorealistic" \
   --form "output_format=jpeg" \
@@ -141,7 +141,7 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
 {
   "id": 12345,
   "uuid": "img_abc123def456",
-  "model_name": "nano-banana-2",
+  "model_name": "nano-banana-pro",
   "input_text": "...",
   "generate_result": "https://cdn.geminigen.ai/images/img_abc123def456.jpg",
   "status": 2,
@@ -170,20 +170,20 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
 
 ## Model Selection Guide
 
-### nano-banana-2 (DEFAULT)
-- **Underlying model:** Gemini 3.1 Flash Image Preview (gemini-3.1-flash-image-preview)
-- **Strengths:** High performance, optimized for speed and high-volume use cases, good quality
-- **Best for:** Most article images — editorial photography, conceptual illustrations, professional scenes
-- **Cost:** Credit-based
-- **When to use:** Default choice for all article image generation
-
-### nano-banana-pro
+### nano-banana-pro (DEFAULT)
 - **Underlying model:** Gemini 3 Pro Image Preview (gemini-3-pro-image-preview)
-- **Strengths:** Professional asset creation, advanced reasoning ("Thinking") capabilities, follows complex instructions, renders high-fidelity text
-- **Best for:** Complex concept art, text-in-image rendering, highly detailed instructions
+- **Strengths:** Professional asset creation, advanced reasoning ("Thinking") capabilities, follows complex instructions, renders high-fidelity text (critical for YouTube-thumbnail-style covers)
+- **Best for:** All article images — covers with title overlay, editorial photography, complex scenes, concept art
 - **Cost:** FREE tier available
 - **Rate limit:** 5 req/min, 100 req/hour, 1,000 req/day
-- **When to use:** When image requires complex instruction following or text rendering
+- **When to use:** Default choice for cover and inline images
+
+### nano-banana-2
+- **Underlying model:** Gemini 3.1 Flash Image Preview (gemini-3.1-flash-image-preview)
+- **Strengths:** High performance, optimized for speed and high-volume use cases
+- **Best for:** High-volume batch runs where rate limits on nano-banana-pro bite
+- **Cost:** Credit-based
+- **When to use:** Downgrade target when speed/cost beats instruction-following
 
 ### imagen-4
 - **Underlying model:** General-use model balancing speed and quality
@@ -195,13 +195,14 @@ curl -X POST https://api.geminigen.ai/uapi/v1/generate_image \
 ### Model Decision Table
 | Article Topic | Recommended Model | Why |
 |--------------|-------------------|-----|
-| Business / productivity | nano-banana-2 | Professional scenes, fast generation |
-| Technology / AI | nano-banana-2 | Concepts, editorial feel, high quality |
+| Business / productivity | nano-banana-pro | Complex scenes, text-on-image covers |
+| Technology / AI | nano-banana-pro | Complex concept rendering, text in diagrams |
 | Nature / environment | imagen-4 | Fine texture rendering |
 | Food / cooking | imagen-4 | Texture detail (ingredients, surfaces) |
-| Fashion / lifestyle | nano-banana-2 | Professional photography quality |
+| Fashion / lifestyle | nano-banana-pro | High-fidelity detail, brand accuracy |
 | Complex concept art | nano-banana-pro | Advanced reasoning, text rendering |
-| Default / unsure | nano-banana-2 | Fast, high quality, reliable |
+| High-volume batch | nano-banana-2 | Faster iteration when rate limits bite |
+| Default / unsure | nano-banana-pro | Best quality, text rendering for covers |
 
 ---
 
@@ -582,7 +583,7 @@ In interactive mode (`article-gen` skill):
 ### Image [N]: Section [N] — [Title]
 **Concept:** [1-line concept tied to THIS section's content]
 **Prompt:** [300-500 word cinematic prompt — context-specific, not generic]
-**Model:** [nano-banana-2 / nano-banana-pro / imagen-4]
+**Model:** [nano-banana-pro / nano-banana-2 / imagen-4]
 **Style:** [selected style]
 **Aspect Ratio:** [16:9 / 4:3 / 1:1]
 **Resolution:** [1K / 2K / 4K]
@@ -620,7 +621,7 @@ When outputting image_prompts in JSON (e.g., for save-article or completion call
   "insert_after_heading": "The exact H2 heading text this image appears below",
   "concept": "1-line concept from context extraction",
   "prompt": "300-500 word cinematic prompt — section-specific",
-  "model": "nano-banana-2",
+  "model": "nano-banana-pro",
   "style": "Photorealistic",
   "aspect_ratio": "16:9",
   "resolution": "1K",

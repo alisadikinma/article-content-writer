@@ -390,7 +390,7 @@ Every completed article MUST be delivered in this exact format:
 ### Image [N]: Section [N] — [Title]
 **Concept:** [context-specific concept — what THIS section is about]
 **Prompt:** [300-500 word cinematic prompt — section-specific]
-**Model:** [nano-banana-2 / nano-banana-pro / imagen-4]
+**Model:** [nano-banana-pro / nano-banana-2 / imagen-4]
 **Style:** [style]
 **Aspect Ratio:** [ratio]
 **Resolution:** [resolution]

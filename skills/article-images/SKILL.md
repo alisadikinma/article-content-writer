@@ -226,7 +226,7 @@ Build a single JSON array `image_prompts[]` consumed by GeminiGen and frontend p
     "insert_after_heading": "<exact H2 heading text>",
     "concept": "<context-specific concept from extraction + outline>",
     "prompt": "<300-500 word cinematic prompt — section-specific, not generic>",
-    "model": "nano-banana-2",
+    "model": "nano-banana-pro",
     "style": "Cinematic",
     "aspect_ratio": "16:9",
     "resolution": "1K",
@@ -239,7 +239,7 @@ Field requirements:
 
 - `insert_after_heading` — exact H2 heading text; MANDATORY for all inline images, null only for cover
 - `concept` — inherit from outline, enriched with Context Extraction insights; if regenerating after user edit, use the edited concept
-- `model` — cover ALWAYS `nano-banana-pro` (text rendering); inline default `nano-banana-2`, upgrade to `nano-banana-pro` for complex instructions or `imagen-4` for fine textures
+- `model` — default `nano-banana-pro` for both cover and inline (best for complex instructions + text rendering); downgrade inline to `nano-banana-2` only if speed/cost critical, or use `imagen-4` for fine textures
 - `aspect_ratio` — default `16:9`
 - `resolution` — default `1K`
 - `title_text` — cover only: exact article title string for in-image rendering. Null for inline.

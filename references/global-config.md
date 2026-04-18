@@ -148,9 +148,9 @@
 |---------|-------|
 | `api_endpoint` | `https://api.geminigen.ai/uapi/v1/generate_image` |
 | `api_key_env` | `GEMINIGEN_API_KEY` |
-| `default_model` | `nano-banana-2` (Gemini 3.1 Flash Image Preview — fast + high quality) |
-| `cover_model` | `nano-banana-pro` (Gemini 3 Pro — text rendering + advanced reasoning for cover thumbnails) |
-| `available_models` | `nano-banana-2`, `nano-banana-pro`, `imagen-4` |
+| `default_model` | `nano-banana-pro` (Gemini 3 Pro — complex instructions + text rendering, default for all images) |
+| `cover_model` | `nano-banana-pro` (same default — text rendering + advanced reasoning for cover thumbnails) |
+| `available_models` | `nano-banana-pro`, `nano-banana-2`, `imagen-4` |
 | `default_style` | `Photorealistic` |
 | `default_aspect_ratio` | `16:9` (widescreen for blog articles) |
 | `default_resolution` | `1K` |
