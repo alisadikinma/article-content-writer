@@ -235,13 +235,19 @@ If ANY blocking gate fails (Virality <3/5, Quality <7/10, SEO <4/6, or Combined 
 5. Recalculate combined score
 6. Repeat until all blocking gates pass AND combined >= 70
 
-If the article was revised, save the updated version:
+If the article was revised, save the updated version. **USE FILE-BASED CURL** (article body is 10-20 KB with HTML; inline `-d '...'` corrupts at shell):
 
 ```bash
+cat > /tmp/article-save-{idea_id}.json << 'PAYLOAD_EOF'
+{"title": "...", "content": "<updated article>", "word_count": ..., "keyword": "..."}
+PAYLOAD_EOF
+
 curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
   -H "Authorization: Bearer {api_token}" \
   -H "Content-Type: application/json" \
-  -d '{"title": "...", "content": "<updated article>", "word_count": ..., "keyword": "..."}'
+  -d @/tmp/article-save-{idea_id}.json
+
+rm -f /tmp/article-save-{idea_id}.json
 ```
 
 ---
@@ -250,12 +256,22 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
 
 After all gates pass and combined >= 70, send the FULL completion callback. **Reuse the exact evidence strings** from your §4 bullet output — don't compose new sentences. The mechanical metrics (SEO values, FAQ count, freshness count, Tier counts) come from `mechanical_scores` — paste values directly.
 
+**USE FILE-BASED CURL** — completion JSON is 8-15 KB with nested evidence strings that may contain quotes:
+
 ```bash
+cat > /tmp/article-complete-{idea_id}.json << 'PAYLOAD_EOF'
+{COMPLETION_JSON}
+PAYLOAD_EOF
+
 curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
   -H "Authorization: Bearer {api_token}" \
   -H "Content-Type: application/json" \
-  -d '{COMPLETION_JSON}'
+  -d @/tmp/article-complete-{idea_id}.json
+
+rm -f /tmp/article-complete-{idea_id}.json
 ```
+
+**If response shows `"success": false`** (missing required fields), the heredoc corrupted — re-write and retry.
 
 **Completion JSON structure:**
 

@@ -142,13 +142,19 @@ Build a single JSON payload:
 
 ## 8. Save via Callback
 
-PUT the full payload to the backend:
+PUT the full payload to the backend. **USE FILE-BASED CURL** — translated content is 10-20 KB with HTML tags and may contain quotes that break inline `-d`:
 
 ```bash
+cat > /tmp/article-translate-{post_id}.json << 'PAYLOAD_EOF'
+{JSON_PAYLOAD}
+PAYLOAD_EOF
+
 curl -s -X PUT "{api_url}/automation/posts/{post_id}/save-translation" \
   -H "Authorization: Bearer {api_token}" \
   -H "Content-Type: application/json" \
-  -d '{JSON_PAYLOAD}'
+  -d @/tmp/article-translate-{post_id}.json
+
+rm -f /tmp/article-translate-{post_id}.json
 ```
 
 The backend UPSERTs the `post_translations` row keyed by `(post_id, language=target_locale)`. If `image_alt_map` is present, the backend rewrites `alt` attributes in the stored `post_translations.content` HTML.

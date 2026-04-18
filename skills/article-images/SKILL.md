@@ -250,13 +250,19 @@ Field requirements:
 
 ## 8. Save via Callback
 
-POST the full array to the backend:
+POST the full array to the backend. **USE FILE-BASED CURL** — payload with 3-5 prompts × 300-500 words each = 5-15 KB, too large for safe inline `-d`:
 
 ```bash
+cat > /tmp/article-imageprompts-{idea_id}.json << 'PAYLOAD_EOF'
+{"idempotency_key":"{idempotency_key}","image_prompts":[ ... ]}
+PAYLOAD_EOF
+
 curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-image-prompts" \
   -H "Authorization: Bearer {api_token}" \
   -H "Content-Type: application/json" \
-  -d '{"idempotency_key":"{idempotency_key}","image_prompts":[ ... ]}'
+  -d @/tmp/article-imageprompts-{idea_id}.json
+
+rm -f /tmp/article-imageprompts-{idea_id}.json
 ```
 
 The backend merges `image_prompts[]` into `generated_article` JSON without touching article body, metadata, or scores.

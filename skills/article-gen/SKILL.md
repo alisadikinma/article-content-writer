@@ -124,13 +124,11 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
 | 4 | writing | 85 | Article written + styled + SEO optimized + images generated |
 | 5 | completed | 100 | Triple gate passed + output delivered |
 
-**Completion callback:** After all gates pass (Quality + Virality + SEO), send the FULL data package to the Portfolio API. See `references/seo-rules-engine.md` Section 5 for the complete JSON schema.
+**Completion callback:** After all gates pass (Quality + Virality + SEO), send the FULL data package to the Portfolio API. See `references/seo-rules-engine.md` Section 5 for the complete JSON schema. **USE FILE-BASED CURL** — completion payload is 15-30 KB with article HTML + evidence strings; inline `-d '...'` corrupts at shell.
 
 ```bash
-curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
-  -H "Authorization: Bearer {api_token}" \
-  -H "Content-Type: application/json" \
-  -d '{
+cat > /tmp/article-complete-{idea_id}.json << 'PAYLOAD_EOF'
+{
     "article": {
       "title": "{article_title}",
       "content": "{full_html_content}",
@@ -228,8 +226,18 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
       "primary_pain_point": "{pain_point}",
       "sources": [{"name": "{source}", "url": "{url}"}]
     }
-  }'
+  }
+PAYLOAD_EOF
+
+curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
+  -H "Authorization: Bearer {api_token}" \
+  -H "Content-Type: application/json" \
+  -d @/tmp/article-complete-{idea_id}.json
+
+rm -f /tmp/article-complete-{idea_id}.json
 ```
+
+**CRITICAL:** Single-quoted heredoc delimiter (`<< 'PAYLOAD_EOF'`) prevents bash `$`/`"`/backtick interpolation. If response is `"success": false` with `keys_received`, the file was corrupted — re-write and retry.
 
 **Error handling:** If any step fails, report it as progress with error detail:
 ```bash

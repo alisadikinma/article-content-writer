@@ -226,14 +226,25 @@ Before saving, compose these SEO fields from the article you just wrote. These a
 }
 ```
 
-Save the written article:
+Save the written article. **USE FILE-BASED CURL** — inline `-d '...'` breaks at this payload size (10-20 KB with HTML content containing quotes). Write the JSON to a temp file, then reference it with `@filename`.
 
 ```bash
+# Write JSON payload to temp file (avoids shell quoting bugs on the 14KB+ body)
+cat > /tmp/article-save-{idea_id}.json << 'PAYLOAD_EOF'
+{JSON_PAYLOAD}
+PAYLOAD_EOF
+
 curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
   -H "Authorization: Bearer {api_token}" \
   -H "Content-Type: application/json" \
-  -d '{JSON_PAYLOAD}'
+  -d @/tmp/article-save-{idea_id}.json
+
+rm -f /tmp/article-save-{idea_id}.json
 ```
+
+**CRITICAL:** Use the `PAYLOAD_EOF` heredoc **with single-quoted delimiter** (`<< 'PAYLOAD_EOF'`) so bash does NOT interpolate `$`, `"`, or backticks inside your JSON. Any HTML inside content may contain these characters and WILL corrupt the body if heredoc is unquoted.
+
+**After calling save-article, check the response.** If you see `"success": false` with `"keys_received"`, the body was malformed — re-write the JSON file and retry. Do NOT proceed to continue-pipeline until save-article returns `"success": true`.
 
 **JSON payload:**
 

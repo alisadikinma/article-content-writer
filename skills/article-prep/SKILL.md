@@ -125,14 +125,22 @@ Using references already in system prompt (retention-engine concepts are embedde
 
 ## 4. Completion — Save Prep Data
 
-After Step 3 completes, save all prep data to the backend:
+After Step 3 completes, save all prep data to the backend. **USE FILE-BASED CURL** — inline `-d '...'` breaks at this payload size (5-15 KB with outline + research data). Write to temp file first:
 
 ```bash
+cat > /tmp/article-prep-{idea_id}.json << 'PAYLOAD_EOF'
+{JSON_PAYLOAD}
+PAYLOAD_EOF
+
 curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-prep" \
   -H "Authorization: Bearer {api_token}" \
   -H "Content-Type: application/json" \
-  -d '{JSON_PAYLOAD}'
+  -d @/tmp/article-prep-{idea_id}.json
+
+rm -f /tmp/article-prep-{idea_id}.json
 ```
+
+**CRITICAL:** Single-quoted heredoc delimiter (`<< 'PAYLOAD_EOF'`) prevents bash from interpolating `$`, `"`, or backticks inside your JSON. If save-prep returns `"success": false`, re-write the JSON file and retry before calling continue-pipeline.
 
 **JSON payload structure:**
 
