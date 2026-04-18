@@ -180,9 +180,10 @@ After writing each H2 section, decide if this section needs an image:
 
 **Report progress: 78% (style_pass)**
 
-### SEO Verification
+### SEO Verification + Meta Field Composition
 - Verify keyword placement (title, first 100 words, headings, body density)
 - Verify GEO formatting (Answer-First H2s, FAQ pairs, entity clarity, freshness)
+- Compose the 7 persisted SEO fields listed in Section 6 (`meta_title`, `meta_description`, `meta_keywords`, `og_title`, `og_description`, `ai_summary`, `faq_schema`). These are REQUIRED in the save-article payload — no downstream step will regenerate them.
 
 **Report progress: 85% (seo_pass)**
 
@@ -193,6 +194,37 @@ After writing each H2 section, decide if this section needs an image:
 **NOTE:** Image *files* are NOT generated in this step. The write step generates image prompt text (included in the payload below). Actual image generation happens after article approval via the admin panel's image pipeline.
 
 **CRITICAL:** Every inline image MUST have `insert_after_heading` set to the exact H2 heading text of the section it belongs to. Images without this field will be positioned incorrectly in the preview. The concept and prompt must be derived FROM the section content — not generic stock imagery.
+
+### SEO Fields (REQUIRED)
+
+Before saving, compose these SEO fields from the article you just wrote. These are persisted directly to the Post + PostTranslation rows when the user approves, so the values you produce here are the values Google, OG/Twitter cards, llms.txt, and the FAQ rich snippet will use.
+
+- **`meta_title`** — 50-60 chars. Keyword-loaded. Different phrasing from the H1 `title` (Google deduplicates identical titles). Include a secondary hook word (Number/Year/Benefit).
+- **`meta_description`** — 150-160 chars. Keyword in first 120 chars. Include the primary benefit + one curiosity gap. No truncation marker `...` — write complete sentences.
+- **`meta_keywords`** — 3-6 keywords, comma-separated. Primary keyword first, then 2-5 related/LSI terms drawn from the outline and research data.
+- **`og_title`** — 40-60 chars. Social-optimized variant; bolder, more clickbait than `meta_title` (allowed: numbers, brackets, emoji). Different from `meta_title` so LinkedIn/Twitter previews feel fresh.
+- **`og_description`** — 100-150 chars. Punchier than `meta_description`, conversation starter, ends with implied question or surprise.
+- **`ai_summary`** — 2-3 sentences (200-400 chars). GEO/AEO-optimized: state the thesis in sentence 1, the strongest data point or outcome in sentence 2, the takeaway in sentence 3. This is what appears in `/api/llms.txt` for AI crawlers — write it so an LLM quoting the article gets the highest-value claim in the fewest tokens.
+- **`faq_schema`** — JSON-LD FAQPage object built from the FAQ section you wrote. Include every Q&A pair from the article (minimum 2, usually 2-4). Use the exact question text and a cleaned plain-text answer (HTML-stripped, but keep 40-80 word body length).
+
+**faq_schema format:**
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Exact question text from article",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cleaned plain-text answer matching the article body (40-80 words)"
+      }
+    }
+  ]
+}
+```
 
 Save the written article:
 
@@ -209,6 +241,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
 {
   "title": "Article Title",
   "content": "<full article content in HTML>",
+  "language": "id",
   "word_count": 2100,
   "keyword": "target keyword",
   "framework": "PASO",
@@ -216,6 +249,26 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
   "hook_type": "Curiosity Gap",
   "hook_boost": "+45%",
   "emotional_arc": "Discovery",
+  "meta_title": "Keyword-loaded 50-60 char title variant",
+  "meta_description": "150-160 char description with keyword in first 120 chars and one curiosity gap.",
+  "meta_keywords": "primary keyword, related term 1, related term 2, related term 3",
+  "og_title": "Social-optimized 40-60 char bolder variant",
+  "og_description": "100-150 char punchy social variant, ends with implied question or surprise.",
+  "ai_summary": "Thesis statement in sentence 1. Strongest data point or outcome in sentence 2. Key takeaway in sentence 3.",
+  "faq_schema": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Question from article",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Plain-text answer body"
+        }
+      }
+    ]
+  },
   "image_prompts": [
     {
       "type": "cover",
@@ -243,20 +296,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
 }
 ```
 
-**Single-language output:** Write the article in the PRIMARY language from prep data (first language in the list). If Indonesian (`id`), use Gen-Z Bahasa (casual, conversational, localized idioms and examples). If English (`en`), write in English. Output ONE article only — translation to other languages is handled separately after approval via Haiku (not in this step).
-
-The JSON payload uses flat format (single language):
-
-```json
-{
-  "title": "Article Title in primary language",
-  "content": "<full article in primary language>",
-  "language": "id",
-  "word_count": 2100,
-  "keyword": "target keyword",
-  ...
-}
-```
+**Single-language output:** Write the article in the PRIMARY language from prep data (first language in the list). If Indonesian (`id`), use Gen-Z Bahasa (casual, conversational, localized idioms and examples). If English (`en`), write in English. Output ONE article only — translation to other languages is handled separately after approval via Haiku (not in this step). All SEO fields (meta_title, meta_description, ai_summary, faq_schema, etc.) must match the primary language.
 
 ---
 
