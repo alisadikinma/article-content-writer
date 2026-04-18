@@ -9,6 +9,10 @@ Pipeline-only skill that handles Five-Gate Scoring, fix-and-re-score loops, and 
 
 > **DO NOT read reference files with the Read tool.** All references (style-guide, seo-rules-engine, virality-triggers, quality-gate) are injected via `--append-system-prompt-file refs-score.md`. They are already in your system prompt. Reading them again wastes time and tokens.
 
+> **Output discipline — TWO pieces only:** (1) bullet-style evidence in §4 format, (2) the JSON completion callback in §7. No markdown tables. No executive summary. No restating scores in a final section. The evidence bullets reuse the same strings as the JSON `evidence` fields — compose each sentence once, quote it in both places.
+
+> **Trust the mechanical scores.** SEO metrics (title length, keyword counts, density), Tier 1/2/3 word counts, FAQ count, and freshness signal count are computed by the backend before you run. Re-counting them yourself wastes 3-5 minutes per article with no quality gain — the backend regex is exact; your estimates are approximate.
+
 ---
 
 ## 1. Pipeline Flags (Required)
@@ -41,9 +45,11 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
 
 ---
 
-## 3. Startup — Fetch Article Data
+## 3. Startup — Fetch Article Data + Mechanical Scores
 
-On start, fetch the article and prep data:
+On start, run TWO fetches in parallel. The first gives you the article; the second gives you pre-computed mechanical metrics so you can skip string counting / regex work and focus on subjective judgment.
+
+**Fetch 1 — article data:**
 
 ```bash
 curl -s -X GET "{api_url}/automation/content-ideas/{idea_id}" \
@@ -56,23 +62,61 @@ Extract from the response:
 - `generated_article.content` — full article HTML
 - `generated_article.word_count` — word count
 - `generated_article.keyword` — target SEO keyword
-- `generated_article.framework` — framework used
-- `generated_article.template` — template used
-- `generated_article.hook_type` — hook type used
-- `generated_article.hook_boost` — hook engagement boost
-- `generated_article.emotional_arc` — arc used
+- `generated_article.framework` / `template` / `hook_type` / `hook_boost` / `emotional_arc`
 - `generated_article.image_prompts` — image prompt array
 - `generated_article.prep_data.research_data` — research data for completion callback
 
+**Fetch 2 — mechanical scores (pre-computed by backend):**
+
+```bash
+curl -s -X GET "{api_url}/automation/content-ideas/{idea_id}/mechanical-scores" \
+  -H "Authorization: Bearer {api_token}" \
+  -H "Content-Type: application/json"
+```
+
+Response structure:
+
+```json
+{
+  "success": true,
+  "data": {
+    "word_count": 2191,
+    "seo": {
+      "title_length": {"value": 53, "status": "green"},
+      "keyword_in_title": {"value": true, "status": "green"},
+      "title_word_count": {"value": 9, "status": "green"},
+      "body_keyword_density": {"value": 0.64, "occurrences": 14, "status": "green"},
+      "keyword_in_first_100": {"value": true, "status": "green"},
+      "keyword_in_headings": {"value": 2, "status": "green"}
+    },
+    "freshness_signals": 21,
+    "faq_pair_count": 2,
+    "h2_count": 11,
+    "h3_count": 10,
+    "ai_humanization": {
+      "tier1_violations": [],
+      "tier1_violation_count": 0,
+      "tier2_clusters": 0,
+      "tier2_cluster_paragraphs": [],
+      "tier3_density_issues": [],
+      "note": "Tier word lists are English-specific; skipped for Indonesian article."
+    },
+    "language": "id"
+  }
+}
+```
+
+**USE the mechanical scores directly** for SEO (Gate 3), Freshness Signals (part of Gate 5), and Tier 1/2/3 word counting (part of Gate 4). Do NOT re-count these yourself — the backend already did it accurately.
+
 ---
 
-## 4. Five-Gate Scoring
+## 4. Five-Gate Scoring — Bullet Evidence Format
 
-Score the article against ALL five gates using the rubrics in your system prompt.
+Score the article against all five gates. **Output format: ONE pass through the article, producing a short bullet list of evidence per gate.** Do NOT compose markdown tables. The evidence strings you produce here get reused verbatim in the JSON callback (§7) — write each bullet so it reads well as both a log entry and a JSON "evidence" string (one complete sentence, 15-40 words).
 
 ### Gate 1 — Virality Score (5 triggers, min 3/5)
 
-Score each trigger as PASS or FAIL with evidence:
+Read the article ONCE. For each trigger, write a single-line bullet: `pass|fail — evidence sentence`.
 
 1. **Social Currency** — exclusive/insider info that makes sharer look smart
 2. **High-Arousal Emotion** — awe, excitement, productive anger (NOT contentment)
@@ -80,11 +124,22 @@ Score each trigger as PASS or FAIL with evidence:
 4. **Identity Signaling** — reader can share to reinforce professional identity
 5. **Cognitive Gap Closure** — narrative tension resolves satisfyingly
 
+Output:
+
+```
+Virality (X/5):
+- social_currency: pass — First-hand curation + insider data (Cursor 1.42x, $4.7B market).
+- high_arousal_emotion: pass — Productive anxiety in first 50 words: "...tertinggal...".
+- practical_utility: pass — 10-tool formula + install commands + "coba 3 hari" timeframe.
+- identity_signaling: pass — 5 dev personas explicitly named.
+- cognitive_gap_closure: pass — 5 loops opened first 500w, all resolved.
+```
+
 **Report progress: 90% (virality_scored)**
 
 ### Gate 2 — Quality Gate (10 criteria, min 7/10)
 
-Score each criterion as PASS or FAIL with notes:
+Same format — bullet per criterion. One line each.
 
 1. **Clear** — Grade 5 readable
 2. **Concise** — tight writing, no fluff
@@ -99,35 +154,52 @@ Score each criterion as PASS or FAIL with notes:
 
 **Report progress: 94% (quality_scored)**
 
-### Gate 3 — SEO Score (6 metrics, min 4/6)
+### Gate 3 — SEO Score (6 metrics) — USE MECHANICAL
 
-Score each metric with traffic light (GREEN/AMBER/RED):
+Do NOT recompute. Copy directly from `mechanical_scores.seo`. Map `status: green` → `pass`, `amber` → `pass` (but note in evidence), `red` → `fail`.
 
-1. **Title Length** — Green: 50-60 chars, Amber: 40-50/60-70, Red: <40/>70
-2. **Keyword in Title** — Green: present, Red: missing
-3. **Title Words** — Green: 6-10, Amber: 5/11-12, Red: <5/>12
-4. **Body Keyword Density** — Green: 0.5-1.5%, Amber: 0.3-0.5%/1.5-2.5%, Red: <0.3%/>3%
-5. **Keyword in First 100** — Green: present, Red: missing
-6. **Keyword in Headings** — Green: 1-2, Amber: 0, Red: >3
+```
+SEO (X/6):
+- title_length: pass — 53 chars (green, target 50-60).
+- keyword_in_title: pass — keyword present.
+- ... (one line per metric, pulled from mechanical data)
+```
 
-### Gate 4 — AI Humanization Score (20 points, deduction-based)
+Count passes. SEO score = number of `green` + `amber` among 6 (any `red` = not pass for that metric).
 
-Base score: 20. Deduct for violations:
+### Gate 4 — AI Humanization Score (20 points, deduction-based) — PARTIAL MECHANICAL
 
-- **Tier 1 violations:** -2 per word found (max -10). The 53 always-replace words per style-guide in system prompt.
-- **Tier 2 cluster violations:** -1 per paragraph with 2+ Tier 2 words (max -5). The 42 cluster-flag words.
-- **Tier 3 density violations:** -1 per word exceeding 3% density (max -3). The 12 density-flag words.
-- **AI pattern violations:** -0.5 per category detected (max -2). The 36 pattern categories (10 structural + 12 language + 8 tone + 6 advanced).
+**Mechanical (backend computed — use directly):**
+- Tier 1 count = `mechanical_scores.ai_humanization.tier1_violation_count` → deduct 2 per violation, max -10
+- Tier 2 clusters = `mechanical_scores.ai_humanization.tier2_clusters` → deduct 1 per cluster, max -5
+- Tier 3 density issues = count of `mechanical_scores.ai_humanization.tier3_density_issues` → deduct 1 per issue, max -3
 
-Final score: max(0, 20 - total_deductions)
+**Subjective (you judge):**
+- AI pattern categories — scan for the 36 categories (10 structural + 12 language + 8 tone + 6 advanced) from style-guide in system prompt. Deduct -0.5 per category detected, max -2.
 
-### Gate 5 — GEO Score (5 metrics, traffic light)
+Final score: `max(0, 20 - total_deductions)`.
 
-1. **Answer-First H2s** — Green: all H2s comply, Amber: 50%+, Red: <50%
-2. **Passage Citability** — Green: all key sections extractable, Amber: most, Red: few
-3. **FAQ Presence** — Green: 2+ pairs, Amber: 1 pair, Red: none
-4. **Entity Clarity** — Green: all claims specific, Amber: most, Red: vague
-5. **Freshness Signals** — Green: 3+ current-year refs, Amber: 1-2, Red: none
+If backend noted "Tier word lists English-specific; skipped for Indonesian" — score tier portions as 0 deductions (article not in English).
+
+Output:
+
+```
+AI Humanization (XX/20):
+- tier1_deduction: -0 (mechanical: 0 violations).
+- tier2_deduction: -0 (mechanical: 0 clusters).
+- tier3_deduction: -0 (mechanical: 0 density issues).
+- ai_pattern_deduction: -0 (judged: no categories detected).
+```
+
+### Gate 5 — GEO Score (5 metrics) — MIXED MECHANICAL + JUDGMENT
+
+- **Answer-First H2s** — judge. You read H2 openers; verify each starts with a 40-60 word stat-rich answer.
+- **Passage Citability** — judge. Are 50-150 word chunks extractable as standalone answers?
+- **FAQ Presence** — MECHANICAL. Use `mechanical_scores.faq_pair_count`. Green: 2+, Amber: 1, Red: 0.
+- **Entity Clarity** — judge. Are claims tied to named entities (sources, tools, companies)?
+- **Freshness Signals** — MECHANICAL. Use `mechanical_scores.freshness_signals`. Green: 3+, Amber: 1-2, Red: 0.
+
+Output one bullet per metric.
 
 **Report progress: 97% (seo_scored)**
 
@@ -176,7 +248,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/save-article" \
 
 ## 7. Completion Callback
 
-After all gates pass and combined >= 70, send the FULL completion callback:
+After all gates pass and combined >= 70, send the FULL completion callback. **Reuse the exact evidence strings** from your §4 bullet output — don't compose new sentences. The mechanical metrics (SEO values, FAQ count, freshness count, Tier counts) come from `mechanical_scores` — paste values directly.
 
 ```bash
 curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/complete" \
