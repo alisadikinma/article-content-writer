@@ -340,7 +340,7 @@ Before the PUT `/save-research` call, Opus must pass a 5-item checklist. If any 
 
 **JSON schema validation:**
 
-- [ ] Top-level has exactly 5 keys: `data_points`, `quotes`, `entities`, `personas`, `written_guides`
+- [ ] Top-level has 5 required keys: `data_points`, `quotes`, `entities`, `personas`, `written_guides`. One optional 6th key, `self_review_gaps`, is permitted in failure mode only (see §6.4). Up to 6 top-level keys total.
 - [ ] No stray metadata fields (no `tier`, `model`, `researched_at` — those live in content_ideas columns)
 - [ ] `personas[].voice` is a single string, not an array
 - [ ] `written_guides[].steps` is a flat string array, not an object array
@@ -360,7 +360,7 @@ Protocol: (1) run 2-3 additional fill-in queries at broader specificity; (2) if 
 
 ## §7 Output Schema v2
 
-The final payload is a single JSON object with exactly 5 top-level keys. Nothing else.
+The final payload is a single JSON object with **5 required top-level keys plus 1 optional 6th key** (`self_review_gaps`, present only in self-review failure mode — see §6.4). Up to 6 top-level keys total. Nothing else.
 
 ### 7.1 Schema
 
@@ -396,6 +396,9 @@ The final payload is a single JSON object with exactly 5 top-level keys. Nothing
       ],
       "source_url": "https://docs.anthropic.com/..."
     }
+  ],
+  "self_review_gaps": [
+    "OPTIONAL 6th key — present ONLY when self-review gate (§6.3) fails after 2-3 fill-in query rounds. Each entry is a short string describing what is short or missing (e.g. 'quotes.length=2, target 5+ — no expert podcast results for this niche'). Omit this key entirely on happy-path saves."
   ]
 }
 ```
@@ -435,7 +438,7 @@ The final payload is a single JSON object with exactly 5 top-level keys. Nothing
 
 ### 7.4 Explicitly NOT In The Schema
 
-To prevent field drift, the following keys from v1 drafts are **removed** and must not appear in the saved payload:
+The saved payload contains **5 required keys + 1 optional `self_review_gaps` key (failure mode only) = up to 6 top-level keys.** To prevent field drift, the following keys from v1 drafts are **removed** and must not appear in the saved payload:
 
 - `tier`, `model`, `researched_at` — derive from `content_ideas` columns, not payload
 - `counter_arguments` — inferred during write phase from counter-tier sources
@@ -446,7 +449,7 @@ To prevent field drift, the following keys from v1 drafts are **removed** and mu
 - `confidence` — always high in practice, signal-to-noise poor
 - Nested `visual_style` objects — flattened to prose per §3
 
-If Opus generates any of the above, the self-review JSON validation check must strip them before save.
+If Opus generates any of the above, the self-review JSON validation check must strip them before save. Note: `self_review_gaps` is the ONLY permitted optional key — all other non-schema fields must be stripped.
 
 ### 7.5 Fully-Worked Example Payload
 

@@ -1102,7 +1102,7 @@ Blog article images serve two roles:
 
 ## 10. Brand Visual Style Resolution (Phase B)
 
-**Context:** Complementary backup — the authoritative instruction lives in `skills/article-images/SKILL.md` §3.5.5. This section exists so the model sees brand-aware prompt composition guidance even if the skill instruction is trimmed.
+**Context:** Complementary backup — the authoritative instruction lives in `skills/article-images/SKILL.md` §3.5 → Brand Visual Style Resolution (nested under "Context Extraction (MANDATORY)"). This section exists so the model sees brand-aware prompt composition guidance even if the skill instruction is trimmed.
 
 When Phase B research produces `research_data.entities[]` (each entity `{name, url, visual_style}`), the skill composes brand-aware prompts WITHOUT requiring the user to upload brand reference images.
 

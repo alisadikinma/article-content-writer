@@ -286,7 +286,7 @@ curl -s -X PUT "{api_url}/automation/content-ideas/{idea_id}/progress" \
 
 ## 8. Continue Pipeline
 
-After the save-research PUT succeeds, trigger the next phase by calling the continue-pipeline endpoint with the exact label `{"completed_step": "research"}`. The Phase B.6 backend branch dispatches `/article-strategy-outline` on Sonnet when it sees this label.
+After the save-research PUT succeeds, trigger the next phase by calling the continue-pipeline endpoint:
 
 ```bash
 curl -s -X POST "{api_url}/automation/content-ideas/{idea_id}/continue-pipeline" \
@@ -295,7 +295,11 @@ curl -s -X POST "{api_url}/automation/content-ideas/{idea_id}/continue-pipeline"
   -d '{"completed_step": "research"}'
 ```
 
-Do **not** use `"prep"` or `"research_complete"` or any other label — the backend branch only matches `"research"` literally. Any other value routes into the legacy `/article-prep` path and skips `/article-strategy-outline`.
+> **IMPORTANT — routing contract:** The backend routes to the next skill based on `idea.progress_percentage`, NOT on the `completed_step` field in this POST body. The Phase B.6 branch (`progress >= 15 && progress < 35 && split_enabled`) in `backend/routes/api.php`'s continue-pipeline closure is what dispatches `/article-strategy-outline`. You MUST have reported progress = 15% via the `PUT /progress` endpoint (see §7's final progress row, `step: "research", percentage: 15`) BEFORE calling continue-pipeline. If progress is still < 15 when continue-pipeline fires, the router will not match the strategy-outline branch and the pipeline will silently stall.
+>
+> The `completed_step` body field is preserved for forward compatibility and plugin-side logging, but does not affect backend dispatch. Sending `"prep"` or `"research_complete"` or `"research"` all behave identically at the router — the load-bearing step is the `PUT /progress` at 15% that must precede this call.
+
+> **Deployment prerequisite:** The Phase B.6 split branch only fires when the Portfolio backend has `ARTICLE_GEN_SKILL_SPLIT_ENABLED=true` in its `.env`. With the flag OFF, the `continue-pipeline` call after `/save-research` will match no dispatch branch and the pipeline will stall silently at 15% progress. If you're seeing the pipeline stall immediately after research completes, verify this flag on the backend first.
 
 ---
 

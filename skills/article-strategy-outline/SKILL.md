@@ -47,7 +47,7 @@ From the JSON response, extract:
   - `data_points[]` — 5-8 verified stats with source names, URLs, years
   - `quotes[]` — expert quotes collected during research
   - `entities[]` — brands / products / tools mentioned, each with optional `visual_style` prose
-  - `personas[]` — reader persona profiles with `emotion`, `pain_point`, `desired_outcome`
+  - `personas[]` — reader persona profiles with `pain`, `emotion`, `voice`
   - `written_guides[]` — source-derived how-to / step-by-step references
 - From `data` (top-level):
   - `title` → your working topic
@@ -141,7 +141,7 @@ Using references already in system prompt (retention-engine concepts are embedde
 
 After Step 3 completes, save the strategy + outline payload to the backend via the existing `/save-prep` endpoint. **USE FILE-BASED CURL** — inline `-d '...'` breaks at this payload size (5-15 KB with full outline).
 
-**IMPORTANT:** In Phase B, `research_data` lives on the top-level `content_ideas` column and is already persisted by `/article-research`. Do NOT nest it under `prep_data` — that would duplicate it. Legacy `/article-prep` behavior (which embedded research inside prep_data) is superseded.
+> **IMPORTANT — do NOT nest `research_data` inside `prep_data`:** In Phase B, `research_data` lives on the top-level `content_ideas` column and is already persisted by `/article-research`. The payload schema below has ONLY `prep_data` at the root — no `research_data` key anywhere. Nesting it under `prep_data` would duplicate it and violate the save-prep contract. Legacy `/article-prep` behavior (which embedded research inside prep_data) is superseded. Read this warning before copying the example structure below.
 
 ```bash
 cat > /tmp/article-prep-{idea_id}.json << 'PAYLOAD_EOF'
