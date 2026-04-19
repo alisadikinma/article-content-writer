@@ -1098,3 +1098,36 @@ Blog article images serve two roles:
 | **Business authority** | Rembrandt 4:1, 3200K | Portra warm | Minimal haze | 50-85mm |
 | **Lifestyle warmth** | Loop 2:1, 3500K | Golden hour | Natural particles | 50mm f/1.8 |
 
+---
+
+## 10. Brand Visual Style Resolution (Phase B)
+
+**Context:** Complementary backup — the authoritative instruction lives in `skills/article-images/SKILL.md` §3.5.5. This section exists so the model sees brand-aware prompt composition guidance even if the skill instruction is trimmed.
+
+When Phase B research produces `research_data.entities[]` (each entity `{name, url, visual_style}`), the skill composes brand-aware prompts WITHOUT requiring the user to upload brand reference images.
+
+### Resolution Logic
+
+1. Read `research_data.entities` from the idea payload (already loaded during §3 Read Idea Data).
+2. For each brand/product identified during Context Extraction, match against `entities[].name` — case-insensitive, allow partial/substring match (e.g. "ChatGPT" matches "chat gpt", "openai chatgpt").
+3. On match, capture the entity's `visual_style` prose paragraph (color palette, UI layout, typography, mood).
+4. When authoring the image prompt for the section that mentions this brand, append:
+
+```
+Feature {brand_name}-style UI mockup matching brand identity.
+Brand aesthetic: {visual_style paragraph verbatim}
+```
+
+### Fallback Branch
+
+If no entity matches the identified brand — or if `research_data` is absent entirely (legacy `/article-prep` path that doesn't produce entities) — SKIP this sub-step. The prompt falls back to the generic cinematic description produced by the standard 8-element WOW framework. This preserves backward compatibility with pre-Phase-B ideas.
+
+### Interaction with `reference_images.brand[]`
+
+Prose `visual_style` from research and uploaded brand logo images are COMPLEMENTARY, not mutually exclusive:
+
+- `visual_style` drives the **aesthetic description** inside the prompt body (palette, typography, mood).
+- `reference_images.brand[]` URLs go into `file_urls` for **logo accuracy** (AI hallucinates logos without a reference file).
+
+When both are present, use both — describe the aesthetic AND pass the logo URL. When only `visual_style` is present (typical Phase B flow), aesthetic prose in the prompt is sufficient; no manifest stop is required.
+

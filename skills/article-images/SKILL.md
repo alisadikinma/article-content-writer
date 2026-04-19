@@ -86,6 +86,40 @@ For each section with `image_concept != null`, identify:
 
 ---
 
+### Brand Visual Style Resolution (NEW — Phase B)
+
+After identifying brands/products in the article, resolve each brand's
+visual_style by looking it up in `research_data.entities[]`:
+
+1. Read `research_data.entities` from the idea payload (already fetched in §3 Read Idea Data)
+2. For each brand/product identified in Context Extraction, find the
+   matching entity by name (case-insensitive, partial match allowed —
+   "ChatGPT" matches entity name "ChatGPT", "chat gpt", "openai chatgpt")
+3. Capture the entity's `visual_style` prose paragraph
+4. When composing the image prompt for this section, append the
+   visual_style paragraph under a new "Brand aesthetic:" line, preceded
+   by: "Feature {brand_name}-style UI mockup matching brand identity."
+
+Example:
+  Article mentions ChatGPT in section 3.
+  Entity lookup finds: visual_style = "Green-teal + dark grey palette.
+    Centered chat with speech bubbles and sidebar history. Söhne sans-serif.
+    Prominent input field with Send icon. Clean, clinical mood."
+
+  Image prompt for section 3 appends:
+    "Feature ChatGPT-style UI mockup matching brand identity.
+     Brand aesthetic: Green-teal + dark grey palette. Centered chat with
+     speech bubbles and sidebar history. Söhne sans-serif. Prominent input
+     field with Send icon. Clean, clinical mood."
+
+If no entity matches (research didn't capture that brand OR research_data
+is absent entirely e.g. legacy prep path), skip this sub-step — the prompt
+falls back to the generic cinematic description. This preserves backward
+compatibility with the legacy `/article-prep` path which does not produce
+entities with visual_style.
+
+---
+
 ## 3.6. Reference Image Manifest
 
 After Context Extraction, check `reference_images.brand[]`:
