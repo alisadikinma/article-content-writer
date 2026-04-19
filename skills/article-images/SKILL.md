@@ -201,6 +201,41 @@ Required elements:
 
 ---
 
+### Caption Authoring (per-type)
+
+Every image MUST have a `caption` field. Rules differ by image type.
+
+**Cover caption:**
+- **Default: the article title verbatim** (from `generated_article.title`). Prefer the exact string.
+- **Paraphrase ONLY when** the primary SEO keyword (from `generated_article.prep_data.research.keyword`) is missing from the title — e.g. title "How We Shipped 10x Faster" + keyword "Vibe Coding" → caption may become "How Vibe Coding Helped Us Ship 10x Faster". Light touch; do NOT rewrite the title creatively.
+- Purpose: reinforces the article's core promise on the hero image.
+
+**Inline caption:**
+- 5-12 words. Short / clear / dense. Supporting context ONLY — explains what the image shows so the reader understands the scene at a glance.
+- HARD RULES (reject the caption if any is violated):
+  1. Must NOT duplicate OR closely paraphrase the article title
+  2. Must NOT duplicate OR closely paraphrase the nearest H2 heading (the `insert_after_heading` value) — even partial-word near-matches are rejected
+  3. Must NOT describe lighting, camera angle, or mood (those belong in `prompt`)
+  4. Must be in the article's language
+- Good inline examples:
+  - `"Installing Claude Code from the VS Code extensions panel."`
+  - `"Terminal output after the first successful generation."`
+  - `"Dashboard view during the third tutorial step."`
+- Bad inline examples (and why):
+  - `"10 Best Vibe Coding Tools 2026"` — duplicates article title
+  - `"Cinematic shot of developer at glass desk"` — describes the prompt, not the image's context
+  - `"Getting Started"` — duplicates the H2 heading
+
+### `needs_creator_face` Flag (inline only)
+
+Set on every inline image to tell the backend whether to auto-inject the creator's face reference (from DB `about.profile_photo`).
+
+- `true` — the scene features the reader-as-protagonist persona (tutorial: "you" are the subject; e.g. "developer at desk using Tool X"). Backend will prepend the creator face and rewrite the VD to match the reference photo's demographics.
+- `false` — abstract illustrations, product shots, UI screenshots, charts, environments without people. Default to `false` when uncertain.
+- Cover does not need this flag — backend always auto-injects the creator face on cover.
+
+---
+
 ## 6. Cover Image — YouTube Thumbnail Style
 
 Always author the cover image FIRST in the output array, unless `--only-sections` explicitly excludes position 0.
@@ -215,7 +250,7 @@ Cover authoring rules:
 - `model` = `nano-banana-pro` (OVERRIDE default — text rendering required for title)
 - `concept` = thumbnail concept derived from Context Extraction output — NOT just title + hook, but the full story at a glance
 
-**5 Required Elements in Cover Prompt:**
+**4 Required Elements in Cover Prompt:**
 
 1. **Title Text** — `generated_article.title` rendered in-image. Position using rule-of-thirds (upper or lower third). Specify in prompt: bold, clean, sans-serif typeface. High contrast against background. Must be legible at 320px width.
 
@@ -223,14 +258,14 @@ Cover authoring rules:
 
 3. **Key Visual** — 1 dominant visual element SPECIFIC to the article topic (from Context Extraction). Not a generic scene. If article is about Claude Code, show terminal/IDE. If about cooking, show the specific dish.
 
-4. **Brand Logo** — if `reference_images.brand[]` contains a logo for the primary brand, include the URL in `file_urls` and instruct: "incorporate the brand identity from the provided reference image, positioned at [corner/on-screen/watermark]." If no brand refs, skip entirely.
+4. **Composition** — max 3 focal points (key visual, title, subtitle). High contrast. Visual hierarchy: key visual > title > subtitle. Readable at 320px.
 
-5. **Composition** — max 3 focal points (key visual, title, optional logo). High contrast. Visual hierarchy: key visual > title > subtitle > logo. Readable at 320px.
+> **Watermark is backend-owned.** Do NOT prescribe a creator brand watermark, logo, or `alisadikinma.com` overlay inside the prompt. The backend reads the `creator_brand` Settings group at dispatch time and appends a centered watermark instruction + brand logo URL automatically. Plugin prompts should NOT compete with that.
 
 - `style` = Photorealistic or Portrait Cinematic (default) or match article tone
 - `title_text` = exact article title string (stored separately for backend use)
 - `subtitle_text` = max 8 word tagline (stored separately for backend use)
-- `file_urls` = array of brand reference URLs from `reference_images.brand[]`, or empty array
+- `file_urls` = array of brand reference URLs from `reference_images.brand[]` for sections that mention specific brands/products, or empty array. Do NOT include the creator's own brand watermark logo here — backend appends it.
 
 ---
 
@@ -245,7 +280,8 @@ Build a single JSON array `image_prompts[]` consumed by GeminiGen and frontend p
     "section": "Header",
     "insert_after_heading": null,
     "concept": "thumbnail concept — what story at a glance",
-    "prompt": "<300-500 word cinematic prompt with title/subtitle/key visual/brand>",
+    "caption": "<article title, verbatim or SEO-paraphrased with primary keyword>",
+    "prompt": "<300-500 word cinematic prompt with title/subtitle/key visual>",
     "model": "nano-banana-pro",
     "style": "Photorealistic",
     "aspect_ratio": "16:9",
@@ -259,6 +295,8 @@ Build a single JSON array `image_prompts[]` consumed by GeminiGen and frontend p
     "section": "<exact section title from outline>",
     "insert_after_heading": "<exact H2 heading text>",
     "concept": "<context-specific concept from extraction + outline>",
+    "caption": "<5-12 words, supporting context — no duplication of title/heading>",
+    "needs_creator_face": false,
     "prompt": "<300-500 word cinematic prompt — section-specific, not generic>",
     "model": "nano-banana-pro",
     "style": "Cinematic",
@@ -273,12 +311,16 @@ Field requirements:
 
 - `insert_after_heading` — exact H2 heading text; MANDATORY for all inline images, null only for cover
 - `concept` — inherit from outline, enriched with Context Extraction insights; if regenerating after user edit, use the edited concept
+- `caption` — **MANDATORY all types.** Rendered as `<figcaption>` under the image on the blog. Per-type rules:
+  - **Cover**: the article title verbatim (from `generated_article.title`), optionally lightly paraphrased to include the primary SEO keyword when not already present. Purpose: reinforces the article's core promise on the hero image.
+  - **Inline**: 5-12 words, short / clear / dense. Supporting context ONLY — explains what the image shows so the reader understands the scene at a glance. HARD RULES: MUST NOT duplicate the article title, MUST NOT duplicate `insert_after_heading`, MUST NOT describe lighting/camera/mood (those belong in `prompt`), MUST be in the article's language. See Section 5 for examples.
+- `needs_creator_face` — **MANDATORY inline only** (boolean). Set `true` when the visual includes the reader-as-protagonist persona (tutorial scenes where "you" the reader are the subject). Set `false` for abstract scenes, product shots, charts, environments without people. The backend uses this flag to auto-inject the creator's face reference from the DB. Omit or set null on cover (cover always auto-injects face).
 - `model` — default `nano-banana-pro` for both cover and inline (best for complex instructions + text rendering); downgrade inline to `nano-banana-2` only if speed/cost critical, or use `imagen-4` for fine textures
 - `aspect_ratio` — default `16:9`
 - `resolution` — default `1K`
 - `title_text` — cover only: exact article title string for in-image rendering. Null for inline.
 - `subtitle_text` — cover only: max 8 word tagline from hook. Null for inline.
-- `file_urls` — array of reference image URLs from `reference_images.brand[]` for images that need brand/product visuals. Empty array `[]` when no brand refs needed for this image. GeminiGen API passes these via the `file_urls` form parameter.
+- `file_urls` — array of reference image URLs from `reference_images.brand[]` for images that need brand/product visuals. Empty array `[]` when no brand refs needed for this image. GeminiGen API passes these via the `file_urls` form parameter. **Do NOT include a watermark logo here** — backend reads watermark config from the `creator_brand` Settings group and appends the logo URL automatically at dispatch time.
 
 ---
 
