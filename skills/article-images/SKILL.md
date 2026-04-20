@@ -86,6 +86,67 @@ For each section with `image_concept != null`, identify:
 
 ---
 
+### Named Entity Detection (NEW — Phase G / v2.4.0)
+
+In addition to brands/products, detect **named public entities** whose correct visual representation matters for the cover image. These are scoped by **appearance in `generated_article.title` OR any H2/H3 heading** (structural subject indicator) — casual mentions deep in a paragraph do NOT trigger entity detection.
+
+Entity types + Wikidata P31 (instance-of) filter:
+- **person** — real public figure (CEO, politician, celebrity). Wikidata P31=Q5 (human).
+- **landmark** — specific famous location (White House, Capitol, Tesla HQ). P31 includes Q41176 (building), Q476028 (ruin), Q839954 (archaeological site), Q35657 (state capitol), etc.
+- **logo** — company/organization brand (Anthropic, SpaceX, OpenAI). P31 includes Q4830453 (business), Q783794 (company), Q43229 (organization).
+- **product** — specific product/vehicle model (Starship, Model S, iPhone 15). P31 includes Q2424752 (product), Q34770 (language), Q1047337 (technology), Q215627 (person/character/fictional — to reject).
+
+For each candidate entity, record `{name, type, in_title, in_h2}`. Only proceed to §3.5b Wikidata lookup for entities that pass the structural gate.
+
+---
+
+### 3.5b. Wikidata + Commons Lookup (NEW — Phase G / v2.4.0)
+
+Cache-first lookup against the backend's entity cache, falling back to Wikidata SPARQL + Commons MediaWiki API when missing. Output feeds `image_prompts[i].entity_refs[]` (cover + inline).
+
+**Step 1 — Cache check (always first):**
+
+```bash
+curl -s -G "{api_url}/automation/entity-refs/lookup" \
+  --data-urlencode "name={entity_name}" \
+  --data-urlencode "type={person|landmark|logo|product}" \
+  -H "Authorization: Bearer {api_token}"
+```
+
+Response shape:
+- `{success: true, cached: true, data: {qid, name, entity_type, url, license, attribution}}` — use the returned URL directly, skip Wikidata.
+- `{success: true, cached: false, data: null}` — cache miss AND Wikidata lookup already ran and failed (low notability OR no Wikimedia P18 OR license rejection). Flag entity to §3.6 manifest as `required: true` + `status: missing`. **Do NOT re-query Wikidata yourself** — the backend just did.
+
+**Step 2 — Notability gate (enforced backend-side, documented here):**
+
+The backend's `EntityReferenceService` rejects entities with:
+- sitelinks < 5 (notability threshold — filters obscure individuals)
+- No Wikidata P18 (commons image property)
+- Commons `LicenseShortName` not in: `CC0`, `Public Domain`, `PD-USGov`, `CC-BY 4.0`, `CC-BY`. Explicitly rejected: `CC-BY-SA` (share-alike), `CC-BY-ND` (no-derivatives), fair-use.
+
+**Step 3 — Output:**
+
+For every successfully-fetched entity, inject into the image prompt's `entity_refs[]`:
+
+```json
+{
+  "qid": "Q115468560",
+  "name": "Dario Amodei",
+  "entity_type": "person",
+  "url": "https://alisadikinma.com/storage/entity-refs/person/Q115468560_dario-amodei.jpg",
+  "license": "CC-BY-4.0",
+  "attribution": "© TechCrunch via Wikimedia Commons"
+}
+```
+
+**Step 4 — VD handling when entity detected:**
+
+When an entity is successfully fetched, write the cover's `visual_direction` to **explicitly name the person/place** (e.g., "Dario Amodei, CEO of Anthropic, in navy suit walking into the West Wing of the White House"). Do NOT write abstract/demographic descriptions — the backend's `CoverBrandingEnhancer` will **skip its VD auto-rewrite** when a person entity is present (Phase C gate), trusting the plugin's specific VD.
+
+**Report progress: 18% (entities_resolved)**
+
+---
+
 ### Brand Visual Style Resolution (NEW — Phase B)
 
 After identifying brands/products in the article, resolve each brand's
@@ -140,6 +201,49 @@ Generate a Reference Image Manifest — a structured checklist telling the user 
 - Filenames: lowercase, kebab-case, `.png`, unique
 - Description includes "where to find it" (press kit, official site, screenshot from own setup)
 - "Used In" tags which images need this file
+
+**Extended manifest categories (Phase G — v2.4.0):**
+
+The manifest now supports TWO parallel categories alongside the existing brand logic. Both are POSTed to the backend in the same `manifest_needed` payload:
+
+- `brand[]` — pre-existing: brand logos / UI screenshots uploaded by the user.
+- `entity[]` — new: named entities detected in §3.5 Named Entity Detection. Each entry includes `{entity_name, entity_type, qid, used_in, status, reason?, fetched_url?, license?, required}`. Entries with `status: fetched` are informational (already resolved via §3.5b Wikidata lookup). Entries with `status: missing` require admin manual upload via the Gate 2 UI. Required entries block the pipeline until the admin resolves them (upload or skip) — same blocking behavior as required brand entries.
+
+Example merged payload:
+
+```json
+{
+  "step": "manifest_needed",
+  "percentage": 20,
+  "message": "1 brand + 2 entities detected — 1 missing, 2 fetched",
+  "manifest": {
+    "brand": [ /* existing brand rows */ ],
+    "entity": [
+      {
+        "entity_name": "Dario Amodei",
+        "entity_type": "person",
+        "qid": "Q115468560",
+        "used_in": ["Cover"],
+        "status": "missing",
+        "reason": "CC-BY-SA license not in allow-list",
+        "required": true
+      },
+      {
+        "entity_name": "White House",
+        "entity_type": "landmark",
+        "qid": "Q35525",
+        "used_in": ["Cover"],
+        "status": "fetched",
+        "fetched_url": "https://alisadikinma.com/storage/entity-refs/landmark/Q35525_white-house.jpg",
+        "license": "PD-USGov",
+        "required": false
+      }
+    ]
+  }
+}
+```
+
+When the admin resolves via the Gate 2 UI (upload or skip), the backend calls `POST /continue-pipeline` — same resumption flow as the brand manifest.
 
 **Save manifest to backend and STOP:**
 
@@ -288,7 +392,17 @@ Build a single JSON array `image_prompts[]` consumed by GeminiGen and frontend p
     "resolution": "1K",
     "title_text": "exact article title",
     "subtitle_text": "max 8 word tagline from hook",
-    "file_urls": ["https://...brand-logo.png"]
+    "file_urls": ["https://...brand-logo.png"],
+    "entity_refs": [
+      {
+        "qid": "Q115468560",
+        "name": "Dario Amodei",
+        "entity_type": "person",
+        "url": "https://alisadikinma.com/storage/entity-refs/person/Q115468560_dario-amodei.jpg",
+        "license": "CC-BY-4.0",
+        "attribution": "© TechCrunch via Wikimedia Commons"
+      }
+    ]
   },
   {
     "type": "inline",
@@ -321,6 +435,7 @@ Field requirements:
 - `title_text` — cover only: exact article title string for in-image rendering. Null for inline.
 - `subtitle_text` — cover only: max 8 word tagline from hook. Null for inline.
 - `file_urls` — array of reference image URLs from `reference_images.brand[]` for images that need brand/product visuals. Empty array `[]` when no brand refs needed for this image. GeminiGen API passes these via the `file_urls` form parameter. **Do NOT include a watermark logo here** — backend reads watermark config from the `creator_brand` Settings group and appends the logo URL automatically at dispatch time.
+- `entity_refs` (NEW — Phase G / v2.4.0) — array of named-entity references from §3.5b Wikidata + Commons lookup. Each entry: `{qid, name, entity_type, url, license, attribution}`. Empty array `[]` when no entities detected. The backend's `CoverBrandingEnhancer` (Phase C gate) reads this to decide: if any entry has `entity_type='person'` on a cover, SKIP creator-face injection and SKIP VD auto-rewrite — the subject IS that public figure, not Ali. All entity URLs are merged into `file_urls` at dispatch time so GeminiGen has the visual references. Landmark/logo/product entities alone do NOT skip creator face (Ali is still in the scene visiting the landmark or using the product).
 
 ---
 
