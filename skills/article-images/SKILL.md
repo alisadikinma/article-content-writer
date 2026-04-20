@@ -88,7 +88,29 @@ For each section with `image_concept != null`, identify:
 
 ### Named Entity Detection (NEW — Phase G / v2.4.0)
 
-In addition to brands/products, detect **named public entities** whose correct visual representation matters for the cover image. These are scoped by **appearance in `generated_article.title` OR any H2/H3 heading** (structural subject indicator) — casual mentions deep in a paragraph do NOT trigger entity detection.
+In addition to brands/products, detect **named public entities** whose correct visual representation matters for the cover image. These are scoped by appearance in **structural subject positions** — places where the article tells the reader "this is what / who the article is about". The structural gate has THREE tiers, in priority order:
+
+1. **Title** — `generated_article.title`
+2. **H2/H3 headings** — any heading text in the article body
+3. **Lede paragraph** — the first 2 paragraphs (everything before the first `</p>` × 2). The lede is where journalism convention names the subject; news articles routinely put role+org in the title ("Anthropic CEO visits White House") and the actual person's name in the first sentence ("On April 17, Anthropic CEO **Dario Amodei** entered…"). Treating the lede as structural catches these cases.
+
+**Casual mentions deeper than paragraph 2 still do NOT trigger detection** — that filter remains, just shifted from "paragraph 1" to "paragraph 2".
+
+### Role-resolution rule (CRITICAL — Phase H / v2.7.1)
+
+When the title or any H2 contains a **role + organization** pattern WITHOUT the person's literal name — examples:
+- "Anthropic CEO …", "CEO Anthropic …", "OpenAI CTO …"
+- "the CEO of Anthropic", "Anthropic's founder"
+- "President Biden" → keep as-is (already includes person name)
+- "the President" alone → role-only, needs resolution
+
+…you MUST resolve the role to the actual person by:
+1. Scanning the lede (first 2 paragraphs) for a `[Title] [Person Name]` pattern (e.g. "CEO Dario Amodei", "founder Dario Amodei"). Capture the proper name.
+2. If the lede doesn't name the person, use your training knowledge to infer the current officeholder for that role+org (e.g., "Anthropic CEO" → "Dario Amodei", "OpenAI CEO" → "Sam Altman"). Cross-check by searching the article body for the inferred name to confirm relevance.
+3. Add the resolved person as a `person` entity with `name = "Dario Amodei"` (the actual name, NOT "Anthropic CEO" — Wikidata SPARQL only matches literal names).
+4. Also keep the organization as a `logo` entity if it's mentioned in title/H2/lede.
+
+If neither the lede nor your knowledge can resolve the role with confidence, skip the person entity (do NOT guess wildly — false matches pollute Wikidata cache).
 
 Entity types + Wikidata P31 (instance-of) filter:
 - **person** — real public figure (CEO, politician, celebrity). Wikidata P31=Q5 (human).
@@ -96,7 +118,7 @@ Entity types + Wikidata P31 (instance-of) filter:
 - **logo** — company/organization brand (Anthropic, SpaceX, OpenAI). P31 includes Q4830453 (business), Q783794 (company), Q43229 (organization).
 - **product** — specific product/vehicle model (Starship, Model S, iPhone 15). P31 includes Q2424752 (product), Q34770 (language), Q1047337 (technology), Q215627 (person/character/fictional — to reject).
 
-For each candidate entity, record `{name, type, in_title, in_h2}`. Only proceed to §3.5b Wikidata lookup for entities that pass the structural gate.
+For each candidate entity, record `{name, type, in_title, in_h2, in_lede, resolved_from_role}` where `resolved_from_role` is true when the role-resolution rule was used. Only proceed to §3.5b Wikidata lookup for entities that pass the structural gate (title OR H2 OR lede OR role-resolution).
 
 ---
 
