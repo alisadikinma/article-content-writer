@@ -1,7 +1,7 @@
 {
   "name": "article-content-writer",
   "description": "AI-powered long-form article writer with inline image prompt generation. 5-step optimized pipeline with 20 hard rules, 107-word AI humanization system, 12 content templates, GEO/AEO optimization, and combined 100-point scoring (Quality + Virality + SEO + AI Humanization + GEO). Includes 14 copywriting frameworks, 8 hook types, and GeminiGen.AI image prompts.",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "author": {
     "name": "Ali Sadikin",
     "url": "https://github.com/alisadikinma"

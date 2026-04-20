@@ -246,6 +246,22 @@ rm -f /tmp/article-save-{idea_id}.json
 
 **After calling save-article, check the response.** If you see `"success": false` with `"keys_received"`, the body was malformed — re-write the JSON file and retry. Do NOT proceed to continue-pipeline until save-article returns `"success": true`.
 
+### Pre-save SEO Field Audit (HARD GATE — v2.7.2)
+
+**Before writing the heredoc, mentally walk this checklist on your payload object. If ANY field is missing, COMPOSE it now — do not save.** This audit exists because production runs were silently shipping articles with `meta_keywords` omitted entirely; the backend then fell back to the literal table-default `"AI & Tech"` for every post, polluting Google indexing of an entire week of content.
+
+| Key | Required value | Common skip pattern |
+|---|---|---|
+| `meta_title` | string, 50-60 chars, includes target keyword, different phrasing from H1 | Sonnet reuses H1 verbatim — REJECT, paraphrase |
+| `meta_description` | string, 150-160 chars, keyword in first 120 chars, complete sentences | Sonnet truncates excerpt with `...` — REJECT, write full sentence |
+| `meta_keywords` | comma-separated string, 3-6 keywords, primary keyword first | Most-skipped field — DO NOT omit. Pull primary from prep_data.research.keyword + 2-5 LSI/related terms from outline section titles |
+| `og_title` | string, 40-60 chars, bolder than meta_title, may include numbers/brackets | Sonnet copies meta_title — REJECT, make it punchier |
+| `og_description` | string, 100-150 chars, conversation starter ends with question/surprise | Sonnet copies meta_description — REJECT, write social-native variant |
+| `ai_summary` | string, 200-400 chars, 2-3 sentences, GEO-optimized thesis+data+takeaway | Sometimes omitted — REQUIRED for /api/llms.txt |
+| `faq_schema` | JSON-LD FAQPage object with mainEntity array (min 2 Q&A pairs) | Sometimes shipped as null — REQUIRED, build from FAQ section H2s |
+
+**If your payload object literally does not have all 7 keys above, STOP and add them.** A missing key is a worse failure than a bad value — backend has fallback chains for empty values, but it cannot synthesize keywords/descriptions from absent fields.
+
 **JSON payload:**
 
 ```json
