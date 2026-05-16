@@ -1,5 +1,17 @@
 # Article Content Writer — Claude Project Instructions
 
+## 🧠 Vault Context Link
+
+Skill library — agnostic, dipakai cross-project (Portfolio_v2, SPARKFLUENCE, dll).
+
+Pre-read kalau perlu konteks:
+- `30-Knowledge/content-strategy-shared.md` — virality framework, SEO/GEO, scoring rubric
+- `20-Projects/claude-plugin/README.md` — skill ecosystem overview
+- `10-Identity/voice-tone.md` — kalau tulis user-facing copy
+- `10-Identity/positioning.md` — USP context (auto-loaded global)
+
+JANGAN hardcode project-specific values (nama klien, niche, dll). Pakai `{{placeholder}}` syntax di SKILL.md + references.
+
 ## Project Overview
 
 Claude Code plugin for AI-powered long-form article writing with inline image prompt generation. 7 skills + 1 agent + 11 reference documents as RAG knowledge base. Optimized 5-step pipeline generates articles in ~6-8 minutes with five scoring gates (Quality + Virality + SEO + AI Humanization + GEO), combined 100-point scoring, and 20 hard rules enforced on every output. Split pipeline architecture (article-prep → article-write → article-score) with compiled reference injection and model switching (Sonnet/Opus) for optimized backend automation.
