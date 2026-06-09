@@ -113,6 +113,8 @@
 
 **Evidence format:** Check 3 random sections. For each, identify the benefit AND the actionable depth. For numbered sections: check that each point has What + How + Example + Outcome. If any numbered point is a single line without implementation detail, FAIL.
 
+> **Length + image context (GEO citation peak):** target the **1,500–2,000-word** AI-citation visibility band and **5–7 images total** (1 cover + 4–6 inline, caption + alt on every image). Reach the band by deepening each numbered point to its 150–250 words — NOT by cutting sections or images. Section count drives both image count and the number of separately-citable answer-first passages, so trimming sections to hit a word target is a GEO regression, not a win.
+
 ---
 
 ### 10. Dual CTA

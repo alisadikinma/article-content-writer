@@ -168,6 +168,24 @@ Each framework below is summarized with its structure, best use, strengths, weak
 
 ---
 
+## Format Decision (run BEFORE framework choice)
+
+**Before** picking a narrative framework below, decide the article's STRUCTURE — narrative frameworks layer ON TOP of a format, they don't replace a scannable body. The format choice is what AI engines actually cite. Full rates, rules, and sources live in the **`geo-format-citation-research.md`** reference (in your system prompt) — consult it for the citation-rate table and the answer-first/passage rules.
+
+Default by discovery intent:
+
+| If the topic is… | Default format |
+|---|---|
+| "Best [X]" / "Top N" / comparison / tools roundup / how-to | **Numbered listicle or step-by-step guide** (highest AI-citation rate) |
+| Troubleshooting / a process | **Step-by-step guide** — each step a standalone answer-first passage |
+| "People Also Ask" / direct informational queries | **FAQ blocks** with answer-first formatting |
+| Complex B2B solution needing social proof | **Case study** |
+| Opinion / story / announcement | **Narrative** — but layer lists/quotes/sub-structure so it stays extractable (pure narrative is the LOWEST-cited format) |
+
+Then choose a narrative framework (StoryBrand / PAS / AIDA …) for the intro + transitions ON TOP of that format. See `geo-format-citation-research.md` §2 for the full IF→THEN rules and §3 for answer-first/passage citability.
+
+---
+
 ## Goal-Based Framework Selection
 
 Use this table when the article goal (educate/sell/convert/engage) is your primary selection criterion. Match the goal first, then refine by topic pattern using the Decision Matrix below.

@@ -98,6 +98,8 @@ Using references already in system prompt (frameworks-library, emotional-arcs, h
 2. Template determines: target word count, section structure, tone, recommended framework + arc
 3. If template's framework recommendation conflicts with Decision Matrix, prefer Decision Matrix
 
+**Word-count target band (GEO):** default **1,500–2,000 words** — AI-citation visibility peaks at ~1,500–1,750, high-performers ~2,000. Advisory, not a hard cap; go longer only when depth genuinely requires it, never pad. Plan **5–7 images total** (1 cover + 4–6 inline, caption + alt mandatory). Hit the word band by tightening prose density per section — never by cutting sections or `image_count` (more sections = more citable passages + more images).
+
 **Report progress: 25% (strategy)**
 
 ### Step 3 — OUTLINE (35%)

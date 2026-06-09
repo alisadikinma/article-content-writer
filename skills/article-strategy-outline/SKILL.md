@@ -108,6 +108,11 @@ Using references already in system prompt (frameworks-library, emotional-arcs, h
 2. Template determines: target word count, section structure, tone, recommended framework + arc
 3. If template's framework recommendation conflicts with Decision Matrix, prefer Decision Matrix
 
+**Word-count target band (AI-citation visibility — GEO):**
+- **Default target band: 1,500–2,000 words.** AI engines (ChatGPT, Perplexity, Google AI Overviews) cite mid-length articles most; the visibility peak sits at ~1,500–1,750 words, and high-performers average ~2,000. The band spans both.
+- This is **advisory, not a hard cap.** Go longer ONLY when topic depth genuinely requires it — never pad with fluff. Depth over length. Listicles/guides may run longer when each numbered point earns its 150–250 words (quality-gate Gate 9).
+- If the chosen template's range sits outside the band, keep the template's structure but aim prose density toward the band; record the realistic `total_word_target` you'll actually hit.
+
 **Report progress: 25% (strategy)**
 
 ---
@@ -129,7 +134,8 @@ Using references already in system prompt (retention-engine concepts are embedde
 5. **Plan citations** — minimum 1 per 400 words, map `research_data.data_points[]` to sections
 6. **Plan Practical Utility section** — [Number]+[Superlative]+[Timeframe]+[Outcome]
 7. **Plan Completion-to-Share resolution** — final payoff + reader reward
-8. **Plan image concepts** — 1 cover + 2-4 inline per section type to concept mapping
+8. **Plan image concepts** — target **5–7 images total** = 1 cover + 4–6 inline (≈ 1 image per 250–300 words). Assign an `image_concept` to the cover AND to each substantive H2 section until `image_count` lands in the 5–7 floor. Every image MUST carry a caption + alt text downstream (captioned figures aid AI passage extraction). Do not exceed 7 unless a genuinely visual topic warrants it — each image is a GeminiGen generation cost and ALL must render before the article compiles (the backend image-completion gate blocks publish on any failed segment).
+   - **Decoupling guardrail (do NOT violate):** hit the WORD band (step "Content template selection") by tightening prose density per section — **never by reducing the planned section count or `image_count` to fit the word target.** Section count is set by the template/topic, independent of the word band. More H2 sections = more images AND more answer-first, separately-citable passages (a GEO win). A 1,500-word and a 2,000-word article on the same 5-section topic plan the SAME `image_count`. `image_count` stays section-derived (cover + sections with a non-null `image_concept`), now targeting the 5–7 floor — it is never back-derived from word count.
 
 **NEW for Phase B (brand-aware images):** When mapping `image_concept` for a section that primarily features a brand/product named in `research_data.entities[]`, include the entity name in the image_concept text so `/article-images` can resolve the brand's visual_style automatically. Example: `image_concept: "ChatGPT interface showing conversation flow"` — entity `ChatGPT` matches, and article-images appends the visual_style prose to the final prompt.
 

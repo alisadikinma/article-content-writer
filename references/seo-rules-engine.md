@@ -349,6 +349,8 @@ When a metric scores Amber or Red, apply these fixes:
 
 These rules ensure articles are optimized for AI citation in Google AI Overviews, ChatGPT web search, Perplexity, and other AI-powered search systems. GEO (Generative Engine Optimization) and AEO (Answer Engine Optimization) target the extractability and citability of content by AI systems.
 
+- **Format drives citation (see `geo-format-citation-research.md`, in your system prompt):** scannable structures — numbered listicles, step-by-step guides, FAQ blocks, tables — are cited far more than flowing narrative. Pick the format BEFORE the narrative framework (that ref's §2), and make every numbered item / step a standalone answer-first passage per §8.2 below.
+
 ### 8.1 Answer-First Formatting
 
 Every H2 section must open with a **40-60 word stat-rich paragraph** that directly answers the section heading. This paragraph must be self-contained — extractable by AI systems as a standalone answer.

@@ -78,12 +78,14 @@ cat > "$PREP" << 'HEADER'
 # Article Generation Reference — Prep (Steps 1-3)
 
 System prompt reference for the `/article-prep` skill.
-Contains: global-config, frameworks-library, hook-repository, emotional-arcs, content-templates.
+Contains: global-config, frameworks-library, geo-format-citation-research, hook-repository, emotional-arcs, content-templates.
 These references are injected via --append-system-prompt-file. Do NOT read them with the Read tool.
 HEADER
 
 append_ref "$PREP" "$REFS_DIR/global-config.md"
 append_ref "$PREP" "$REFS_DIR/frameworks-library.md"
+# GEO format-citation research — drives the format decision BEFORE framework choice.
+append_ref "$PREP" "$REFS_DIR/geo-format-citation-research.md"
 append_ref "$PREP" "$REFS_DIR/hook-repository.md"
 append_ref "$PREP" "$REFS_DIR/emotional-arcs.md"
 append_ref "$PREP" "$REFS_DIR/content-templates.md"
@@ -96,7 +98,7 @@ cat > "$WRITE" << 'HEADER'
 # Article Generation Reference — Write (Step 4)
 
 System prompt reference for the `/article-write` skill.
-Contains: global-config (trimmed), style-guide, retention-engine, seo-rules-engine (trimmed).
+Contains: global-config (trimmed), style-guide, retention-engine, seo-rules-engine (trimmed), geo-format-citation-research.
 These references are injected via --append-system-prompt-file. Do NOT read them with the Read tool.
 Note: image-prompt-guide is NOT included — image prompts are generated separately after article approval.
 HEADER
@@ -119,6 +121,9 @@ append_ref_excluding "$WRITE" "$REFS_DIR/seo-rules-engine.md" \
   "## 5. Completion Callback JSON" \
   "## 6. SEO Score Output Format" \
   "## 7. Per-Metric Optimization"
+
+# GEO format-citation research — enforce numbered-listicle/step structure when writing.
+append_ref "$WRITE" "$REFS_DIR/geo-format-citation-research.md"
 
 # --- refs-score.md (Step 5: Five Gates + Combined Score) ---
 SCORE="$OUT_DIR/refs-score.md"

@@ -112,6 +112,8 @@ These 20 rules apply during writing. All reference details are in your system pr
 
 20. **ALWAYS apply GEO/AEO formatting.** Answer-First H2s (40-60 word openers), Passage Citability (50-150 word chunks), 2+ FAQ pairs, Entity Clarity, 3+ Freshness Signals. See seo-rules-engine in system prompt.
 
+21. **ENFORCE the chosen format's structure.** When the prep format is a **listicle / how-to / step-by-step guide** (see `geo-format-citation-research.md` §2 in your system prompt), each numbered H2/H3 MUST (a) lead with the answer-first 40–60-word stat opener (§8.1) and (b) read as a self-contained, separately-extractable passage (§8.2) — a reader landing on that one heading gets a complete answer. Numbered items are the most AI-cited structure; do not flatten them into flowing narrative.
+
 ---
 
 ## 5. Writing Process
